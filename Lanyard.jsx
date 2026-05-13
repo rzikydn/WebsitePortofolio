@@ -31,7 +31,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     <div className="lanyard-wrapper">
       <Canvas
         camera={{ position: activePosition, fov: activeFov }}
-        dpr={[1, isMobile ? 1.2 : 2]}
+        dpr={[1, isMobile ? 1.5 : 2]}
         gl={{
           alpha: transparent,
           antialias: !isMobile,
@@ -155,8 +155,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     }
   }, [hovered, dragged]);
 
-  // Number of curve sample points — fewer on mobile for performance
-  const curvePoints = isMobile ? 16 : 32;
+  // Number of curve sample points — gunakan 32 untuk semua device agar kurva mulus tanpa glitch
+  const curvePoints = 32;
 
   useFrame((state, delta) => {
     // Clamp delta to prevent physics explosion after tab-switch or frame stalls
@@ -232,7 +232,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
                 map={materials.base.map}
-                map-anisotropy={isMobile ? 4 : 16}
+                map-anisotropy={16}
                 clearcoat={isMobile ? 0 : 1}
                 clearcoatRoughness={0.15}
                 roughness={0.9}
