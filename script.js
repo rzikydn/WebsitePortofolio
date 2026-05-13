@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function init() {
     const greetings = [
         "Hello",
         "Bonjour",
@@ -83,4 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
             themeIcon.classList.add('ph-moon-stars');
         }
     });
-});
+}
+
+// Module scripts are deferred — DOM may already be loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
