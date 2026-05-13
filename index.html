@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Preloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+    <!-- Preloader Overlay -->
+    <div class="preloader-wrap">
+        <div class="preloader-bg"></div>
+        <div class="greeting-container fade-out">
+            <span class="dot">•</span>
+            <span class="greeting" id="greeting-text">Hello</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Background Elements -->
+        <div class="bg-zigzag"></div>
+
+        <!-- Konten Website (di atas background) -->
+        <div class="content-wrapper">
+
+            <nav class="floating-navbar">
+                <div class="nav-links">
+                    <a href="#" class="nav-item active">
+                        <i class="ph ph-house"></i>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-user"></i>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-browser"></i>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-tote"></i>
+                    </a>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="theme-toggle">
+                        <i class="ph ph-moon-stars"></i>
+                    </button>
+                    <button class="btn-hire">
+                        <i class="ph ph-plus-circle"></i>
+                        Hire Me
+                    </button>
+                </div>
+            </nav>
+
+            <div class="hero-card">
+                <div class="hero-top">
+                    <div class="hero-role">
+                        <span class="role-dot"></span>
+                        Data Analyst Enthusiast
+                    </div>
+                </div>
+
+                <div class="hero-main">
+                    <div class="hero-content">
+                        <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
+                        <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating
+                            insights.</p>
+
+                        <div class="hero-buttons">
+                            <button class="btn-hire">
+                                <i class="ph ph-plus-circle"></i>
+                                Hire Me
+                            </button>
+                            <button class="btn-copy">
+                                <i class="ph ph-copy"></i>
+                                Copy Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Lanyard 3D Component -->
+    <div id="lanyard-root"></div>
+
+    <script src="script.js"></script>
+    <script type="module" src="/main.jsx"></script>
+</body>
+
+</html>

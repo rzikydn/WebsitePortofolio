@@ -1,0 +1,533 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #111;
+    font-family: "Elms Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Preloader styles */
+.preloader-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.preloader-bg {
+    position: absolute;
+    top: 0;
+    left: -10vw;
+    width: 120vw;
+    height: 100vh;
+    background-color: #000000;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.preloader-bg::after {
+    content: '';
+    position: absolute;
+    top: 99%;
+    /* Overlap slightly to avoid white lines */
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    background-color: #000000;
+    border-radius: 0 0 50% 50%;
+}
+
+.preloader-wrap.slide-up .preloader-bg {
+    transform: translate3d(0, -135vh, 0);
+}
+
+.greeting-container {
+    position: relative;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 3rem;
+    font-weight: 500;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+.greeting-container.fade-out {
+    opacity: 0;
+}
+
+.dot {
+    position: absolute;
+    right: 100%;
+    margin-right: 15px;
+    font-size: 2.8rem;
+    line-height: 1;
+}
+
+.greeting {
+    line-height: 1;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .greeting-container {
+        font-size: 2rem;
+    }
+
+    .dot {
+        font-size: 1.8rem;
+        margin-right: 12px;
+    }
+}
+
+/* Main Content */
+.main-content {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #1f2937;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+#lanyard-root {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 35%;
+    height: 100vh;
+    z-index: 15;
+    pointer-events: none;
+}
+
+#lanyard-root canvas {
+    pointer-events: auto;
+}
+
+.bg-zigzag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(75, 85, 99, 0.08) 20px, rgba(75, 85, 99, 0.08) 21px),
+        repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(107, 114, 128, 0.06) 30px, rgba(107, 114, 128, 0.06) 31px),
+        repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(55, 65, 81, 0.05) 40px, rgba(55, 65, 81, 0.05) 41px),
+        repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(31, 41, 55, 0.04) 35px, rgba(31, 41, 55, 0.04) 36px);
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Navbar Styles */
+.floating-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 12px 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 750px;
+    height: max-content;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-item i {
+    font-size: 1.6rem;
+}
+
+.nav-item:hover {
+    color: #1e293b;
+}
+
+.nav-item.active {
+    background-color: #f1f5f9;
+    color: #1e293b;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: #334155;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+    padding: 10px;
+}
+
+.theme-toggle i {
+    font-size: 1.6rem;
+}
+
+.theme-toggle:hover {
+    color: #000;
+}
+
+.btn-hire {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #0f172a;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-hire i {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+}
+
+.btn-hire:hover {
+    background-color: #1e293b;
+    transform: translateY(-2px);
+}
+
+/* Hero Card Styles */
+.hero-card {
+    width: 100%;
+    max-width: 1200px;
+    padding: 30px 0;
+}
+
+.hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.hero-role {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #475569;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.role-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #94a3b8;
+    border-radius: 50%;
+}
+
+.hero-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-content {
+    flex: 1;
+}
+
+.hero-title {
+    font-size: clamp(3.5rem, 6.5vw, 6.5rem);
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1.1;
+}
+
+.hero-desc {
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 50px;
+    max-width: 800px;
+}
+
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.hero-buttons .btn-hire {
+    padding: 18px 36px;
+    font-size: 1.3rem;
+    border-radius: 14px;
+}
+
+.hero-buttons .btn-hire i {
+    font-size: 1.5rem;
+}
+
+.btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ffffff;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    padding: 18px 36px;
+    border-radius: 14px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.btn-copy i {
+    font-size: 1.5rem;
+    color: #94a3b8;
+}
+
+.btn-copy:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+/* Navbar Mobile Optimization */
+@media (max-width: 768px) {
+    #lanyard-root {
+        width: 55%;
+        height: 50vh;
+        top: -15vh;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    .content-wrapper {
+        padding: 20px 15px;
+    }
+
+    .floating-navbar {
+        padding: 10px 12px;
+        border-radius: 18px;
+    }
+
+    .nav-links {
+        gap: 4px;
+    }
+
+    .nav-item {
+        width: 38px;
+        height: 38px;
+    }
+
+    .nav-item i {
+        font-size: 1.3rem;
+    }
+
+    .nav-actions {
+        gap: 6px;
+    }
+
+    .theme-toggle {
+        padding: 6px;
+    }
+
+    .theme-toggle i {
+        font-size: 1.4rem;
+    }
+
+    .btn-hire {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        gap: 5px;
+    }
+
+    .btn-hire i {
+        font-size: 1.1rem;
+    }
+
+    .hero-card {
+        padding: 10px 0;
+        padding-top: 45vh;
+    }
+
+    .hero-top {
+        display: none;
+    }
+
+    .hero-role {
+        font-size: 0.9rem;
+    }
+
+    .role-dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    .hero-main {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: clamp(1.8rem, 7vw, 2.5rem);
+        margin-bottom: 12px;
+        letter-spacing: -1px;
+    }
+
+    .hero-desc {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    .hero-buttons .btn-hire,
+    .btn-copy {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+
+    .hero-buttons .btn-hire i,
+    .btn-copy i {
+        font-size: 1rem;
+    }
+}
+
+/* Dark Mode Overrides */
+body.dark-mode .main-content {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .bg-zigzag {
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255, 255, 255, 0.04) 20px, rgba(255, 255, 255, 0.04) 21px),
+        repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255, 255, 255, 0.03) 30px, rgba(255, 255, 255, 0.03) 31px),
+        repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(255, 255, 255, 0.02) 40px, rgba(255, 255, 255, 0.02) 41px),
+        repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(255, 255, 255, 0.02) 35px, rgba(255, 255, 255, 0.02) 36px);
+}
+
+body.dark-mode .floating-navbar {
+    background-color: #1e1e20;
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .nav-item {
+    color: #8c8c92;
+}
+
+body.dark-mode .nav-item:hover {
+    color: #ffffff;
+}
+
+body.dark-mode .nav-item.active {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .theme-toggle {
+    color: #e5e5ea;
+}
+
+body.dark-mode .theme-toggle:hover {
+    color: #ffffff;
+}
+
+body.dark-mode .btn-hire {
+    background-color: #3a3a3c;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-hire i {
+    color: #e5e5ea;
+}
+
+body.dark-mode .btn-hire:hover {
+    background-color: #48484a;
+}
+
+/* Dark Mode Overrides for Hero Card */
+body.dark-mode .hero-role {
+    color: #94a3b8;
+}
+
+body.dark-mode .hero-title {
+    color: #f8fafc;
+}
+
+body.dark-mode .hero-desc {
+    color: #94a3b8;
+}
+
+body.dark-mode .btn-copy {
+    background-color: transparent;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+body.dark-mode .btn-copy:hover {
+    background-color: #334155;
+}
