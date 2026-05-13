@@ -34,7 +34,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{
           alpha: transparent,
-          antialias: !isMobile,
+          antialias: true, // Selalu aktifkan antialias agar tepian tali tidak bergerigi/glitch
           powerPreference: 'high-performance',
           stencil: false,
           depth: true,
@@ -42,11 +42,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics
-          gravity={gravity}
-          timeStep="vary"
-          interpolate={true}
-        >
+        <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Band isMobile={isMobile} />
         </Physics>
         {isMobile ? (
@@ -104,6 +100,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
 }
 
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+  const { width, height } = useThree((state) => state.size);
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -117,14 +114,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   const rot = useRef(new THREE.Vector3());
   const dir = useRef(new THREE.Vector3());
 
-  // PERF: Memoize segment props so child RigidBody components don't re-render unnecessarily
-  // Lower damping values (2 instead of 4) so the fall feels lighter/more fluid
   const segmentProps = useMemo(() => ({
     type: 'dynamic',
     canSleep: true,
     colliders: false,
-    angularDamping: 2,
-    linearDamping: 2,
+    angularDamping: 4,
+    linearDamping: 4,
   }), []);
 
   const { nodes, materials } = useGLTF(cardGLB);
@@ -155,13 +150,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     }
   }, [hovered, dragged]);
 
-  // Number of curve sample points — gunakan 32 untuk semua device agar kurva mulus tanpa glitch
-  const curvePoints = 32;
+  // Number of curve sample points — gunakan 40 agar kurva sangat mulus tanpa patah/glitch
+  const curvePoints = 40;
 
   useFrame((state, delta) => {
-    // Clamp delta to prevent physics explosion after tab-switch or frame stalls
-    const dt = Math.min(delta, 0.1);
-
     if (dragged) {
       vec.current.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.current.copy(vec.current).sub(state.camera.position).normalize();
@@ -180,15 +172,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
         ref.current.lerped.lerp(
           ref.current.translation(),
-          dt * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
+          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
-
       curve.points[0].copy(j3.current.translation());
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(curvePoints));
+      band.current.geometry.setPoints(curve.getPoints(32));
 
       ang.current.copy(card.current.angvel());
       rot.current.copy(card.current.rotation());
@@ -249,7 +240,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         <meshLineMaterial
           color="white"
           depthTest={false}
-          resolution={isMobile ? [1000, 2000] : [1000, 1000]}
+          resolution={[width, height]} // Gunakan ukuran layar dinamis agar MeshLine dirender dengan rasio yang tepat
           useMap
           map={texture}
           repeat={[-4, 1]}
