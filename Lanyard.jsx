@@ -1,13 +1,14 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
+import { useEffect, useRef, useState } from 'react';
+import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
+// replace with your own imports, see the usage snippet for details
 import cardGLB from './card.glb?url';
-import lanyardTexture from './lanyard.png';
+import lanyard from './lanyard.png';
 
 import * as THREE from 'three';
 import './Lanyard.css';
@@ -23,7 +24,6 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // On mobile: higher FOV zooms out, making lanyard smaller
   const activeFov = isMobile ? 26 : fov;
   const activePosition = isMobile ? [0, 0, 20] : position;
 
@@ -32,99 +32,62 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         camera={{ position: activePosition, fov: activeFov }}
         dpr={[1, isMobile ? 1.5 : 2]}
-        gl={{
-          alpha: transparent,
-          antialias: true, // Selalu aktifkan antialias agar tepian tali tidak bergerigi/glitch
-          powerPreference: 'high-performance',
-          stencil: false,
-          depth: true,
-        }}
+        gl={{ alpha: transparent }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Band isMobile={isMobile} />
         </Physics>
-        {isMobile ? (
-          <Environment blur={0.75}>
-            <Lightformer
-              intensity={2}
-              color="white"
-              position={[0, -1, 5]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={3}
-              color="white"
-              position={[1, 1, 1]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-          </Environment>
-        ) : (
-          <Environment blur={0.75}>
-            <Lightformer
-              intensity={2}
-              color="white"
-              position={[0, -1, 5]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={3}
-              color="white"
-              position={[-1, -1, 1]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={3}
-              color="white"
-              position={[1, 1, 1]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={10}
-              color="white"
-              position={[-10, 0, 14]}
-              rotation={[0, Math.PI / 2, Math.PI / 3]}
-              scale={[100, 10, 1]}
-            />
-          </Environment>
-        )}
+        <Environment blur={0.75}>
+          <Lightformer
+            intensity={2}
+            color="white"
+            position={[0, -1, 5]}
+            rotation={[0, 0, Math.PI / 3]}
+            scale={[100, 0.1, 1]}
+          />
+          <Lightformer
+            intensity={3}
+            color="white"
+            position={[-1, -1, 1]}
+            rotation={[0, 0, Math.PI / 3]}
+            scale={[100, 0.1, 1]}
+          />
+          <Lightformer
+            intensity={3}
+            color="white"
+            position={[1, 1, 1]}
+            rotation={[0, 0, Math.PI / 3]}
+            scale={[100, 0.1, 1]}
+          />
+          <Lightformer
+            intensity={10}
+            color="white"
+            position={[-10, 0, 14]}
+            rotation={[0, Math.PI / 2, Math.PI / 3]}
+            scale={[100, 10, 1]}
+          />
+        </Environment>
       </Canvas>
     </div>
   );
 }
 
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
-  const { width, height } = useThree((state) => state.size);
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
     j2 = useRef(),
     j3 = useRef(),
     card = useRef();
-
-  // PERF: Store reusable Vector3 instances in refs so they are NOT recreated on re-render
-  const vec = useRef(new THREE.Vector3());
-  const ang = useRef(new THREE.Vector3());
-  const rot = useRef(new THREE.Vector3());
-  const dir = useRef(new THREE.Vector3());
-
-  const segmentProps = useMemo(() => ({
-    type: 'dynamic',
-    canSleep: true,
-    colliders: false,
-    angularDamping: 4,
-    linearDamping: 4,
-  }), []);
-
+  const vec = new THREE.Vector3(),
+    ang = new THREE.Vector3(),
+    rot = new THREE.Vector3(),
+    dir = new THREE.Vector3();
+  const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
   const { nodes, materials } = useGLTF(cardGLB);
-  const texture = useTexture(lanyardTexture);
-
+  const texture = useTexture(lanyard);
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -132,7 +95,6 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  // Rope segment length — longer on mobile for a more visible strap
   const ropeLength = isMobile ? 1.25 : 1;
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], ropeLength]);
@@ -150,22 +112,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     }
   }, [hovered, dragged]);
 
-  // Number of curve sample points — gunakan 40 agar kurva sangat mulus tanpa patah/glitch
-  const curvePoints = 40;
-
   useFrame((state, delta) => {
     if (dragged) {
-      vec.current.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      dir.current.copy(vec.current).sub(state.camera.position).normalize();
-      vec.current.add(dir.current.multiplyScalar(state.camera.position.length()));
+      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
+      dir.copy(vec).sub(state.camera.position).normalize();
+      vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({
-        x: vec.current.x - dragged.x,
-        y: vec.current.y - dragged.y,
-        z: vec.current.z - dragged.z,
-      });
+      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
     }
-
     if (fixed.current) {
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
@@ -179,15 +133,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(32));
-
-      ang.current.copy(card.current.angvel());
-      rot.current.copy(card.current.rotation());
-      card.current.setAngvel({
-        x: ang.current.x,
-        y: ang.current.y - rot.current.y * 0.25,
-        z: ang.current.z,
-      });
+      band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
+      ang.copy(card.current.angvel());
+      rot.copy(card.current.rotation());
+      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
     }
   });
 
@@ -198,16 +147,16 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     <>
       <group position={isMobile ? [0, 6, 0] : [0, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5 * ropeLength, 0, 0]} ref={j1} {...segmentProps}>
+        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1 * ropeLength, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5 * ropeLength, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[2 * ropeLength, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
             scale={2.25}
@@ -217,7 +166,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
             onPointerDown={e => (
               e.target.setPointerCapture(e.pointerId),
-              drag(new THREE.Vector3().copy(e.point).sub(vec.current.copy(card.current.translation())))
+              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
             )}
           >
             <mesh geometry={nodes.card.geometry}>
@@ -240,7 +189,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         <meshLineMaterial
           color="white"
           depthTest={false}
-          resolution={[width, height]} // Gunakan ukuran layar dinamis agar MeshLine dirender dengan rasio yang tepat
+          resolution={isMobile ? [1000, 2000] : [1000, 1000]}
           useMap
           map={texture}
           repeat={[-4, 1]}
