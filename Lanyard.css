@@ -6,7 +6,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Removed transform: scale(1) — it forced unnecessary GPU compositing layer
-     and can cause rendering overhead without any visual benefit */
-  will-change: auto;
+  transform: scale(1);
+  transform-origin: center;
 }

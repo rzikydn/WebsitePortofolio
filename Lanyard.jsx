@@ -7,7 +7,7 @@ import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphe
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
 // replace with your own imports, see the usage snippet for details
-import cardGLB from './card.glb?url';
+import cardGLB from './card.glb';
 import lanyard from './lanyard.png';
 
 import * as THREE from 'three';
@@ -24,13 +24,10 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const activeFov = isMobile ? 26 : fov;
-  const activePosition = isMobile ? [0, 0, 20] : position;
-
   return (
     <div className="lanyard-wrapper">
       <Canvas
-        camera={{ position: activePosition, fov: activeFov }}
+        camera={{ position: position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
@@ -73,7 +70,6 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     </div>
   );
 }
-
 function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   const band = useRef(),
     fixed = useRef(),
@@ -95,11 +91,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  const ropeLength = isMobile ? 1.25 : 1;
-
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], ropeLength]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], ropeLength]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], ropeLength]);
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
     [0, 1.5, 0]
@@ -145,7 +139,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
 
   return (
     <>
-      <group position={isMobile ? [0, 6, 0] : [0, 4, 0]}>
+      <group position={[0, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
