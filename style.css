@@ -2,8 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -144,10 +146,10 @@ body {
         repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(107, 114, 128, 0.06) 30px, rgba(107, 114, 128, 0.06) 31px),
         repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(55, 65, 81, 0.05) 40px, rgba(55, 65, 81, 0.05) 41px),
         repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(31, 41, 55, 0.04) 35px, rgba(31, 41, 55, 0.04) 36px);
-    
+
     /* Fade out the pattern at the bottom smoothly */
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 250px), transparent 100%);
-    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 250px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 120px), transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 120px), transparent 100%);
 }
 
 .content-wrapper {
@@ -567,6 +569,8 @@ body.dark-mode .btn-copy:hover {
 
 .about-container {
     max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
     text-align: center;
     position: relative;
     z-index: 20;
@@ -577,12 +581,30 @@ body.dark-mode .btn-copy:hover {
     color: #cbd5e1;
     line-height: 1.4;
     font-weight: 500;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .about-section {
+        min-height: 100vh;
+        height: 100vh;
+        margin-top: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about-container {
+        transform: none;
+    }
 }
 
 /* Dark Mode About Section */
 body.dark-mode .about-section {
     background-color: #121212;
 }
+
 body.dark-mode .about-text {
     color: #475569;
 }

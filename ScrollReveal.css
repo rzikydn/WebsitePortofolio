@@ -1,0 +1,22 @@
+.scroll-reveal {
+  margin: 0;
+}
+
+.scroll-reveal-text {
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  line-height: 1.4;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: center;
+  margin: 0;
+  font-family: "Elms Sans", sans-serif;
+}
+
+.word {
+  display: inline-block;
+}
+
+/* Dark Mode */
+body.dark-mode .scroll-reveal-text {
+  color: #e2e8f0;
+}
