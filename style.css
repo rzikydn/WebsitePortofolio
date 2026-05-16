@@ -180,10 +180,16 @@ body {
     transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.nav-links {
+.nav-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+}
+
+.nav-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #e2e8f0;
 }
 
 .nav-item {
@@ -210,13 +216,6 @@ body {
     background-color: #f1f5f9;
     color: #1e293b;
 }
-
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .theme-toggle {
     background: none;
     border: none;
@@ -423,7 +422,7 @@ body {
 
     .hero-card {
         padding: 10px 0;
-        padding-top: 45vh;
+        padding-top: 52vh;
     }
 
     .hero-top {
@@ -624,8 +623,8 @@ body.dark-mode .about-text {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #0f172a; /* Sangat gelap, mendekati hitam */
-    z-index: 50; /* Paling atas, menutupi lanyard 3D dan blur */
+    background-color: #0f172a;
+    z-index: 50;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -633,4 +632,52 @@ body.dark-mode .about-text {
     font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 600;
     margin-top: -100vh;
+}
+
+/* Mobile Navbar Overrides */
+@media (max-width: 768px) {
+    .floating-navbar {
+        position: fixed;
+        bottom: 30px;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 380px;
+        padding: 10px 16px;
+        border-radius: 50px;
+        justify-content: space-around;
+        gap: 8px;
+        z-index: 100;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    
+    body.dark-mode .floating-navbar {
+        background-color: rgba(30, 41, 59, 0.95);
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .floating-navbar .btn-hire {
+        display: none;
+    }
+    
+    .floating-navbar .nav-group {
+        gap: 4px;
+    }
+
+    .floating-navbar .nav-item {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .floating-navbar .nav-item i {
+        font-size: 1.4rem;
+    }
+    
+    .floating-navbar .theme-toggle i {
+        font-size: 1.4rem;
+    }
 }

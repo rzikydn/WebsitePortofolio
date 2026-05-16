@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export function ProgressiveBlur({
   className = "",
@@ -6,6 +6,14 @@ export function ProgressiveBlur({
   position = "bottom",
   blurLevels = [0.5, 1, 2, 4, 8, 16, 32, 64],
 }) {
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const divElements = Array(blurLevels.length - 2).fill(null);
 
   const getPositionStyle = () => {
@@ -13,6 +21,27 @@ export function ProgressiveBlur({
     if (position === "bottom") return { bottom: 0, left: 0, right: 0 };
     return { top: 0, bottom: 0, left: 0, right: 0 };
   };
+
+  if (isMobile) {
+    return (
+      <div
+        className={`gradient-blur ${className}`}
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          height: position === "both" ? "100%" : height,
+          ...getPositionStyle(),
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+          maskImage: position === "bottom" ? "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)" : "linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
+          WebkitMaskImage: position === "bottom" ? "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)" : "linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)"
+        }}
+      />
+    );
+  }
 
   return (
     <div

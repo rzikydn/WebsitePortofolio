@@ -28,8 +28,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     <div className="lanyard-wrapper">
       <Canvas
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={[1, isMobile ? 1.5 : 2]}
-        gl={{ alpha: transparent }}
+        dpr={[1, isMobile ? 1 : 1.5]}
+        gl={{ alpha: transparent, antialias: !isMobile }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
