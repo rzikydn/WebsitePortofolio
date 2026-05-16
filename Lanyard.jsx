@@ -27,6 +27,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
   return (
     <div className="lanyard-wrapper">
       <Canvas
+        frameloop={ready ? "always" : "demand"}
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent, antialias: true }}
@@ -193,3 +194,6 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     </>
   );
 }
+
+useGLTF.preload(cardGLB);
+useTexture.preload(lanyard);

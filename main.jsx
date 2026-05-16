@@ -56,8 +56,8 @@ if (scrollRevealRoot) {
 const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
   const demoItems = [
-    { link: '#', text: 'Cultrahub', subtitle: 'Cultural Social Commerce App Landing Page', image: 'https://picsum.photos/600/400?random=1' },
-    { link: '#', text: 'Butterfly Tours', subtitle: 'Tour and Travel Landing Page', image: 'https://picsum.photos/600/400?random=2' },
+    { link: '#', text: 'Mirov', subtitle: 'BSMR Workspace SaaS Platform', image: 'https://picsum.photos/600/400?random=1' },
+    { link: '#', text: 'Certification Dashboard', subtitle: 'Data Driven Insight', image: 'https://picsum.photos/600/400?random=2' },
     { link: '#', text: 'KeluhKesah', subtitle: 'Anonymous Menfess-like App', image: 'https://picsum.photos/600/400?random=3' },
     { link: '#', text: 'E-Commerce Dashboard', subtitle: 'Interactive sales & analytics dashboard', image: 'https://picsum.photos/600/400?random=4' }
   ];
