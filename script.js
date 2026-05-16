@@ -64,10 +64,10 @@ function init() {
             // Allow scrolling on the main body
             document.body.style.overflow = "auto";
             
-            // 3. Drop the lanyard after preloader clears
+            // 3. Drop the lanyard after preloader clears and page is quiet
             setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('lanyard-drop'));
-            }, 600);
+            }, 1500);
             
             // 4. Remove preloader from DOM after transition completes (1.4s)
             setTimeout(() => {
