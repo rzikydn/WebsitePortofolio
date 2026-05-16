@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import Lanyard from './Lanyard'
+import { ProgressiveBlur } from './ProgressiveBlur'
 
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
@@ -27,4 +28,14 @@ function App() {
 const root = document.getElementById('lanyard-root');
 if (root) {
   ReactDOM.createRoot(root).render(<App />);
+}
+
+const blurRoot = document.getElementById('progressive-blur-root');
+if (blurRoot) {
+  ReactDOM.createRoot(blurRoot).render(<ProgressiveBlur height="250px" position="bottom" />);
+}
+
+const blurTopRoot = document.getElementById('progressive-blur-top-root');
+if (blurTopRoot) {
+  ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
 }

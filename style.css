@@ -2,6 +2,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+    display: none;
+}
+
+:root {
+    --blur-fade-color: 255, 255, 255;
 }
 
 body {
@@ -10,8 +21,7 @@ body {
     font-family: "Elms Sans", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-    height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 /* Preloader styles */
@@ -108,7 +118,7 @@ body {
 }
 
 #lanyard-root {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     width: 35%;
@@ -134,6 +144,10 @@ body {
         repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(107, 114, 128, 0.06) 30px, rgba(107, 114, 128, 0.06) 31px),
         repeating-linear-gradient(60deg, transparent, transparent 40px, rgba(55, 65, 81, 0.05) 40px, rgba(55, 65, 81, 0.05) 41px),
         repeating-linear-gradient(150deg, transparent, transparent 35px, rgba(31, 41, 55, 0.04) 35px, rgba(31, 41, 55, 0.04) 36px);
+    
+    /* Fade out the pattern at the bottom smoothly */
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 250px), transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 250px), transparent 100%);
 }
 
 .content-wrapper {
@@ -309,6 +323,8 @@ body {
     display: flex;
     align-items: center;
     gap: 25px;
+    position: relative;
+    z-index: 20;
 }
 
 .hero-buttons .btn-hire {
@@ -456,6 +472,10 @@ body {
 }
 
 /* Dark Mode Overrides */
+body.dark-mode {
+    --blur-fade-color: 18, 18, 18;
+}
+
 body.dark-mode .main-content {
     background-color: #121212;
     color: #ffffff;
@@ -530,4 +550,39 @@ body.dark-mode .btn-copy {
 
 body.dark-mode .btn-copy:hover {
     background-color: #334155;
+}
+
+/* About Section */
+.about-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+}
+
+.about-container {
+    max-width: 1000px;
+    text-align: center;
+    position: relative;
+    z-index: 20;
+}
+
+.about-text {
+    font-size: clamp(1.8rem, 4vw, 3.5rem);
+    color: #cbd5e1;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+/* Dark Mode About Section */
+body.dark-mode .about-section {
+    background-color: #121212;
+}
+body.dark-mode .about-text {
+    color: #475569;
 }
