@@ -595,7 +595,9 @@ body.dark-mode .btn-copy:hover {
 @media (max-width: 768px) {
     .about-section {
         min-height: 100vh;
+        min-height: 100svh;
         height: 100vh;
+        height: 100svh;
         margin-top: 0;
         padding: 20px;
         display: flex;
