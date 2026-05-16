@@ -17,11 +17,9 @@ function App() {
     return () => window.removeEventListener('lanyard-drop', handleDrop);
   }, []);
 
-  if (!showLanyard) return null;
-
   return (
     <React.Suspense fallback={null}>
-      <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} transparent={true} />
+      <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} transparent={true} ready={showLanyard} />
     </React.Suspense>
   );
 }
