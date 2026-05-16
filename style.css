@@ -272,6 +272,7 @@ body {
     width: 100%;
     max-width: 1200px;
     padding: 30px 0;
+    padding-top: 16vh;
 }
 
 .hero-top {
@@ -631,15 +632,16 @@ body.dark-mode .about-text {
     background-color: #0f172a;
     z-index: 50;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     margin-top: -100vh;
     overflow: hidden;
+    padding-top: 5vh;
 }
 
 .black-section .bg-text {
-    position: absolute;
-    top: 15vh;
+    position: relative;
     font-size: clamp(4rem, 18vw, 25rem);
     font-weight: 900;
     color: #1e293b;
@@ -647,6 +649,9 @@ body.dark-mode .about-text {
     white-space: nowrap;
     user-select: none;
     opacity: 0.5;
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 2vh;
 }
 
 /* Mobile Navbar Overrides */
