@@ -34,8 +34,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60} paused={!ready}>
-          <Band isMobile={isMobile} />
+        <Physics gravity={gravity} timeStep="vary">
+          {ready && <Band isMobile={isMobile} />}
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
