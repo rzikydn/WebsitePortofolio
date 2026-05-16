@@ -554,17 +554,25 @@ body.dark-mode .btn-copy:hover {
     background-color: #334155;
 }
 
+/* About Section Wrapper */
+.about-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350vh;
+    z-index: 5;
+}
+
 /* About Section */
 .about-section {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    position: relative;
-    z-index: 5;
+    position: sticky;
+    top: 0;
 }
 
 .about-container {
@@ -607,4 +615,20 @@ body.dark-mode .about-section {
 
 body.dark-mode .about-text {
     color: #475569;
+}
+
+/* Black Section (Next Section) */
+.black-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #0f172a; /* Sangat gelap, mendekati hitam */
+    z-index: 50; /* Paling atas, menutupi lanyard 3D dan blur */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 600;
+    margin-top: -100vh;
 }

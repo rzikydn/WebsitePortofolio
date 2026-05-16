@@ -44,13 +44,10 @@ const ScrollReveal = ({
         opacity: 1,
         stagger: 0.05,
         scrollTrigger: {
-          trigger: pinEl || el,
+          trigger: '.about-wrapper',
           start: 'top top',
-          end: '+=1200',
+          end: '+=1500',
           scrub: true,
-          pin: pinEl || el,
-          pinSpacing: true,
-          anticipatePin: 1,
         }
       }
     );
