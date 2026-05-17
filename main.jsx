@@ -6,6 +6,31 @@ import ScrollReveal from './ScrollReveal'
 import FlowingMenu from './FlowingMenu'
 import LogoLoop from './LogoLoop'
 
+// ============================================
+// Asset Loading Tracker
+// ============================================
+let assetsReady = false;
+
+function signalReady() {
+  if (assetsReady) return; // Only fire once
+  assetsReady = true;
+  window.dispatchEvent(new CustomEvent('assets-ready'));
+}
+
+// Strategy 1: Use window.onload (fires when ALL resources are loaded: images, fonts, scripts)
+window.addEventListener('load', () => {
+  signalReady();
+});
+
+// Strategy 2: Safety timeout — never let preloader loop more than 8 seconds
+setTimeout(() => {
+  signalReady();
+}, 8000);
+
+// ============================================
+// React Component Mounts
+// ============================================
+
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
 

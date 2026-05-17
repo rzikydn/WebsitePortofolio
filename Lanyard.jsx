@@ -30,10 +30,13 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Use zero gravity during preloader (warm-up), switch to real gravity when ready
+  const activeGravity = ready ? gravity : [0, 0, 0];
+
   return (
-    <div className="lanyard-wrapper">
+    <div className="lanyard-wrapper" style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.3s ease' }}>
       <Canvas
-        frameloop={ready ? "always" : "demand"}
+        frameloop="always"
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
         dpr={[1, 1.5]}
         gl={{ alpha: transparent, antialias: false, powerPreference: "high-performance" }}
@@ -41,8 +44,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       >
         <ambientLight intensity={Math.PI} />
         {physicsReady && (
-          <Physics gravity={gravity} timeStep={1 / 60} interpolate>
-            {ready && <Band isMobile={isMobile} />}
+          <Physics gravity={activeGravity} timeStep={1 / 60} interpolate>
+            <Band isMobile={isMobile} ready={ready} />
           </Physics>
         )}
         {isMobile ? (
@@ -83,7 +86,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     </div>
   );
 }
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) {
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -111,6 +114,17 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     [0, 0, 0],
     [0, 1.5, 0]
   ]);
+
+  // Wake up all rigid bodies when ready (gravity activates)
+  useEffect(() => {
+    if (ready) {
+      [fixed, j1, j2, j3, card].forEach(ref => {
+        if (ref.current) {
+          ref.current.wakeUp();
+        }
+      });
+    }
+  }, [ready]);
 
   useEffect(() => {
     if (hovered) {

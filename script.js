@@ -36,20 +36,40 @@ function init() {
     const preloaderWrap = document.querySelector(".preloader-wrap");
     
     let currentIndex = 1; // Start at 1 because index 0 ("Hello") is already in HTML
+    let allAssetsLoaded = false;
+    let minCyclesDone = false; // Ensure at least 1 full cycle
     
-    // Function to cycle through greetings
+    // Listen for signal from main.jsx that all React components are ready
+    window.addEventListener('assets-ready', () => {
+        allAssetsLoaded = true;
+        tryFinish();
+    });
+    
+    // Function to cycle through greetings (loops until assets are loaded)
     function changeGreeting() {
-        if (currentIndex < greetings.length) {
-            greetingText.textContent = greetings[currentIndex];
-            currentIndex++;
+        greetingText.textContent = greetings[currentIndex];
+        currentIndex++;
+        
+        if (currentIndex >= greetings.length) {
+            // Completed one full cycle
+            minCyclesDone = true;
             
-            if (currentIndex === greetings.length) {
-                // Last word reached, pause for a moment before finishing
-                setTimeout(finishPreloader, 1000);
+            if (allAssetsLoaded) {
+                // Assets ready, finish after showing the last word briefly
+                setTimeout(() => tryFinish(), 500);
             } else {
-                // Slower speed between words so it's readable
+                // Assets not ready yet, loop back to beginning
+                currentIndex = 0;
                 setTimeout(changeGreeting, 250);
             }
+        } else {
+            setTimeout(changeGreeting, 250);
+        }
+    }
+    
+    function tryFinish() {
+        if (allAssetsLoaded && minCyclesDone) {
+            finishPreloader();
         }
     }
     
@@ -77,11 +97,8 @@ function init() {
         }, 400); // Wait 400ms for text fade-out
     }
     
-    // Initial Sequence: Fade in the first word
+    // Initial Sequence: Start cycling greetings immediately
     setTimeout(() => {
-        // Trigger fade-in by removing the fade-out class
-        greetingContainer.classList.remove("fade-out");
-        
         // Wait for fade-in to finish, let "Hello" stay a bit, then start cycling
         setTimeout(changeGreeting, 800);
     }, 100);
