@@ -21,6 +21,26 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* Scroll progress fill */
+.acc-progress-fill {
+    position: absolute;
+    left: 3vw;
+    top: 0;
+    width: 3px;
+    height: 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+    z-index: 1;
+    will-change: height;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+}
+
+body.dark-mode .acc-progress-fill {
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 8px rgba(15, 23, 42, 0.3);
+}
+
 .acc-item {
     border-bottom: none;
     overflow: hidden;
@@ -197,6 +217,7 @@ body.dark-mode .acc-arrow {
 @media (max-width: 768px) {
     .acc-wrapper {
         padding: 0 4vw;
+        padding-left: calc(3vw + 25px);
         margin-top: 2rem;
     }
 

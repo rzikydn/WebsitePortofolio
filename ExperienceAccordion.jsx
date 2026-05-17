@@ -94,6 +94,10 @@ function AccordionItem({ item, isOpen, onToggle }) {
 
 export default function ExperienceAccordion() {
   const [openIndices, setOpenIndices] = useState(new Set());
+  const [progress, setProgress] = useState(0);
+  const wrapperRef = useRef(null);
+  const progressRef = useRef(null);
+  const rafRef = useRef(null);
 
   const handleToggle = (index) => {
     setOpenIndices((prev) => {
@@ -107,8 +111,37 @@ export default function ExperienceAccordion() {
     });
   };
 
+  useEffect(() => {
+    const updateProgress = () => {
+      if (!wrapperRef.current || !progressRef.current) return;
+      const rect = wrapperRef.current.getBoundingClientRect();
+      const wrapperHeight = rect.height;
+      const windowHeight = window.innerHeight;
+      
+      const startOffset = windowHeight * 0.8;
+      const scrolled = startOffset - rect.top;
+      const pct = Math.min(100, Math.max(0, (scrolled / wrapperHeight) * 100));
+      
+      // Direct DOM update — no React re-render
+      progressRef.current.style.height = `${pct}%`;
+    };
+
+    const handleScroll = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(updateProgress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    updateProgress();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
-    <div className="acc-wrapper">
+    <div className="acc-wrapper" ref={wrapperRef}>
+      <div className="acc-progress-fill" ref={progressRef} />
       {EXPERIENCES.map((item, index) => (
         <AccordionItem
           key={index}
