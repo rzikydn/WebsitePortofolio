@@ -983,7 +983,7 @@ body.dark-mode .exp-desc {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    padding: 5vh 5vw;
+    padding: 5vh 5vw 15vh;
 }
 
 .contact-section .bg-text {
@@ -1154,6 +1154,82 @@ body.dark-mode {
     --menu-border: rgba(15, 23, 42, 0.2);
 }
 
+/* Footer */
+.site-footer {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    z-index: 50;
+    padding: 5rem 5vw 0;
+    overflow: hidden;
+    border-radius: 30px 30px 0 0;
+    margin-top: -30px;
+}
+
+.footer-top {
+    display: flex;
+    gap: 5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.footer-heading {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 0.5rem 0;
+}
+
+.footer-link {
+    font-size: 0.95rem;
+    color: rgba(15, 23, 42, 0.5);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #0f172a;
+}
+
+.footer-brand {
+    padding: 2rem 0 0;
+    overflow: hidden;
+}
+
+.footer-brand span {
+    display: block;
+    font-size: clamp(6rem, 20vw, 22rem);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 0.85;
+    letter-spacing: -5px;
+    user-select: none;
+}
+
+.footer-bottom {
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.footer-bottom p {
+    font-size: 0.85rem;
+    color: rgba(15, 23, 42, 0.4);
+    margin: 0;
+}
+
+/* Footer dark mode */
+body.dark-mode .site-footer {
+    background: #e2e8f0;
+}
+
 /* Contact CTA — Mobile Center */
 @media (max-width: 768px) {
     .contact-row {
@@ -1177,5 +1253,19 @@ body.dark-mode {
         width: clamp(200px, 60vw, 300px);
         height: clamp(200px, 60vw, 300px);
         align-self: center;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .site-footer {
+        padding: 3rem 5vw 0;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .footer-brand span {
+        letter-spacing: -3px;
     }
 }
