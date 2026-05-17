@@ -1,0 +1,245 @@
+/* Experience Accordion — Clean separator style */
+.acc-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    position: relative;
+    padding: 0 5vw;
+    padding-left: calc(3vw + 40px);
+}
+
+.acc-wrapper::before {
+    content: '';
+    position: absolute;
+    left: 3vw;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.acc-item {
+    border-bottom: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.acc-item:first-child {
+    border-top: none;
+}
+
+/* Trigger button */
+.acc-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.6rem 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    text-align: left;
+    font-family: inherit;
+    outline: none;
+    transition: opacity 0.2s ease;
+    position: relative;
+}
+
+.acc-trigger:hover {
+    opacity: 0.8;
+}
+
+.acc-trigger:focus-visible {
+    outline: 2px solid rgba(200, 255, 0, 0.4);
+    outline-offset: 2px;
+}
+
+/* Company + sub info */
+.acc-trigger-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.acc-company {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.acc-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+}
+
+.acc-role {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
+.acc-dot-sep {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 1.1rem;
+    user-select: none;
+}
+
+.acc-period {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* Arrow icon */
+.acc-arrow {
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-left: 50rem;
+    color: rgba(255, 255, 255, 0.3);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 24px;
+    min-height: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.acc-arrow--open {
+    transform: rotate(180deg);
+}
+
+/* Expandable content area */
+.acc-content-wrapper {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.acc-content {
+    padding: 0 0.5rem 1.6rem 0.5rem;
+}
+
+.acc-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.acc-bullet {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.7;
+    padding-left: 1.2rem;
+    position: relative;
+}
+
+.acc-bullet::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dark mode */
+body.dark-mode .acc-item {
+    border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+
+body.dark-mode .acc-item:first-child {
+    border-top-color: rgba(15, 23, 42, 0.1);
+}
+
+body.dark-mode .acc-wrapper::before {
+    background: rgba(15, 23, 42, 0.1);
+}
+
+body.dark-mode .acc-company {
+    color: rgba(15, 23, 42, 0.85);
+}
+
+body.dark-mode .acc-role {
+    color: rgba(15, 23, 42, 0.4);
+}
+
+body.dark-mode .acc-dot-sep {
+    color: rgba(15, 23, 42, 0.2);
+}
+
+body.dark-mode .acc-period {
+    color: rgba(15, 23, 42, 0.3);
+}
+
+body.dark-mode .acc-bullet {
+    color: rgba(15, 23, 42, 0.45);
+}
+
+body.dark-mode .acc-bullet::before {
+    color: rgba(15, 23, 42, 0.3);
+}
+
+body.dark-mode .acc-arrow {
+    color: rgba(15, 23, 42, 0.3);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .acc-wrapper {
+        padding: 0 4vw;
+        margin-top: 2rem;
+    }
+
+    .acc-trigger {
+        padding: 1.3rem 0.3rem;
+        padding-right: 2.5rem;
+        position: relative;
+    }
+
+    .acc-company {
+        font-size: 1.05rem;
+    }
+
+    .acc-sub {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+
+    .acc-role {
+        font-size: 0.82rem;
+    }
+
+    .acc-period {
+        font-size: 0.78rem;
+    }
+
+    .acc-arrow {
+        position: absolute;
+        right: 0.3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 0;
+    }
+
+    .acc-arrow--open {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .acc-content {
+        padding: 0 0.3rem 1.2rem 0.3rem;
+    }
+
+    .acc-desc {
+        font-size: 0.85rem;
+    }
+}

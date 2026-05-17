@@ -5,6 +5,7 @@ import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
 import FlowingMenu from './FlowingMenu'
 import LogoLoop from './LogoLoop'
+import ExperienceAccordion from './ExperienceAccordion'
 
 // ============================================
 // Asset Loading Tracker
@@ -142,4 +143,10 @@ if (logoLoopRoot) {
   };
 
   ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
+}
+
+// Experience Accordion Mount
+const experienceRoot = document.getElementById('experience-root');
+if (experienceRoot) {
+  ReactDOM.createRoot(experienceRoot).render(<ExperienceAccordion />);
 }

@@ -1,0 +1,122 @@
+import React, { useState, useRef, useEffect } from 'react';
+import './ExperienceAccordion.css';
+
+const EXPERIENCES = [
+  {
+    yearStart: '2024',
+    yearEnd: 'Present',
+    company: 'Cakrawala University',
+    role: 'Data Science',
+    period: 'Sep 2024 - Present',
+    bullets: [
+      'Deepening knowledge in data science with a focus on data analysis, machine learning, and data visualization to generate impactful insights.',
+    ],
+    active: true,
+  },
+  {
+    yearStart: '2025',
+    yearEnd: '2025',
+    company: 'Badan Sertifikasi Manajemen Risiko',
+    role: 'Database Administrator',
+    period: 'Jan 2025 - Sep 2025 · 9 mos',
+    bullets: [
+      'Provided technical support and assisted in resolving IT issues faced by employees.',
+      'Performed data input and updates to the BSNP system while maintaining consistency and accuracy.',
+      'Carried out data cleaning, validation, and verification to ensure data reliability in reporting.',
+      'Compiled data summaries and web-based visual reports to support internal monitoring and decision-making.',
+      'Collaborated with the administrative team to automate reporting and streamline data collection workflows for greater efficiency.',
+    ],
+  },
+  {
+    yearStart: '2024',
+    yearEnd: '2024',
+    company: 'Badan Sertifikasi Manajemen Risiko',
+    role: 'Administrative',
+    period: 'Sep 2024 - Dec 2024 · 4 mos',
+    bullets: [
+      'Managed the registration process for competency test participants from initial submission through assessment scheduling.',
+      'Prepared registration reports and assessment schedules for management evaluation.',
+      'Organized and archived certification documents for easy accessibility.',
+      'Provided information services to participants directly and via email.',
+    ],
+  },
+];
+
+function AccordionItem({ item, isOpen, onToggle }) {
+  const contentRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      setHeight(contentRef.current.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [isOpen]);
+
+  return (
+    <div className={`acc-item ${isOpen ? 'acc-item--open' : ''} ${item.active ? 'acc-item--active' : ''}`}>
+      <button className="acc-trigger" onClick={onToggle}>
+        <div className="acc-trigger-info">
+          <h3 className="acc-company">{item.company}</h3>
+          <div className="acc-sub">
+            <span className="acc-role">{item.role}</span>
+            <span className="acc-dot-sep">·</span>
+            <span className="acc-period">{item.period}</span>
+          </div>
+        </div>
+        <svg
+          className={`acc-arrow ${isOpen ? 'acc-arrow--open' : ''}`}
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+      <div className="acc-content-wrapper" style={{ height: `${height}px` }}>
+        <div className="acc-content" ref={contentRef}>
+          <ul className="acc-bullets">
+            {item.bullets.map((bullet, i) => (
+              <li key={i} className="acc-bullet">{bullet}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ExperienceAccordion() {
+  const [openIndices, setOpenIndices] = useState(new Set());
+
+  const handleToggle = (index) => {
+    setOpenIndices((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
+
+  return (
+    <div className="acc-wrapper">
+      {EXPERIENCES.map((item, index) => (
+        <AccordionItem
+          key={index}
+          item={item}
+          isOpen={openIndices.has(index)}
+          onToggle={() => handleToggle(index)}
+        />
+      ))}
+    </div>
+  );
+}
