@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -600,7 +604,7 @@ body.dark-mode .btn-copy:hover {
 
 @media (max-width: 768px) {
     .about-wrapper {
-        height: 200vh;
+        height: 500vh;
     }
 
     .about-section {

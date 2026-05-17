@@ -46,7 +46,11 @@ const ScrollReveal = ({
         scrollTrigger: {
           trigger: '.about-wrapper',
           start: 'top top',
-          end: '+=1500',
+          end: () => {
+            const wrapper = document.querySelector('.about-wrapper');
+            // End animation at 80% of wrapper scroll distance
+            return `+=${wrapper ? wrapper.offsetHeight * 0.6 : 1500}`;
+          },
           scrub: true,
         }
       }

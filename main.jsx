@@ -84,10 +84,10 @@ if (scrollRevealRoot) {
 const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
   const demoItems = [
-    { link: '#', text: 'Jakarta Demographics', subtitle: 'Interactive Population Data & Analytics Dashboard', image: 'https://picsum.photos/600/400?random=1' },
-    { link: '#', text: 'Mirov', subtitle: 'BSMR Workspace SaaS Platform', image: 'https://picsum.photos/600/400?random=2' },
-    { link: '#', text: 'Certification Dashboard', subtitle: 'SaaS Certification Analytics', image: 'https://picsum.photos/600/400?random=3' },
-    { link: '#', text: 'Olist Market Insight', subtitle: 'Interactive sales & analytics dashboard', image: 'https://picsum.photos/600/400?random=4' }
+    { link: 'https://www.linkedin.com/posts/wildan-rizky_datawrangling-python-streamlit-ugcPost-7347899508191653888-traJ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s', text: 'Jakarta Demographics', subtitle: 'Interactive Population Data & Analytics Dashboard', image: '/images/mockup1.png' },
+    { link: 'https://planner.bsmr.org', text: 'Mirov', subtitle: 'BSMR Workspace SaaS Platform', image: '/images/mockup2.png' },
+    { link: 'https://www.linkedin.com/posts/wildan-rizky_dataanalytics-dashboard-streamlit-ugcPost-7371386743175983104-Y5rB?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s', text: 'Certification Dashboard', subtitle: 'SaaS Certification Analytics', image: '/images/mockup3.png' },
+    { link: 'https://uasdatawarehouse.streamlit.app/', text: 'Olist Market Insight', subtitle: 'Interactive sales & analytics dashboard', image: '/images/mockup4.png' }
   ];
 
   ReactDOM.createRoot(flowingMenuRoot).render(

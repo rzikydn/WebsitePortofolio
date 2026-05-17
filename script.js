@@ -18,62 +18,40 @@ gsap.ticker.add((time)=>{
 gsap.ticker.lagSmoothing(0);
 
 function init() {
-    const greetings = [
-        "Hello",
-        "Bonjour",
-        "Hola",
-        "Ciao",
-        "Guten Tag",
-        "안녕하세요",
-        "Привет",
-        "Namaste",
-        "Merhaba",
-        "Halo"
-    ];
-    
-    const greetingText = document.getElementById("greeting-text");
     const greetingContainer = document.querySelector(".greeting-container");
     const preloaderWrap = document.querySelector(".preloader-wrap");
     
-    let currentIndex = 1; // Start at 1 because index 0 ("Hello") is already in HTML
-    let allAssetsLoaded = false;
-    let minCyclesDone = false; // Ensure at least 1 full cycle
+    let finished = false;
+    let assetsReady = false;
+    let minTimeReached = false;
     
     // Listen for signal from main.jsx that all React components are ready
     window.addEventListener('assets-ready', () => {
-        allAssetsLoaded = true;
+        assetsReady = true;
         tryFinish();
     });
     
-    // Function to cycle through greetings (loops until assets are loaded)
-    function changeGreeting() {
-        greetingText.textContent = greetings[currentIndex];
-        currentIndex++;
-        
-        if (currentIndex >= greetings.length) {
-            // Completed one full cycle
-            minCyclesDone = true;
-            
-            if (allAssetsLoaded) {
-                // Assets ready, finish after showing the last word briefly
-                setTimeout(() => tryFinish(), 500);
-            } else {
-                // Assets not ready yet, loop back to beginning
-                currentIndex = 0;
-                setTimeout(changeGreeting, 250);
-            }
-        } else {
-            setTimeout(changeGreeting, 250);
-        }
-    }
+    // Minimum 3.5s so greetings cycle at least once
+    setTimeout(() => {
+        minTimeReached = true;
+        tryFinish();
+    }, 3500);
+    
+    // Fallback: finish preloader after max 8 seconds even if assets-ready never fires
+    setTimeout(() => {
+        finishPreloader();
+    }, 8000);
     
     function tryFinish() {
-        if (allAssetsLoaded && minCyclesDone) {
+        if (assetsReady && minTimeReached) {
             finishPreloader();
         }
     }
     
     function finishPreloader() {
+        if (finished) return;
+        finished = true;
+        
         // 1. Fade out the text
         greetingContainer.classList.add("fade-out");
         
@@ -96,12 +74,6 @@ function init() {
             
         }, 400); // Wait 400ms for text fade-out
     }
-    
-    // Initial Sequence: Start cycling greetings immediately
-    setTimeout(() => {
-        // Wait for fade-in to finish, let "Hello" stay a bit, then start cycling
-        setTimeout(changeGreeting, 800);
-    }, 100);
     
     // --- Dark Mode Toggle Logic ---
     const themeToggleBtn = document.querySelector('.theme-toggle');
@@ -127,3 +99,18 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
+// Smooth scroll navigation using Lenis
+document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href');
+        const target = document.querySelector(targetId);
+        if (target) {
+            lenis.scrollTo(target, {
+                duration: 2,
+                easing: (t) => 1 - Math.pow(1 - t, 4), // easeOutQuart
+            });
+        }
+    });
+});

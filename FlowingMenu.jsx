@@ -36,6 +36,8 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
   const animationRef = useRef(null);
+  const activeRef = useRef(false);
+  const touchedRef = useRef(false);
   const [repetitions, setRepetitions] = useState(4);
 
   const animationDefaults = { duration: 0.6, ease: 'expo' };
@@ -108,13 +110,8 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
     };
   }, [text, image, repetitions, speed]);
 
-  const handleMouseEnter = ev => {
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
-    const edge = findClosestEdge(x, y, rect.width, rect.height);
-
+  const showMarquee = (edge = 'bottom') => {
+    if (!marqueeRef.current || !marqueeInnerRef.current) return;
     gsap
       .timeline({ defaults: animationDefaults })
       .set(marqueeRef.current, { y: edge === 'top' ? '-101%' : '101%' }, 0)
@@ -122,26 +119,74 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
       .to([marqueeRef.current, marqueeInnerRef.current], { y: '0%' }, 0);
   };
 
-  const handleMouseLeave = ev => {
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
-    const edge = findClosestEdge(x, y, rect.width, rect.height);
-
+  const hideMarquee = (edge = 'bottom') => {
+    if (!marqueeRef.current || !marqueeInnerRef.current) return;
     gsap
       .timeline({ defaults: animationDefaults })
       .to(marqueeRef.current, { y: edge === 'top' ? '-101%' : '101%' }, 0)
       .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' }, 0);
   };
 
+  const handleMouseEnter = ev => {
+    if (!itemRef.current) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+    const edge = findClosestEdge(x, y, rect.width, rect.height);
+    showMarquee(edge);
+  };
+
+  const handleMouseLeave = ev => {
+    if (!itemRef.current) return;
+    const rect = itemRef.current.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+    const edge = findClosestEdge(x, y, rect.width, rect.height);
+    hideMarquee(edge);
+  };
+
+  const handleClick = (ev) => {
+    // Only intercept on touch devices
+    if (!touchedRef.current) return;
+
+    if (!activeRef.current) {
+      // First tap: show marquee, prevent navigation
+      ev.preventDefault();
+      activeRef.current = true;
+      showMarquee('bottom');
+    } else {
+      // Second tap: allow navigation (don't preventDefault)
+      activeRef.current = false;
+    }
+  };
+
+  const handleTouchStart = () => {
+    touchedRef.current = true;
+  };
+
+  // Close marquee when tapping elsewhere
+  useEffect(() => {
+    const handleDocumentTouch = (ev) => {
+      if (activeRef.current && itemRef.current && !itemRef.current.contains(ev.target)) {
+        activeRef.current = false;
+        hideMarquee('bottom');
+      }
+    };
+    document.addEventListener('touchstart', handleDocumentTouch);
+    return () => document.removeEventListener('touchstart', handleDocumentTouch);
+  }, []);
+
   return (
     <div className="menu__item" ref={itemRef} style={{ borderColor }}>
       <a
         className="menu__item-link"
         href={link}
+        target="_blank"
+        rel="noopener noreferrer"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onClick={handleClick}
         style={{ color: textColor }}
       >
         <div className="menu__item-content">
