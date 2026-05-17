@@ -971,6 +971,174 @@ body.dark-mode .exp-desc {
     }
 }
 
+/* Contact CTA Section */
+.contact-section {
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    background-color: var(--black-section-bg, #0f172a);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 5vh 5vw;
+}
+
+.contact-section .bg-text {
+    position: relative;
+    font-size: clamp(3.75rem, 16vw, 19rem);
+    font-weight: 900;
+    color: var(--black-section-text, #1e293b);
+    letter-spacing: -2px;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1;
+    margin: 0;
+}
+
+.contact-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 5vw;
+    margin-top: 2rem;
+    gap: 3rem;
+}
+
+.contact-image {
+    position: absolute;
+    right: -45%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(250px, 25vw, 420px);
+    height: clamp(250px, 25vw, 420px);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.contact-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+/* Default (dark theme): show pp2, hide pp1 */
+.contact-img--dark {
+    display: none;
+}
+.contact-img--light {
+    display: block;
+}
+
+/* Light mode: show pp1, hide pp2 */
+body.dark-mode .contact-img--dark {
+    display: block;
+}
+body.dark-mode .contact-img--light {
+    display: none;
+}
+
+.contact-cta-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    text-align: left;
+    flex: 1;
+    max-width: 900px;
+}
+
+.contact-subtitle {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.contact-desc {
+    font-size: clamp(1rem, 1.5vw, 3rem);
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 800px;
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+}
+
+.contact-btn--primary {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+}
+
+.contact-btn--primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+
+.contact-btn--secondary {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.contact-btn--secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Contact dark mode */
+body.dark-mode .contact-subtitle {
+    color: rgba(15, 23, 42, 0.4);
+}
+
+body.dark-mode .contact-headline {
+    color: rgba(15, 23, 42, 0.9);
+}
+
+body.dark-mode .contact-btn--primary {
+    background: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+}
+
+body.dark-mode .contact-btn--primary:hover {
+    background: #0f172a;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+}
+
+body.dark-mode .contact-btn--secondary {
+    color: rgba(15, 23, 42, 0.7);
+    border-color: rgba(15, 23, 42, 0.2);
+}
+
+body.dark-mode .contact-btn--secondary:hover {
+    background: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.4);
+}
+
 /* Variables for MY WORKS Section (Inverted Logic) */
 :root {
     --black-section-bg: #0f172a;
@@ -984,4 +1152,30 @@ body.dark-mode {
     --black-section-text: #e2e8f0;
     --menu-text: #0f172a;
     --menu-border: rgba(15, 23, 42, 0.2);
+}
+
+/* Contact CTA — Mobile Center */
+@media (max-width: 768px) {
+    .contact-row {
+        flex-direction: column;
+        padding: 0 4vw;
+        gap: 2rem;
+    }
+
+    .contact-cta-content {
+        align-items: center;
+        text-align: center;
+    }
+
+    .contact-desc {
+        max-width: 100%;
+    }
+
+    .contact-image {
+        position: static;
+        transform: none;
+        width: clamp(200px, 60vw, 300px);
+        height: clamp(200px, 60vw, 300px);
+        align-self: center;
+    }
 }
