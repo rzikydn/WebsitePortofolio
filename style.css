@@ -599,6 +599,10 @@ body.dark-mode .btn-copy:hover {
 }
 
 @media (max-width: 768px) {
+    .about-wrapper {
+        height: 200vh;
+    }
+
     .about-section {
         min-height: 100vh;
         min-height: 100svh;
@@ -1032,6 +1036,7 @@ body.dark-mode .exp-desc {
 .contact-img--dark {
     display: none;
 }
+
 .contact-img--light {
     display: block;
 }
@@ -1040,6 +1045,7 @@ body.dark-mode .exp-desc {
 body.dark-mode .contact-img--dark {
     display: block;
 }
+
 body.dark-mode .contact-img--light {
     display: none;
 }
@@ -1139,6 +1145,24 @@ body.dark-mode .contact-btn--secondary:hover {
     border-color: rgba(15, 23, 42, 0.4);
 }
 
+/* Contact CTA — Light Mode Text Fix */
+body.dark-mode .contact-subtitle {
+    color: rgba(15, 23, 42, 0.85);
+}
+
+body.dark-mode .contact-desc {
+    color: rgba(15, 23, 42, 0.5);
+}
+
+body.dark-mode .contact-btn--primary {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+body.dark-mode .contact-btn--primary:hover {
+    background: #1e293b;
+}
+
 /* Variables for MY WORKS Section (Inverted Logic) */
 :root {
     --black-section-bg: #0f172a;
@@ -1202,6 +1226,7 @@ body.dark-mode {
 .footer-brand {
     padding: 2rem 0 0;
     overflow: hidden;
+    max-height: clamp(6rem, 14vw, 15rem)
 }
 
 .footer-brand span {
@@ -1266,6 +1291,7 @@ body.dark-mode .site-footer {
     }
 
     .footer-brand span {
+        font-size: clamp(4rem, 20vw, 8rem);
         letter-spacing: -3px;
     }
 }

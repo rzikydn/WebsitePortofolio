@@ -119,3 +119,23 @@
   background-size: cover;
   background-position: 50% 50%;
 }
+
+@media (max-width: 768px) {
+  .menu__item-text {
+    font-size: clamp(1rem, 5vw, 1.5rem);
+    white-space: nowrap;
+  }
+
+  .menu__item-sub {
+    font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+    white-space: nowrap;
+  }
+
+  .menu__item-icon {
+    font-size: 1.2rem;
+  }
+
+  .menu__item-link {
+    padding: 0 4vw;
+  }
+}
