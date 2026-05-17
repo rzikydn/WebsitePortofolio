@@ -17,6 +17,12 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [physicsReady, setPhysicsReady] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setPhysicsReady(true), 200);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -29,14 +35,16 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         frameloop={ready ? "always" : "demand"}
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={[1, isMobile ? 1.5 : 2]}
-        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance" }}
+        dpr={[1, 1.5]}
+        gl={{ alpha: transparent, antialias: false, powerPreference: "high-performance" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity} timeStep="vary">
-          {ready && <Band isMobile={isMobile} />}
-        </Physics>
+        {physicsReady && (
+          <Physics gravity={gravity} timeStep={1 / 60} interpolate>
+            {ready && <Band isMobile={isMobile} />}
+          </Physics>
+        )}
         {isMobile ? (
           <Environment preset="city" />
         ) : (
@@ -112,6 +120,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
+    const clampedDelta = Math.min(delta, 1 / 30);
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
@@ -125,7 +134,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
         const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
         ref.current.lerped.lerp(
           ref.current.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
+          clampedDelta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
       curve.points[0].copy(j3.current.translation());
@@ -146,13 +155,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     <>
       <group position={[0, isMobile ? 6 : 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} linearDamping={2} angularDamping={1}>
           <BallCollider args={[0.1]} mass={1} sensor />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps} linearDamping={2} angularDamping={1}>
           <BallCollider args={[0.1]} mass={1} sensor />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps} linearDamping={2} angularDamping={1}>
           <BallCollider args={[0.1]} mass={1} sensor />
         </RigidBody>
         <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>

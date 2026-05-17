@@ -221,6 +221,7 @@ body {
     background-color: #f1f5f9;
     color: #1e293b;
 }
+
 .theme-toggle {
     background: none;
     border: none;
@@ -629,7 +630,7 @@ body.dark-mode .about-text {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: #0f172a;
+    background-color: var(--black-section-bg, #0f172a);
     z-index: 50;
     display: flex;
     flex-direction: column;
@@ -644,7 +645,7 @@ body.dark-mode .about-text {
     position: relative;
     font-size: clamp(4rem, 18vw, 25rem);
     font-weight: 900;
-    color: #1e293b;
+    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
@@ -652,6 +653,34 @@ body.dark-mode .about-text {
     margin: 0;
     line-height: 1;
     margin-bottom: 2vh;
+}
+
+/* Skills Section */
+.skills-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--black-section-bg, #0f172a);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 5vh;
+}
+
+.skills-section .bg-text {
+    position: relative;
+    font-size: clamp(3rem, 15vw, 20rem);
+    /* Matches MY WORKS size */
+    font-weight: 900;
+    color: var(--black-section-text, #1e293b);
+    letter-spacing: -2px;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1;
+    margin: 0;
 }
 
 /* Mobile Navbar Overrides */
@@ -674,7 +703,7 @@ body.dark-mode .about-text {
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
     }
-    
+
     body.dark-mode .floating-navbar {
         background-color: rgba(30, 41, 59, 0.95);
         border-color: rgba(255, 255, 255, 0.05);
@@ -683,7 +712,7 @@ body.dark-mode .about-text {
     .floating-navbar .btn-hire {
         display: none;
     }
-    
+
     .floating-navbar .nav-group {
         gap: 4px;
     }
@@ -692,12 +721,39 @@ body.dark-mode .about-text {
         width: 44px;
         height: 44px;
     }
-    
+
     .floating-navbar .nav-item i {
         font-size: 1.4rem;
     }
-    
+
     .floating-navbar .theme-toggle i {
         font-size: 1.4rem;
     }
+
+    .skills-section {
+        margin-top: -15vh;
+    }
+
+    .skills-section .bg-text {
+        transform: translateX(-8%);
+    }
+
+    #logo-loop-root {
+        margin-top: 3rem !important;
+    }
+}
+
+/* Variables for MY WORKS Section (Inverted Logic) */
+:root {
+    --black-section-bg: #0f172a;
+    --black-section-text: #1e293b;
+    --menu-text: #ffffff;
+    --menu-border: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode {
+    --black-section-bg: #f8fafc;
+    --black-section-text: #e2e8f0;
+    --menu-text: #0f172a;
+    --menu-border: rgba(15, 23, 42, 0.2);
 }

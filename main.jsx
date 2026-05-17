@@ -4,6 +4,8 @@ import Lanyard from './Lanyard'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
 import FlowingMenu from './FlowingMenu'
+import LogoLoop from './LogoLoop'
+
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
 
@@ -65,11 +67,54 @@ if (flowingMenuRoot) {
   ReactDOM.createRoot(flowingMenuRoot).render(
     <FlowingMenu items={demoItems}
       speed={15}
-      textColor="#ffffff"
+      textColor="var(--menu-text)"
       bgColor="transparent"
-      marqueeBgColor="#ffffff"
-      marqueeTextColor="#0f172a"
-      borderColor="rgba(255,255,255,0.2)"
+      marqueeBgColor="var(--menu-text)"
+      marqueeTextColor="var(--black-section-bg)"
+      borderColor="var(--menu-border)"
     />
   );
+}
+
+// Logo Loop Mount
+const logoLoopRoot = document.getElementById('logo-loop-root');
+if (logoLoopRoot) {
+  const imageLogos = [
+    { src: "/images/React.png", alt: "React" },
+    { src: "/images/Vue.png", alt: "Vue" },
+    { src: "/images/Node.js.png", alt: "Node.js" },
+    { src: "/images/Python.png", alt: "Python" },
+    { src: "/images/TypeScript.png", alt: "TypeScript" },
+    { src: "/images/Tailwindcss6.png", alt: "Tailwind CSS" },
+    { src: "/images/Vite.png", alt: "Vite" },
+    { src: "/images/HTML.png", alt: "HTML" },
+    { src: "/images/GitLab.png", alt: "GitLab" },
+  ];
+
+  const LogoLoopWrapper = () => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= 768);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return (
+      <LogoLoop
+        logos={imageLogos}
+        speed={120}
+        direction="left"
+        logoHeight={isMobile ? 80 : 140}
+        gap={isMobile ? 50 : 140}
+        hoverSpeed={0}
+        scaleOnHover
+        fadeOut
+        fadeOutColor="transparent"
+        ariaLabel="Technology skills"
+      />
+    );
+  };
+
+  ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
 }
