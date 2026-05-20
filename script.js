@@ -11,14 +11,14 @@ const lenis = new Lenis({
 
 lenis.on('scroll', ScrollTrigger.update);
 
-gsap.ticker.add((time)=>{
-  lenis.raf(time * 1000);
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
 });
 
 gsap.ticker.lagSmoothing(0);
 
 function init() {
-    const greetingContainer = document.querySelector(".greeting-container");
+    const preloaderContent = document.querySelector(".preloader-content");
     const preloaderWrap = document.querySelector(".preloader-wrap");
     
     let finished = false;
@@ -52,36 +52,43 @@ function init() {
         if (finished) return;
         finished = true;
         
-        // 1. Fade out the text
-        greetingContainer.classList.add("fade-out");
+        // 1. Instantly complete progress bar to 100%
+        if (typeof window.completePreloaderProgress === 'function') {
+            window.completePreloaderProgress();
+        }
         
-        // 2. Slide up the background after text fades out
+        // 2. Fade out the text & progress bar
+        if (preloaderContent) {
+            preloaderContent.classList.add("fade-out");
+        }
+        
+        // 3. Slide up the background after text fades out
         setTimeout(() => {
             preloaderWrap.classList.add("slide-up");
             
             // Allow scrolling on the main body
             document.body.style.overflow = "auto";
             
-            // 3. Drop the lanyard after preloader clears and page is quiet
+            // 4. Drop the lanyard after preloader clears and page is quiet
             setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('lanyard-drop'));
-            }, 1500);
+            }, 200);
             
-            // 4. Remove preloader from DOM after transition completes (1.4s)
+            // 5. Remove preloader from DOM after transition completes (1.4s)
             setTimeout(() => {
                 preloaderWrap.style.display = "none";
             }, 1400);
             
         }, 400); // Wait 400ms for text fade-out
     }
-    
+
     // --- Dark Mode Toggle Logic ---
     const themeToggleBtn = document.querySelector('.theme-toggle');
     const themeIcon = themeToggleBtn.querySelector('i');
 
     themeToggleBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
-        
+
         // Switch between moon and sun icon
         if (document.body.classList.contains('dark-mode')) {
             themeIcon.classList.remove('ph-moon-stars');

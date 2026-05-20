@@ -38,7 +38,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         frameloop="always"
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={[1, 1.5]}
+        dpr={[1, 1.2]}
         gl={{ alpha: transparent, antialias: false, powerPreference: "high-performance" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
@@ -48,40 +48,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
             <Band isMobile={isMobile} ready={ready} />
           </Physics>
         )}
-        {isMobile ? (
-          <Environment preset="city" />
-        ) : (
-          <Environment blur={0.75}>
-            <Lightformer
-              intensity={2}
-              color="white"
-              position={[0, -1, 5]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={3}
-              color="white"
-              position={[-1, -1, 1]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={3}
-              color="white"
-              position={[1, 1, 1]}
-              rotation={[0, 0, Math.PI / 3]}
-              scale={[100, 0.1, 1]}
-            />
-            <Lightformer
-              intensity={10}
-              color="white"
-              position={[-10, 0, 14]}
-              rotation={[0, Math.PI / 2, Math.PI / 3]}
-              scale={[100, 10, 1]}
-            />
-          </Environment>
-        )}
+        <Environment preset="city" />
       </Canvas>
     </div>
   );
@@ -155,7 +122,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 12 : 32));
+      band.current.geometry.setPoints(curve.getPoints(isMobile ? 10 : 18));
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
@@ -192,22 +159,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
             )}
           >
             <mesh geometry={nodes.card.geometry}>
-              {isMobile ? (
-                <meshStandardMaterial
-                  map={materials.base.map}
-                  roughness={0.9}
-                  metalness={0.8}
-                />
-              ) : (
-                <meshPhysicalMaterial
-                  map={materials.base.map}
-                  map-anisotropy={16}
-                  clearcoat={1}
-                  clearcoatRoughness={0.15}
-                  roughness={0.9}
-                  metalness={0.8}
-                />
-              )}
+              <meshStandardMaterial
+                map={materials.base.map}
+                map-anisotropy={isMobile ? 4 : 16}
+                roughness={0.85}
+                metalness={0.7}
+              />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
