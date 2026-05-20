@@ -1,0 +1,478 @@
+/* Motion Carousel Container */
+.motion-carousel-container {
+    width: 100%;
+    max-width: 100%;
+    /* Spans full screen width to prevent crop lines */
+    margin: 40px auto 0 auto;
+    position: relative;
+    z-index: 20;
+    overflow: hidden;
+    /* Clip exactly at screen edges to avoid page scrollbars */
+}
+
+/* Embla Viewport */
+.motion-carousel-viewport {
+    overflow: hidden;
+    /* MANDATORY for Embla Carousel loop calculations to function correctly! */
+    width: 100%;
+    cursor: grab;
+}
+
+.motion-carousel-viewport:active {
+    cursor: grabbing;
+}
+
+/* Track holding slides */
+.motion-carousel-track {
+    display: flex;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Individual Slide wrapper */
+.motion-carousel-slide {
+    flex: 0 0 clamp(280px, 50vw, 550px);
+    /* Active in center, size restricted elegantly on large monitors */
+    min-width: 0;
+    padding: 20px 15px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+    .motion-carousel-slide {
+        flex: 0 0 75%;
+    }
+}
+
+@media (max-width: 768px) {
+    .motion-carousel-slide {
+        flex: 0 0 88%;
+        padding: 10px 8px;
+    }
+}
+
+/* Premium Bento-Style Certificate Card */
+.certificate-card {
+    position: relative;
+    width: 100%;
+    min-height: 380px;
+    border-radius: 20px;
+    background-color: rgba(10, 15, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.certificate-card.active {
+    border-color: rgba(56, 189, 248, 0.35);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), 0 0 20px rgba(56, 189, 248, 0.05);
+}
+
+/* Card Background Media Showcase matching Bento Grid */
+.cert-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.cert-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+    filter: brightness(0.85) contrast(1.05);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease;
+    will-change: transform;
+}
+
+.certificate-card:hover .cert-bg-img,
+.certificate-card.active .cert-bg-img {
+    transform: scale(1.06) translateY(-4px);
+    opacity: 0.55;
+    filter: brightness(1) contrast(1.1);
+}
+
+/* Premium Gradient Overlay matching Bento grid overlay exactly */
+.cert-gradient-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 75%;
+    background: linear-gradient(to top,
+            rgba(15, 23, 42, 0.98) 15%,
+            rgba(15, 23, 42, 0.7) 50%,
+            rgba(15, 23, 42, 0) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Card Content block */
+.cert-card-inner {
+    position: relative;
+    z-index: 3;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    min-height: 380px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .certificate-card {
+        min-height: 360px;
+    }
+
+    .cert-card-inner {
+        padding: 22px;
+        min-height: 360px;
+    }
+
+    .cert-bg-img {
+        object-fit: contain;
+        margin-top: 13px;
+        zoom: 1.14;
+        transform: scale(1.0);
+        object-position: top center;
+        opacity: 0.200;
+    }
+
+    .cert-bg-icon-floating {
+        font-size: 5rem;
+        top: 20px;
+        right: 20px;
+    }
+}
+
+/* Bento Issuer Badge */
+.cert-issuer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 9999px;
+    padding: 4px 12px;
+    align-self: flex-start;
+    margin-bottom: 6px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-issuer-badge i {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    transition: color 0.4s ease;
+}
+
+.cert-issuer-badge span {
+    color: #94a3b8;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    font-family: inherit;
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+}
+
+.certificate-card:hover .cert-issuer-badge,
+.certificate-card.active .cert-issuer-badge {
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.certificate-card:hover .cert-bg-google+.cert-card-inner .cert-issuer-badge span,
+.certificate-card.active .cert-bg-google+.cert-card-inner .cert-issuer-badge span,
+.certificate-card:hover .cert-bg-google+.cert-card-inner .cert-issuer-badge i,
+.certificate-card.active .cert-bg-google+.cert-card-inner .cert-issuer-badge i {
+    color: #38bdf8;
+}
+
+.certificate-card:hover .cert-bg-sql+.cert-card-inner .cert-issuer-badge span,
+.certificate-card.active .cert-bg-sql+.cert-card-inner .cert-issuer-badge span,
+.certificate-card:hover .cert-bg-sql+.cert-card-inner .cert-issuer-badge i,
+.certificate-card.active .cert-bg-sql+.cert-card-inner .cert-issuer-badge i {
+    color: #8b5cf6;
+}
+
+.certificate-card:hover .cert-bg-ds+.cert-card-inner .cert-issuer-badge span,
+.certificate-card.active .cert-bg-ds+.cert-card-inner .cert-issuer-badge span,
+.certificate-card:hover .cert-bg-ds+.cert-card-inner .cert-issuer-badge i,
+.certificate-card.active .cert-bg-ds+.cert-card-inner .cert-issuer-badge i {
+    color: #10b981;
+}
+
+/* Card Body */
+.cert-body {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cert-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.certificate-card:hover .cert-bg-google+.cert-card-inner .cert-title,
+.certificate-card.active .cert-bg-google+.cert-card-inner .cert-title {
+    color: #38bdf8;
+}
+
+.certificate-card:hover .cert-bg-sql+.cert-card-inner .cert-title,
+.certificate-card.active .cert-bg-sql+.cert-card-inner .cert-title {
+    color: #8b5cf6;
+}
+
+.certificate-card:hover .cert-bg-ds+.cert-card-inner .cert-title,
+.certificate-card.active .cert-bg-ds+.cert-card-inner .cert-title {
+    color: #10b981;
+}
+
+@media (max-width: 768px) {
+    .cert-title {
+        font-size: 0.95rem;
+    }
+
+    .cert-issuer-badge {
+        display: none;
+    }
+
+    .cert-issuer-badge span {
+        font-size: 0.55rem;
+    }
+
+    .cert-issuer-badge i {
+        font-size: 0.7rem;
+    }
+
+    .cert-skill-pill {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+    }
+
+    .cert-date {
+        font-size: 0.62rem;
+    }
+
+    .cert-id {
+        font-size: 0.55rem;
+    }
+
+    .cert-verify-cta {
+        font-size: 0.6rem;
+        gap: 4px;
+    }
+
+    .cert-footer {
+        padding-top: 10px;
+        margin-top: 8px;
+        margin-bottom: 5.5px;
+    }
+
+    .cert-body {
+        gap: 6px;
+        margin: 6px 0;
+    }
+}
+
+.cert-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+/* Skills Pill Box */
+.cert-skills-pill-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.cert-skill-pill {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.certificate-card:hover .cert-skill-pill,
+.certificate-card.active .cert-skill-pill {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+}
+
+/* Card Footer */
+.cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 14px;
+    margin-top: 12px;
+}
+
+.cert-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cert-date {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.cert-id {
+    font-size: 0.65rem;
+    color: #475569;
+    font-family: monospace;
+}
+
+/* Bento CTA Link Button */
+.cert-verify-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #38bdf8;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.4;
+    transform: translateY(2px);
+    white-space: nowrap;
+}
+
+.certificate-card:hover .cert-verify-cta,
+.certificate-card.active .cert-verify-cta {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cert-bg-google+.cert-card-inner .cert-verify-cta {
+    color: #38bdf8;
+}
+
+.cert-bg-sql+.cert-card-inner .cert-verify-cta {
+    color: #8b5cf6;
+}
+
+.cert-bg-ds+.cert-card-inner .cert-verify-cta {
+    color: #10b981;
+}
+
+.cert-verify-cta i {
+    font-size: 0.95rem;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.certificate-card:hover .cert-verify-cta i,
+.certificate-card.active .cert-verify-cta i {
+    transform: translate(2px, -2px);
+}
+
+/* Navigation Controls matching Animate UI Layout */
+.motion-carousel-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.motion-carousel-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+}
+
+.motion-carousel-arrow:hover {
+    background-color: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+    transform: scale(1.05);
+}
+
+.motion-carousel-pagination {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 18px;
+    border-radius: 9999px;
+}
+
+.motion-carousel-pill {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #000000;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.motion-carousel-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.motion-carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+}
+
+.motion-carousel-dot.active {
+    background-color: #ffffff;
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}

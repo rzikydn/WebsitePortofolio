@@ -38,7 +38,7 @@ const ScrollReveal = ({
 
     const st = gsap.fromTo(
       wordElements,
-      { opacity: baseOpacity, willChange: 'opacity' },
+      { opacity: baseOpacity },
       {
         ease: 'none',
         opacity: 1,

@@ -15,7 +15,7 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true }) {
+export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [physicsReady, setPhysicsReady] = useState(false);
 
@@ -34,9 +34,16 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
   const activeGravity = ready ? gravity : [0, 0, 0];
 
   return (
-    <div className="lanyard-wrapper" style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+    <div 
+      className="lanyard-wrapper" 
+      style={{ 
+        opacity: ready ? 1 : 0, 
+        transition: 'opacity 0.3s ease',
+        visibility: inViewport ? 'visible' : 'hidden' // Skip painting completely when off-screen
+      }}
+    >
       <Canvas
-        frameloop="always"
+        frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
         dpr={[1, 1.2]}
         gl={{ alpha: transparent, antialias: false, powerPreference: "high-performance" }}
@@ -101,6 +108,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
+    if (!fixed.current || !card.current) return;
+
+    // Optimize: Exit early if the card has gone to sleep and is not being dragged
+    const isSleeping = typeof card.current.isSleeping === 'function' ? card.current.isSleeping() : false;
+    if (isSleeping && !dragged) {
+      return;
+    }
+
     const clampedDelta = Math.min(delta, 1 / 30);
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);

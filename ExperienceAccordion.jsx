@@ -4,12 +4,15 @@ import './ExperienceAccordion.css';
 const EXPERIENCES = [
   {
     yearStart: '2024',
-    yearEnd: 'Present',
-    company: 'Cakrawala University',
-    role: 'Data Science',
-    period: 'Sep 2024 - Present',
+    yearEnd: '2024',
+    company: 'Badan Sertifikasi Manajemen Risiko',
+    role: 'Administrative',
+    period: 'Sep 2024 - Dec 2024 · 4 mos',
     bullets: [
-      'Deepening knowledge in data science with a focus on data analysis, machine learning, and data visualization to generate impactful insights.',
+      'Managed the registration process for competency test participants from initial submission through assessment scheduling.',
+      'Prepared registration reports and assessment schedules for management evaluation.',
+      'Organized and archived certification documents for easy accessibility.',
+      'Provided information services to participants directly and via email.',
     ],
     active: true,
   },
@@ -25,19 +28,6 @@ const EXPERIENCES = [
       'Carried out data cleaning, validation, and verification to ensure data reliability in reporting.',
       'Compiled data summaries and web-based visual reports to support internal monitoring and decision-making.',
       'Collaborated with the administrative team to automate reporting and streamline data collection workflows for greater efficiency.',
-    ],
-  },
-  {
-    yearStart: '2024',
-    yearEnd: '2024',
-    company: 'Badan Sertifikasi Manajemen Risiko',
-    role: 'Administrative',
-    period: 'Sep 2024 - Dec 2024 · 4 mos',
-    bullets: [
-      'Managed the registration process for competency test participants from initial submission through assessment scheduling.',
-      'Prepared registration reports and assessment schedules for management evaluation.',
-      'Organized and archived certification documents for easy accessibility.',
-      'Provided information services to participants directly and via email.',
     ],
   },
 ];

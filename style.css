@@ -80,7 +80,8 @@ body {
     align-items: center;
     gap: 30px;
     width: 100%;
-    max-width: 240px; /* Narrower width for compact elegant look */
+    max-width: 240px;
+    /* Narrower width for compact elegant look */
     padding: 0 15px;
     opacity: 1;
     transition: opacity 0.4s ease;
@@ -91,14 +92,16 @@ body {
 }
 
 .greeting-container {
-    position: relative; /* Fixed: keeps dot anchored next to text */
+    position: relative;
+    /* Fixed: keeps dot anchored next to text */
     display: flex;
     justify-content: center;
     align-items: center;
     color: #ffffff;
     font-size: 3rem;
     font-weight: 500;
-    white-space: nowrap; /* Prevent long greetings from wrapping into 2 lines */
+    white-space: nowrap;
+    /* Prevent long greetings from wrapping into 2 lines */
 }
 
 /* Custom Progress bar matching shadcn UI layout exactly */
@@ -143,6 +146,19 @@ body {
     margin-right: 15px;
     font-size: 2.8rem;
     line-height: 1;
+}
+
+/* Desktop optimization for larger preloader progress bar */
+@media (min-width: 769px) {
+    .preloader-content {
+        max-width: 320px;
+        /* Wider progress bar container on desktop */
+    }
+
+    .preloader-progress-bar {
+        height: 6px;
+        /* Slightly thicker progress bar on desktop */
+    }
 }
 
 .greeting {
@@ -296,6 +312,63 @@ body {
     color: #000;
 }
 
+/* Premium Custom Tooltips for Navbar */
+@media (min-width: 769px) {
+    [data-tooltip] {
+        position: relative;
+    }
+
+    [data-tooltip]::before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 112%;
+        left: 50%;
+        transform: translateX(-50%) translateY(4px) scale(0.95);
+        padding: 8px 14px;
+        background-color: #0f172a;
+        /* Premium dark background matching your mock */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        border-radius: 8px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 99999;
+    }
+
+    /* Small Arrow Pointer at the bottom center of the tooltip */
+    [data-tooltip]::after {
+        content: '';
+        position: absolute;
+        bottom: 98%;
+        left: 50%;
+        transform: translateX(-50%) translateY(4px);
+        border-width: 6px 6px 0;
+        border-style: solid;
+        border-color: #0f172a transparent transparent;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 99999;
+    }
+
+    /* Hover States - trigger tooltip reveal with premium slide & scale */
+    [data-tooltip]:hover::before {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    [data-tooltip]:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 .btn-hire {
     display: flex;
     align-items: center;
@@ -309,7 +382,8 @@ body {
     font-weight: 500;
     cursor: pointer;
     font-family: inherit;
-    text-decoration: none; /* Prevent underline style on link tag */
+    text-decoration: none;
+    /* Prevent underline style on link tag */
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -401,7 +475,7 @@ body {
 }
 
 .btn-copy {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
     background-color: #ffffff;
@@ -413,6 +487,8 @@ body {
     font-weight: 500;
     cursor: pointer;
     font-family: inherit;
+    text-decoration: none;
+    /* Prevent underline style on link tag */
     transition: all 0.3s ease;
 }
 
@@ -623,6 +699,7 @@ body.dark-mode .btn-copy:hover {
     width: 100%;
     height: 350vh;
     z-index: 5;
+    background-color: #ffffff;
 }
 
 /* About Section */
@@ -639,12 +716,15 @@ body.dark-mode .btn-copy:hover {
 }
 
 .about-container {
-    max-width: 1000px;
+    max-width: 1400px;
+    /* Increased from 1000px to stretch the text beautifully wide like the reference */
     width: 100%;
     margin: 0 auto;
     text-align: center;
     position: relative;
     z-index: 20;
+    padding: 0 40px;
+    /* Add side spacing for high-end screens */
 }
 
 .about-text {
@@ -678,6 +758,10 @@ body.dark-mode .btn-copy:hover {
 }
 
 /* Dark Mode About Section */
+body.dark-mode .about-wrapper {
+    background-color: #121212;
+}
+
 body.dark-mode .about-section {
     background-color: #121212;
 }
@@ -700,6 +784,7 @@ body.dark-mode .about-text {
     margin-top: -100vh;
     overflow: hidden;
     padding-top: 5vh;
+    border-radius: 30px 30px 0 0;
 }
 
 .black-section .bg-text {
@@ -720,7 +805,8 @@ body.dark-mode .about-text {
 .skills-section {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    min-height: auto;
+    /* Shrink height to pull MY EXPERIENCE section up on desktop */
     background-color: var(--black-section-bg, #0f172a);
     z-index: 50;
     display: flex;
@@ -729,6 +815,8 @@ body.dark-mode .about-text {
     align-items: center;
     overflow: hidden;
     padding-top: 5vh;
+    padding-bottom: 8vh;
+    /* Balanced spacing before MY EXPERIENCE starts */
 }
 
 .skills-section .bg-text {
@@ -764,6 +852,42 @@ body.dark-mode .about-text {
 }
 
 .experience-section .bg-text {
+    position: relative;
+    font-size: clamp(3rem, 14vw, 18rem);
+    font-weight: 900;
+    color: var(--black-section-text, #1e293b);
+    letter-spacing: -2px;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Certificates Section */
+.certificates-section {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    background-color: var(--black-section-bg, #0f172a);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* Center all elements horizontally */
+    overflow: hidden;
+    padding-top: 5vh;
+    padding-bottom: 8vh;
+}
+
+#certificates-root {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.certificates-section .bg-text {
+    align-self: center;
     position: relative;
     font-size: clamp(3rem, 14vw, 18rem);
     font-weight: 900;
@@ -968,18 +1092,22 @@ body.dark-mode .exp-desc {
 
 /* Mobile Navbar Overrides */
 @media (max-width: 768px) {
+    .black-section {
+        border-radius: 20px 20px 0 0;
+    }
+
     .floating-navbar {
         position: fixed;
         bottom: 24px;
         top: auto;
         left: 50%;
         transform: translateX(-50%);
-        width: auto;
-        max-width: 300px;
-        padding: 8px 14px;
+        width: max-content;
+        max-width: 95vw;
+        padding: 5px 8px;
         border-radius: 50px;
         justify-content: space-around;
-        gap: 4px;
+        gap: 3px;
         z-index: 100;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         background-color: rgba(255, 255, 255, 0.95);
@@ -996,25 +1124,46 @@ body.dark-mode .exp-desc {
         display: none;
     }
 
+    /* Keep socials visible but hyper-compact to prevent wide navbar stretching */
+    .nav-divider--socials,
+    .nav-group--socials {
+        display: flex !important;
+    }
+
     .floating-navbar .nav-group {
-        gap: 2px;
+        gap: 1.5px;
     }
 
     .floating-navbar .nav-item {
-        width: 36px;
-        height: 36px;
+        width: 28px;
+        height: 28px;
     }
 
     .floating-navbar .nav-item i {
-        font-size: 1.15rem;
+        font-size: 0.95rem;
+    }
+
+    .floating-navbar .theme-toggle {
+        padding: 4px;
     }
 
     .floating-navbar .theme-toggle i {
-        font-size: 1.15rem;
+        font-size: 0.95rem;
+    }
+
+    .floating-navbar .nav-divider {
+        width: 1px;
+        height: 16px;
+        margin: 0 2px;
     }
 
     .skills-section {
-        margin-top: -15vh;
+        margin-top: -2px;
+        /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
+        min-height: auto;
+        /* Shrink height to pull MY EXPERIENCE section up on mobile */
+        padding-bottom: 3rem;
+        /* Breathing room below the logo loop */
     }
 
     .skills-section .bg-text {
@@ -1028,7 +1177,18 @@ body.dark-mode .exp-desc {
     .experience-section {
         min-height: auto;
         padding-top: 0;
-        margin-top: -55vh;
+        margin-top: -2px;
+        /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
+    }
+
+    .certificates-section {
+        margin-top: -2px;
+        /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
+    }
+
+    .contact-section {
+        margin-top: -2px;
+        /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
     }
 }
 

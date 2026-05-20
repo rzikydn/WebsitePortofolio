@@ -9,7 +9,34 @@ const lenis = new Lenis({
     syncTouch: false,
 });
 
-lenis.on('scroll', ScrollTrigger.update);
+// Dynamic active navbar link on scroll (ScrollSpy)
+lenis.on('scroll', () => {
+    ScrollTrigger.update();
+    
+    const navItems = document.querySelectorAll('.floating-navbar a[href^="#"]');
+    const sections = Array.from(navItems).map(item => document.querySelector(item.getAttribute('href'))).filter(Boolean);
+    
+    let currentActive = "";
+    const scrollPos = window.scrollY + window.innerHeight / 3;
+    
+    sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+            currentActive = `#${section.id}`;
+        }
+    });
+    
+    if (currentActive) {
+        navItems.forEach(item => {
+            if (item.getAttribute('href') === currentActive) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+});
 
 gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
@@ -114,6 +141,10 @@ document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(link => {
         const targetId = link.getAttribute('href');
         const target = document.querySelector(targetId);
         if (target) {
+            // Update active state instantly on click
+            document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(item => item.classList.remove('active'));
+            link.classList.add('active');
+            
             lenis.scrollTo(target, {
                 duration: 2,
                 easing: (t) => 1 - Math.pow(1 - t, 4), // easeOutQuart

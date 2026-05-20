@@ -4,7 +4,7 @@ export function ProgressiveBlur({
   className = "",
   height = "30%",
   position = "bottom",
-  blurLevels = [0.5, 1, 2, 4, 8, 16, 32, 64],
+  blurLevels = [2, 8, 24, 64],
 }) {
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 768);
 

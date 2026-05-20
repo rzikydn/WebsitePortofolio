@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import Lanyard from './Lanyard'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
-import FlowingMenu from './FlowingMenu'
+import BentoGrid from './BentoGrid'
 import LogoLoop from './LogoLoop'
 import ExperienceAccordion from './ExperienceAccordion'
+import MotionCarousel from './MotionCarousel'
 
 // ============================================
 // Asset Loading Tracker
@@ -34,6 +35,7 @@ setTimeout(() => {
 
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
+  const [inViewport, setInViewport] = useState(true);
 
   useEffect(() => {
     // Listen for custom event dispatched by script.js when preloader finishes
@@ -42,12 +44,33 @@ function App() {
     };
 
     window.addEventListener('lanyard-drop', handleDrop);
-    return () => window.removeEventListener('lanyard-drop', handleDrop);
+
+    // High-performance IntersectionObserver to pause/unmount canvas off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInViewport(entry.isIntersecting);
+      },
+      { threshold: 0.01 } // Trigger even if 1% is visible
+    );
+
+    const rootEl = document.getElementById('lanyard-root');
+    if (rootEl) observer.observe(rootEl);
+
+    return () => {
+      window.removeEventListener('lanyard-drop', handleDrop);
+      if (rootEl) observer.unobserve(rootEl);
+    };
   }, []);
 
   return (
     <React.Suspense fallback={null}>
-      <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} transparent={true} ready={showLanyard} />
+      <Lanyard 
+        position={[0, 0, 20]} 
+        gravity={[0, -40, 0]} 
+        transparent={true} 
+        ready={showLanyard} 
+        inViewport={inViewport} 
+      />
     </React.Suspense>
   );
 }
@@ -83,22 +106,8 @@ if (scrollRevealRoot) {
 
 const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
-  const demoItems = [
-    { link: 'https://www.linkedin.com/posts/wildan-rizky_datawrangling-python-streamlit-ugcPost-7347899508191653888-traJ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s', text: 'Jakarta Demographics', subtitle: 'Interactive Population Data & Analytics Dashboard', image: '/images/mockup1.png' },
-    { link: 'https://planner.bsmr.org', text: 'Mirov', subtitle: 'BSMR Workspace SaaS Platform', image: '/images/mockup2.png' },
-    { link: 'https://www.linkedin.com/posts/wildan-rizky_dataanalytics-dashboard-streamlit-ugcPost-7371386743175983104-Y5rB?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s', text: 'Certification Dashboard', subtitle: 'SaaS Certification Analytics', image: '/images/mockup3.png' },
-    { link: 'https://uasdatawarehouse.streamlit.app/', text: 'Olist Market Insight', subtitle: 'Interactive sales & analytics dashboard', image: '/images/mockup4.png' }
-  ];
-
   ReactDOM.createRoot(flowingMenuRoot).render(
-    <FlowingMenu items={demoItems}
-      speed={15}
-      textColor="var(--menu-text)"
-      bgColor="transparent"
-      marqueeBgColor="var(--menu-text)"
-      marqueeTextColor="var(--black-section-bg)"
-      borderColor="var(--menu-border)"
-    />
+    <BentoGrid />
   );
 }
 
@@ -149,4 +158,10 @@ if (logoLoopRoot) {
 const experienceRoot = document.getElementById('experience-root');
 if (experienceRoot) {
   ReactDOM.createRoot(experienceRoot).render(<ExperienceAccordion />);
+}
+
+// Certificates Carousel Mount
+const certificatesRoot = document.getElementById('certificates-root');
+if (certificatesRoot) {
+  ReactDOM.createRoot(certificatesRoot).render(<MotionCarousel />);
 }
