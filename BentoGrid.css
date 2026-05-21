@@ -22,9 +22,8 @@
     justify-content: flex-end;
     min-height: 380px;
     text-decoration: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
-    will-change: transform; /* Promotes element to dedicated GPU hardware layer */
     box-sizing: border-box;
 }
 
@@ -41,7 +40,8 @@
 .bento-card:hover {
     transform: translateY(-8px);
     border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(56, 189, 248, 0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16), 0 0 30px rgba(56, 189, 248, 0.05);
+    will-change: transform;
 }
 
 /* Card Background Media Showcase */
@@ -62,13 +62,13 @@
     opacity: 0.3;
     filter: brightness(0.85) contrast(1.05);
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease;
-    will-change: transform; /* Activates GPU layer compositing for zoom transitions */
 }
 
 .bento-card:hover .bento-bg img {
     transform: scale(1.06) translateY(-4px);
     opacity: 0.55;
     filter: brightness(1) contrast(1.1);
+    will-change: transform;
 }
 
 /* Ambient Gradient Overlay */

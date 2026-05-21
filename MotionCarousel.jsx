@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { motion } from 'framer-motion';
 import './MotionCarousel.css';
 
 const CERTIFICATES = [
@@ -113,14 +112,8 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
             const isActive = index === selectedIndex;
             return (
               <div key={index} className="motion-carousel-slide">
-                <motion.div
-                  style={{ width: '100%', height: '100%' }}
-                  animate={{
-                    scale: isActive ? 1.02 : 0.90,
-                    opacity: isActive ? 1 : 0.45,
-                  }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                >
+                {/* CSS-driven scale/opacity transition — replaces Framer Motion for zero JS overhead */}
+                <div className={`carousel-slide-animator ${isActive ? 'slide-active' : 'slide-inactive'}`}>
                   <div className={`certificate-card ${isActive ? 'active' : ''}`}>
                     {/* Zooming background image exactly matching Bento design */}
                     <div className="cert-bg">
@@ -165,7 +158,7 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             );
           })}
@@ -214,3 +207,4 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
     </div>
   );
 }
+

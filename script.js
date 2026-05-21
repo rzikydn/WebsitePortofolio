@@ -9,32 +9,73 @@ const lenis = new Lenis({
     syncTouch: false,
 });
 
-// Dynamic active navbar link on scroll (ScrollSpy)
+// High-Performance cached ScrollSpy to avoid DOM querying and layout thrashing on every frame
+let cachedSections = [];
+
+function cacheSectionPositions() {
+    const navItems = document.querySelectorAll('.floating-navbar a[href^="#"]');
+    if (!navItems.length) return;
+    
+    cachedSections = Array.from(navItems).map(item => {
+        const target = document.querySelector(item.getAttribute('href'));
+        if (target) {
+            return {
+                id: item.getAttribute('href'),
+                element: target,
+                top: target.offsetTop,
+                height: target.offsetHeight,
+                navLink: item
+            };
+        }
+        return null;
+    }).filter(Boolean);
+}
+
+// Perform caching at optimal times to guarantee accurate measurements
+window.addEventListener('load', cacheSectionPositions);
+window.addEventListener('resize', cacheSectionPositions);
+document.addEventListener('DOMContentLoaded', cacheSectionPositions);
+// Multiple timeouts to capture delayed dynamic layout renders
+setTimeout(cacheSectionPositions, 500);
+setTimeout(cacheSectionPositions, 1500);
+setTimeout(cacheSectionPositions, 3000);
+
+// Dynamic active navbar link on scroll (ScrollSpy) — with dirty flag to skip redundant DOM updates
+let lastActiveId = "";
+
 lenis.on('scroll', () => {
     ScrollTrigger.update();
     
-    const navItems = document.querySelectorAll('.floating-navbar a[href^="#"]');
-    const sections = Array.from(navItems).map(item => document.querySelector(item.getAttribute('href'))).filter(Boolean);
+    if (cachedSections.length === 0) {
+        cacheSectionPositions();
+        if (cachedSections.length === 0) return;
+    }
     
     let currentActive = "";
     const scrollPos = window.scrollY + window.innerHeight / 3;
     
-    sections.forEach(section => {
-        const top = section.offsetTop;
-        const height = section.offsetHeight;
-        if (scrollPos >= top && scrollPos < top + height) {
-            currentActive = `#${section.id}`;
+    for (let i = 0; i < cachedSections.length; i++) {
+        const section = cachedSections[i];
+        if (scrollPos >= section.top && scrollPos < section.top + section.height) {
+            currentActive = section.id;
         }
-    });
+    }
     
-    if (currentActive) {
-        navItems.forEach(item => {
-            if (item.getAttribute('href') === currentActive) {
-                item.classList.add('active');
+    // Skip DOM mutations if active section hasn't changed (biggest perf win)
+    if (currentActive && currentActive !== lastActiveId) {
+        lastActiveId = currentActive;
+        for (let i = 0; i < cachedSections.length; i++) {
+            const section = cachedSections[i];
+            if (section.id === currentActive) {
+                if (!section.navLink.classList.contains('active')) {
+                    section.navLink.classList.add('active');
+                }
             } else {
-                item.classList.remove('active');
+                if (section.navLink.classList.contains('active')) {
+                    section.navLink.classList.remove('active');
+                }
             }
-        });
+        }
     }
 });
 

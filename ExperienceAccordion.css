@@ -57,16 +57,15 @@ body.dark-mode .acc-progress-fill {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.6rem 0.5rem;
+    padding: 1.6rem 0.5rem 0.8rem 0.5rem;
     background: none;
     border: none;
-    cursor: pointer;
     color: inherit;
     text-align: left;
     font-family: inherit;
     outline: none;
-    transition: opacity 0.2s ease;
     position: relative;
+    pointer-events: none;
 }
 
 .acc-trigger:hover {
@@ -87,7 +86,7 @@ body.dark-mode .acc-progress-fill {
 }
 
 .acc-company {
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-size: clamp(2.2rem, 4vw, 3.3rem);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.85);
     margin: 0;
@@ -102,19 +101,19 @@ body.dark-mode .acc-progress-fill {
 }
 
 .acc-role {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: rgba(255, 255, 255, 0.4);
     font-weight: 400;
 }
 
 .acc-dot-sep {
     color: rgba(255, 255, 255, 0.2);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     user-select: none;
 }
 
 .acc-period {
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: rgba(255, 255, 255, 0.3);
     font-weight: 400;
     letter-spacing: 0.3px;
@@ -122,26 +121,13 @@ body.dark-mode .acc-progress-fill {
 
 /* Arrow icon */
 .acc-arrow {
-    flex-shrink: 0;
-    flex-grow: 0;
-    margin-left: 50rem;
-    color: rgba(255, 255, 255, 0.3);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 24px;
-    min-height: 24px;
-    width: 24px;
-    height: 24px;
+    display: none !important;
 }
 
-.acc-arrow--open {
-    transform: rotate(180deg);
-}
-
-/* Expandable content area */
+/* Always open expanded content area */
 .acc-content-wrapper {
-    height: 0;
-    overflow: hidden;
-    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: auto !important;
+    overflow: visible;
 }
 
 .acc-content {
@@ -158,9 +144,9 @@ body.dark-mode .acc-progress-fill {
 }
 
 .acc-bullet {
-    font-size: 1rem;
+    font-size: 1.18rem;
     color: rgba(255, 255, 255, 0.45);
-    line-height: 1.7;
+    line-height: 1.8;
     padding-left: 1.2rem;
     position: relative;
 }
@@ -222,8 +208,7 @@ body.dark-mode .acc-arrow {
     }
 
     .acc-trigger {
-        padding: 1.3rem 0.3rem;
-        padding-right: 2.5rem;
+        padding: 1.3rem 0.3rem 0.6rem 0.3rem;
         position: relative;
     }
 
@@ -244,23 +229,16 @@ body.dark-mode .acc-arrow {
         font-size: 0.78rem;
     }
 
-    .acc-arrow {
-        position: absolute;
-        right: 0.3rem;
-        top: 50%;
-        transform: translateY(-50%);
-        margin-left: 0;
-    }
-
-    .acc-arrow--open {
-        transform: translateY(-50%) rotate(180deg);
-    }
-
     .acc-content {
         padding: 0 0.3rem 1.2rem 0.3rem;
     }
 
     .acc-desc {
         font-size: 0.85rem;
+    }
+
+    .acc-bullet {
+        font-size: 0.85rem;
+        line-height: 1.6;
     }
 }
