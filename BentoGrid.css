@@ -1,26 +1,26 @@
 /* Bento Grid Container */
 .bento-grid-container {
-    max-width: 1200px;
+    max-width: 75rem;
     width: 100%;
-    margin: 50px auto 0 auto;
+    margin: 3.125rem auto 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    padding: 0 24px;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
     box-sizing: border-box;
 }
 
 /* Individual Bento Card */
 .bento-card {
     position: relative;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     background-color: rgba(10, 15, 30, 0.8); /* Slightly darker/more solid for premium high-contrast look */
     border: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 380px;
+    min-height: 23.75rem;
     text-decoration: none;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
@@ -90,18 +90,18 @@
 .bento-info {
     position: relative;
     z-index: 3;
-    padding: 28px;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
     box-sizing: border-box;
 }
 
 /* Card Header Icon */
 .bento-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;

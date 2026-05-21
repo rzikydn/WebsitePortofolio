@@ -140,8 +140,8 @@ if (logoLoopRoot) {
         logos={imageLogos}
         speed={120}
         direction="left"
-        logoHeight={isMobile ? 80 : 140}
-        gap={isMobile ? 50 : 140}
+        logoHeight={isMobile ? 80 : "8.75rem"}
+        gap={isMobile ? 50 : "8.75rem"}
         hoverSpeed={0}
         scaleOnHover
         fadeOut

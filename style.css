@@ -1,5 +1,23 @@
 html {
     scroll-behavior: smooth;
+    /* Base font-size: default 16px on standard displays */
+    font-size: 16px;
+}
+
+/* ===== High-DPI Display Normalization =====
+   Target laptops with high-resolution panels and OS scaling active (resolution >= 1.5dppx).
+   This scales root font-size down for high-DPI screens (like Yoga Pro 7) to prevent a zoomed-in look,
+   while keeping it at the standard 16px for low/medium-DPI laptops (like HUAWEI MateBook D14). */
+@media (min-width: 1025px) and (min-resolution: 1.5dppx) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 1025px) and (min-resolution: 2dppx) {
+    html {
+        font-size: 13.5px;
+    }
 }
 
 * {
@@ -225,17 +243,17 @@ body {
     z-index: 10;
     width: 100%;
     height: 100%;
-    padding: 30px 20px;
+    padding: 1.875rem 1.25rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
 /* Navbar Styles */
 .floating-navbar {
     position: fixed;
-    top: 30px;
+    top: 1.875rem;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9000;
@@ -245,11 +263,11 @@ body {
     background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-radius: 24px;
-    padding: 12px 18px;
+    border-radius: 1.5rem;
+    padding: 0.75rem 1.125rem;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 750px;
+    max-width: 46.875rem;
     height: max-content;
     border: 1px solid rgba(0, 0, 0, 0.04);
     transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
@@ -258,12 +276,12 @@ body {
 .nav-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .nav-divider {
     width: 1px;
-    height: 24px;
+    height: 1.5rem;
     background-color: #e2e8f0;
 }
 
@@ -271,8 +289,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
     border-radius: 50%;
     color: #94a3b8;
     text-decoration: none;
@@ -301,7 +319,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: color 0.3s ease;
-    padding: 10px;
+    padding: 0.625rem;
 }
 
 .theme-toggle i {
@@ -324,7 +342,7 @@ body {
         bottom: 112%;
         left: 50%;
         transform: translateX(-50%) translateY(4px) scale(0.95);
-        padding: 8px 14px;
+        padding: 0.5rem 0.875rem;
         background-color: #0f172a;
         /* Premium dark background matching your mock */
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -332,7 +350,7 @@ body {
         font-size: 0.85rem;
         font-weight: 500;
         letter-spacing: 0.2px;
-        border-radius: 8px;
+        border-radius: 0.5rem;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
@@ -372,12 +390,12 @@ body {
 .btn-hire {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     background-color: #0f172a;
     color: #ffffff;
     border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -400,8 +418,8 @@ body {
 /* Hero Card Styles */
 .hero-card {
     width: 100%;
-    max-width: 1200px;
-    padding: 30px 0;
+    max-width: 75rem;
+    padding: 1.875rem 0;
     padding-top: 16vh;
 }
 
@@ -409,21 +427,21 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 }
 
 .hero-role {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
     color: #475569;
     font-size: 1.3rem;
     font-weight: 500;
 }
 
 .role-dot {
-    width: 10px;
-    height: 10px;
+    width: 0.625rem;
+    height: 0.625rem;
     background-color: #94a3b8;
     border-radius: 50%;
 }
@@ -432,7 +450,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 40px;
+    gap: 2.5rem;
 }
 
 .hero-content {
@@ -440,34 +458,34 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(3.5rem, 6.5vw, 6.5rem);
+    font-size: clamp(2.5rem, 5.5vw, 5.5rem);
     color: #1e293b;
-    margin-bottom: 25px;
+    margin-bottom: 1.5625rem;
     font-weight: 700;
     letter-spacing: -2px;
     line-height: 1.1;
 }
 
 .hero-desc {
-    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
     color: #64748b;
     line-height: 1.6;
-    margin-bottom: 50px;
-    max-width: 800px;
+    margin-bottom: 3.125rem;
+    max-width: 50rem;
 }
 
 .hero-buttons {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 1.5625rem;
     position: relative;
     z-index: 20;
 }
 
 .hero-buttons .btn-hire {
-    padding: 18px 36px;
+    padding: 1.125rem 2.25rem;
     font-size: 1.3rem;
-    border-radius: 14px;
+    border-radius: 0.875rem;
 }
 
 .hero-buttons .btn-hire i {
@@ -477,12 +495,12 @@ body {
 .btn-copy {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
     background-color: #ffffff;
     color: #334155;
     border: 1px solid #e2e8f0;
-    padding: 18px 36px;
-    border-radius: 14px;
+    padding: 1.125rem 2.25rem;
+    border-radius: 0.875rem;
     font-size: 1.3rem;
     font-weight: 500;
     cursor: pointer;
@@ -1236,9 +1254,9 @@ body.dark-mode .exp-desc {
     right: -45%;
     top: 50%;
     transform: translateY(-50%);
-    width: clamp(250px, 25vw, 420px);
-    height: clamp(250px, 25vw, 420px);
-    border-radius: 20px;
+    width: clamp(15.625rem, 25vw, 26.25rem);
+    height: clamp(15.625rem, 25vw, 26.25rem);
+    border-radius: 1.25rem;
     overflow: hidden;
 }
 
@@ -1246,7 +1264,7 @@ body.dark-mode .exp-desc {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 1.25rem;
 }
 
 /* Default (dark theme): show pp2, hide pp1 */
