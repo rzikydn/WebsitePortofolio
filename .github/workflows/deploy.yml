@@ -1,0 +1,40 @@
+name: Build and Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main # Jalankan otomatis setiap kali push ke branch 'main'
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy to Hosting
+    runs-on: ubuntu-latest
+
+    steps:
+      # Langkah 1: Unduh kode terbaru dari Repositori GitHub Anda ke mesin server GitHub Actions
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      # Langkah 2: Siapkan lingkungan Node.js
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Langkah 3: Install seluruh dependencies dan jalankan build produksi (Vite akan menghasilkan folder 'dist')
+      - name: 📦 Install dependencies & Build Production
+        run: |
+          npm install
+          npm run build
+
+      # Langkah 4: Unggah isi folder 'dist' ke public_html di hosting Anda menggunakan FTP
+      - name: 🚀 Deploy to Hosting via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/ # Folder output hasil compile Vite
+          server-dir: / # Folder root FTP karena akun FTP sudah dikunci langsung di folder rzikydn.my.id
+          state-name: .ftp-deploy-sync-state.json
