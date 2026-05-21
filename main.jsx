@@ -7,9 +7,11 @@ import BentoGrid from './BentoGrid'
 import LogoLoop from './LogoLoop'
 import ExperienceAccordion from './ExperienceAccordion'
 import MotionCarousel from './MotionCarousel'
+import cardGLB from './card.glb'
+import lanyard from './lanyard.png'
 
 // ============================================
-// Asset Loading Tracker
+// Real Asset Preloader & Loader Tracker
 // ============================================
 let assetsReady = false;
 
@@ -19,15 +21,96 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Strategy 1: Use window.onload (fires when ALL resources are loaded: images, fonts, scripts)
-window.addEventListener('load', () => {
-  signalReady();
-});
-
-// Strategy 2: Safety timeout — never let preloader loop more than 8 seconds
+// Safety timeout fallback: never let preloader loop more than 8.5 seconds
 setTimeout(() => {
   signalReady();
-}, 8000);
+}, 8500);
+
+// Comprehensive list of all high-resolution/heavy assets to preload
+const CRITICAL_IMAGES = [
+  "/images/pp2new.png",
+  "/images/pp1new.png",
+  "/images/SER1.png",
+  "/images/SER2.png",
+  "/images/SER3.png",
+  "/images/mockup1.png",
+  "/images/mockup2.png",
+  "/images/mockup3.png",
+  "/images/mockup4.png",
+  "/images/React.png",
+  "/images/Vue.png",
+  "/images/Node.js.png",
+  "/images/Python.png",
+  "/images/TypeScript.png",
+  "/images/Tailwindcss6.png",
+  "/images/Vite.png",
+  "/images/HTML.png",
+  "/images/GitLab.png"
+];
+
+function startAssetPreload() {
+  const assetsToLoad = [
+    ...CRITICAL_IMAGES,
+    lanyard,
+    cardGLB
+  ];
+
+  let loadedCount = 0;
+  const totalAssets = assetsToLoad.length;
+
+  function handleAssetLoaded(url, success) {
+    loadedCount++;
+    const progressPercentage = 15 + ((loadedCount / totalAssets) * 85); // Scale from 15% to 100%
+    
+    if (typeof window.updatePreloaderProgress === 'function') {
+      window.updatePreloaderProgress(progressPercentage);
+    }
+
+    if (loadedCount >= totalAssets) {
+      // Wait for the visual progress animation to smoothly hit 100%
+      const checkVisualComplete = setInterval(() => {
+        if (window.preloaderVisualComplete) {
+          clearInterval(checkVisualComplete);
+          // Small visual buffer so the user sees 100% before it fades out
+          setTimeout(() => {
+            signalReady();
+          }, 350);
+        }
+      }, 30);
+    }
+  }
+
+  assetsToLoad.forEach(url => {
+    if (!url) {
+      handleAssetLoaded(url, false);
+      return;
+    }
+
+    // Check if the asset is a 3D model (.glb)
+    if (url.endsWith('.glb') || url.includes('.glb') || url.includes('data:application/octet-stream')) {
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.blob(); // fully downloads GLB into browser cache
+        })
+        .then(() => handleAssetLoaded(url, true))
+        .catch(() => handleAssetLoaded(url, false));
+    } else {
+      // Standard image preloading
+      const img = new Image();
+      img.src = url;
+      img.onload = () => handleAssetLoaded(url, true);
+      img.onerror = () => handleAssetLoaded(url, false);
+    }
+  });
+}
+
+// Start asset downloading immediately on load
+if (document.readyState === 'complete') {
+  startAssetPreload();
+} else {
+  window.addEventListener('load', startAssetPreload);
+}
 
 // ============================================
 // React Component Mounts

@@ -145,41 +145,79 @@
         (function () {
             var greetings = ["Hello", "Bonjour", "Hola", "Ciao", "Guten Tag", "안녕하세요", "Привет", "Namaste", "Merhaba", "Halo"];
             var el = document.getElementById("greeting-text");
-            var idx = 1;
-            function cycle() {
-                if (!el) return;
-                el.textContent = greetings[idx];
-                idx = (idx + 1) % greetings.length;
-                setTimeout(cycle, 250);
-            }
-            setTimeout(cycle, 900);
+            
+            // Cycle continually through the first 9 greetings (0 to 8) to keep it lively on slow connections
+            // Save the 10th one ("Halo") for 100% completion
+            var currentGreetingIdx = 0;
+            var greetingCycleInterval = setInterval(function () {
+                currentGreetingIdx = (currentGreetingIdx + 1) % (greetings.length - 1);
+                if (el) el.textContent = greetings[currentGreetingIdx];
+            }, 250);
 
-            // Progress Bar simulation matching shadcn progress indicator
-            var progress = 0;
+            // Smooth progress interpolation targets
+            var targetProgress = 0;
+            var currentVisualProgress = 0;
+            window.preloaderVisualComplete = false;
+
             var fillEl = document.getElementById("preloader-progress-fill");
             var textEl = document.getElementById("preloader-progress-text");
 
+            // Animation loop for fluid, premium progress transition
+            function animateProgress() {
+                if (currentVisualProgress < targetProgress) {
+                    var diff = targetProgress - currentVisualProgress;
+                    // Linear interpolation (lerp) with a speed cap for seamless gradual rise
+                    var step = Math.max(0.3, diff * 0.05); 
+                    currentVisualProgress += step;
+                    
+                    if (currentVisualProgress > targetProgress) {
+                        currentVisualProgress = targetProgress;
+                    }
+                    
+                    if (fillEl) fillEl.style.width = currentVisualProgress + "%";
+                    if (textEl) textEl.textContent = Math.round(currentVisualProgress) + "%";
+                }
+                
+                if (currentVisualProgress >= 100) {
+                    window.preloaderVisualComplete = true;
+                    // Stop the cycling loop once load is finished
+                    clearInterval(greetingCycleInterval);
+                    // Ensure the final state shows the last Indonesian greeting ("Halo")
+                    if (el) {
+                        el.textContent = greetings[greetings.length - 1];
+                    }
+                }
+                
+                requestAnimationFrame(animateProgress);
+            }
+            
+            // Trigger animation loop
+            requestAnimationFrame(animateProgress);
+
+            // Initial warm-up simulation up to 15% (first 250ms)
+            var initialProgress = 0;
             var interval = setInterval(function () {
-                if (progress >= 88) {
+                if (initialProgress >= 15) {
                     clearInterval(interval);
                     return;
                 }
-                // Random incremental increase
-                progress += Math.floor(Math.random() * 4) + 1;
-                if (progress > 88) progress = 88;
-                updateProgress(progress);
-            }, 120);
+                initialProgress += 3;
+                if (initialProgress > 15) initialProgress = 15;
+                if (initialProgress > targetProgress) {
+                    targetProgress = initialProgress;
+                }
+            }, 50);
 
-            function updateProgress(value) {
-                if (fillEl) fillEl.style.width = value + "%";
-                if (textEl) textEl.textContent = value + "%";
-            }
+            // Expose globally so main.jsx can feed real loading data
+            window.updatePreloaderProgress = function (value) {
+                if (value < targetProgress) return; 
+                targetProgress = value;
+            };
 
-            // Expose globally to trigger instant 100% loading complete
+            // Expose globally for absolute fallback complete
             window.completePreloaderProgress = function () {
                 clearInterval(interval);
-                progress = 100;
-                updateProgress(100);
+                targetProgress = 100;
             };
         })();
     </script>

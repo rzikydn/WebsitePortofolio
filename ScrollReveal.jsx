@@ -57,7 +57,10 @@ const ScrollReveal = ({
     );
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      if (st && st.scrollTrigger) {
+        st.scrollTrigger.kill();
+      }
+      st.kill();
     };
   }, [enableBlur, baseOpacity, blurStrength, pinContainer]);
 

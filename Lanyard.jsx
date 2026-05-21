@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { useGLTF, useTexture, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
@@ -45,8 +45,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={[1, 1.2]}
-        gl={{ alpha: transparent, antialias: false, powerPreference: "high-performance" }}
+        dpr={isMobile ? [1, 1.5] : [1, 1.5]} // 1.5x is the sweet spot: crisp visuals, minimal GPU load
+        gl={{ alpha: transparent, antialias: true, powerPreference: "high-performance" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
@@ -55,7 +55,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
             <Band isMobile={isMobile} ready={ready} />
           </Physics>
         )}
-        <Environment preset="city" />
+        {/* Lightweight directional light replaces heavy Environment HDR cubemap */}
+        <directionalLight position={[5, 5, 5]} intensity={0.5} />
       </Canvas>
     </div>
   );
@@ -176,7 +177,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
             <mesh geometry={nodes.card.geometry}>
               <meshStandardMaterial
                 map={materials.base.map}
-                map-anisotropy={isMobile ? 4 : 16}
+                map-anisotropy={16} // Force 16 on all devices for sharp, highly legible text at sharp angles
                 roughness={0.85}
                 metalness={0.7}
               />

@@ -1,5 +1,5 @@
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* Lenis handles smooth scrolling — CSS smooth-scroll creates double-interpolation */
     /* Base font-size: default 16px on standard displays */
     font-size: 16px;
 }
@@ -236,6 +236,11 @@ body {
     /* Fade out the pattern at the bottom smoothly */
     -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 120px), transparent 100%);
     mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 120px), transparent 100%);
+
+    /* GPU performance: promote to compositor layer and isolate from main paint tree */
+    will-change: transform;
+    contain: strict;
+    transform: translateZ(0);
 }
 
 .content-wrapper {
@@ -270,7 +275,9 @@ body {
     max-width: 46.875rem;
     height: max-content;
     border: 1px solid rgba(0, 0, 0, 0.04);
-    transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+    will-change: transform; /* Promote navbar to its own GPU compositor layer */
+    contain: layout style; /* Isolate repaints */
 }
 
 .nav-group {
@@ -1251,7 +1258,7 @@ body.dark-mode .exp-desc {
 
 .contact-image {
     position: absolute;
-    right: -45%;
+    right: 5vw;
     top: 50%;
     transform: translateY(-50%);
     width: clamp(15.625rem, 25vw, 26.25rem);
@@ -1286,7 +1293,7 @@ body.dark-mode .contact-img--light {
 }
 
 .contact-cta-content {
-    position: relative;
+    position: static;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -1294,7 +1301,7 @@ body.dark-mode .contact-img--light {
     gap: 1.2rem;
     text-align: left;
     flex: 1;
-    max-width: 900px;
+    max-width: min(800px, 58%);
 }
 
 .contact-subtitle {

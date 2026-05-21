@@ -83,12 +83,12 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
     transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    contain: layout style paint;
 }
 
 .certificate-card.active {
     border-color: rgba(56, 189, 248, 0.35);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), 0 0 20px rgba(56, 189, 248, 0.05);
-    will-change: transform, opacity;
 }
 
 /* Card Background Media Showcase matching Bento Grid */
@@ -107,16 +107,14 @@
     height: 100%;
     object-fit: cover;
     opacity: 0.3;
-    filter: brightness(0.85) contrast(1.05);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    will-change: transform, opacity;
 }
 
 .certificate-card:hover .cert-bg-img,
 .certificate-card.active .cert-bg-img {
-    transform: scale(1.06) translateY(-4px);
+    transform: scale3d(1.06, 1.06, 1) translate3d(0, -4px, 0);
     opacity: 0.55;
-    filter: brightness(1) contrast(1.1);
-    will-change: transform;
 }
 
 /* Premium Gradient Overlay matching Bento grid overlay exactly */
