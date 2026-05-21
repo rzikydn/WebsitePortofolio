@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rzikydn.my.id/sitemap.xml

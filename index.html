@@ -4,7 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Preloader</title>
+    <title>Wildan Rizky Wijaya | Portfolio</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Portfolio of Wildan Rizky Wijaya — Data Analyst Enthusiast from Jakarta, Indonesia. Skilled in data analysis, visualization, Python, SQL, and creating actionable insights from complex datasets.">
+    <meta name="keywords"
+        content="Wildan Rizky Wijaya, Data Analyst, Portfolio, Data Visualization, Python, SQL, Jakarta, Indonesia">
+    <meta name="author" content="Wildan Rizky Wijaya">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" href="https://rzikydn.my.id/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rzikydn.my.id/">
+    <meta property="og:title" content="Wildan's Portofolio">
+    <meta property="og:description"
+        content="Data Analyst Enthusiast from Jakarta, Indonesia. Exploring datasets, creating insights, and building data-driven solutions.">
+    <meta property="og:image" content="https://rzikydn.my.id/images/pp1new.png">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Wildan's Portofolio">
+    <meta name="twitter:description"
+        content="Data Analyst Enthusiast from Jakarta, Indonesia. Exploring datasets, creating insights, and building data-driven solutions.">
+    <meta name="twitter:image" content="https://rzikydn.my.id/images/pp1new.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Wildan Rizky Wijaya",
+        "url": "https://rzikydn.my.id/",
+        "jobTitle": "Data Analyst",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Jakarta",
+            "addressCountry": "ID"
+        },
+        "email": "rzikydn@gmail.com",
+        "sameAs": [
+            "https://www.linkedin.com/in/wildan-rizky",
+            "https://github.com/rzikydn",
+            "https://www.instagram.com/rzikydn/"
+        ]
+    }
+    </script>
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +96,8 @@
         </div>
         <div class="nav-divider nav-divider--socials"></div>
         <div class="nav-group nav-group--socials">
-            <a href="https://www.instagram.com/rzikydn/" target="_blank" rel="noopener noreferrer" class="nav-item" data-tooltip="Instagram">
+            <a href="https://www.instagram.com/rzikydn/" target="_blank" rel="noopener noreferrer" class="nav-item"
+                data-tooltip="Instagram">
                 <i class="ph ph-instagram-logo"></i>
             </a>
             <a href="https://www.linkedin.com/in/wildan-rizky" target="_blank" rel="noopener noreferrer"
@@ -55,7 +110,8 @@
             <button class="theme-toggle" data-tooltip="Toggle Theme">
                 <i class="ph ph-sun"></i>
             </button>
-            <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-hire" data-tooltip="View CV">
+            <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing" target="_blank"
+                rel="noopener noreferrer" class="btn-hire" data-tooltip="View CV">
                 <i class="ph ph-file-pdf"></i>
                 View CV
             </a>
@@ -86,8 +142,8 @@
 
     <!-- Inline preloader greeting & progress animation - runs immediately, no module wait -->
     <script>
-        (function() {
-            var greetings = ["Hello","Bonjour","Hola","Ciao","Guten Tag","안녕하세요","Привет","Namaste","Merhaba","Halo"];
+        (function () {
+            var greetings = ["Hello", "Bonjour", "Hola", "Ciao", "Guten Tag", "안녕하세요", "Привет", "Namaste", "Merhaba", "Halo"];
             var el = document.getElementById("greeting-text");
             var idx = 1;
             function cycle() {
@@ -102,8 +158,8 @@
             var progress = 0;
             var fillEl = document.getElementById("preloader-progress-fill");
             var textEl = document.getElementById("preloader-progress-text");
-            
-            var interval = setInterval(function() {
+
+            var interval = setInterval(function () {
                 if (progress >= 88) {
                     clearInterval(interval);
                     return;
@@ -113,14 +169,14 @@
                 if (progress > 88) progress = 88;
                 updateProgress(progress);
             }, 120);
-            
+
             function updateProgress(value) {
                 if (fillEl) fillEl.style.width = value + "%";
                 if (textEl) textEl.textContent = value + "%";
             }
-            
+
             // Expose globally to trigger instant 100% loading complete
-            window.completePreloaderProgress = function() {
+            window.completePreloaderProgress = function () {
                 clearInterval(interval);
                 progress = 100;
                 updateProgress(100);
@@ -153,7 +209,8 @@
                             insights.</p>
 
                         <div class="hero-buttons">
-                            <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-hire">
+                            <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing"
+                                target="_blank" rel="noopener noreferrer" class="btn-hire">
                                 <i class="ph ph-file-pdf"></i>
                                 View CV
                             </a>
