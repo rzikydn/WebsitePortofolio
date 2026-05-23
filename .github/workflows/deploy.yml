@@ -38,3 +38,5 @@ jobs:
           local-dir: ./dist/ # Folder output hasil compile Vite
           server-dir: / # Folder root FTP karena akun FTP sudah dikunci langsung di folder rzikydn.my.id
           state-name: .ftp-deploy-sync-state.json
+          timeout: 180000 # Menambah waktu batas socket menjadi 3 menit untuk mengantisipasi file besar
+          security: loose # Menghindari verifikasi SSL ketat yang sering memutus koneksi FTP secara sepihak
