@@ -9,6 +9,7 @@ import ExperienceAccordion from './ExperienceAccordion'
 import MotionCarousel from './MotionCarousel'
 import { SmoothCursor } from './SmoothCursor'
 import { ConfettiSideCannons } from './ConfettiSideCannons'
+import { ArrowBigDownDashIcon } from './ArrowBigDownDashIcon'
 import cardGLB from './card.glb'
 import lanyard from './lanyard.png'
 
@@ -261,4 +262,10 @@ if (smoothCursorRoot) {
 const confettiRoot = document.getElementById('confetti-root');
 if (confettiRoot) {
   ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
+}
+
+// Mobile Arrow Indicator Mount
+const mobileArrowRoot = document.getElementById('mobile-arrow-root');
+if (mobileArrowRoot) {
+  ReactDOM.createRoot(mobileArrowRoot).render(<ArrowBigDownDashIcon size={38} />);
 }

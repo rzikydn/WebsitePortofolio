@@ -1551,4 +1551,31 @@ body.dark-mode .site-footer {
     body.custom-cursor-active [contenteditable] {
         cursor: text !important;
     }
+}
+
+/* Mobile Scroll-Down Arrow Indicator */
+#mobile-arrow-root {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    #mobile-arrow-root {
+        position: absolute;
+        top: -6rem; /* Shifted higher up to hover perfectly above the text without pushing it down */
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+
+    #mobile-arrow-root svg {
+        color: rgba(0, 0, 0, 0.4); /* Elegant semi-transparent grey/black in default light mode */
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode #mobile-arrow-root svg {
+        color: rgba(255, 255, 255, 0.4); /* Elegant semi-transparent white in dark mode */
+    }
 }

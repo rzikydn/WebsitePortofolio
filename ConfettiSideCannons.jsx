@@ -35,19 +35,15 @@ export function ConfettiSideCannons() {
   };
 
   useEffect(() => {
-    // 1. Automatic trigger on scroll into view (only for mobile <= 768px)
+    // 1. Automatic trigger on scroll into view (for both desktop and mobile)
     const handleIntersection = (entries) => {
       const [entry] = entries;
-      const isMobile = window.innerWidth <= 768;
 
-      if (entry.isIntersecting && isMobile) {
+      if (entry.isIntersecting) {
         if (!hasFired.current) {
           triggerConfetti();
           hasFired.current = true;
         }
-      } else if (!entry.isIntersecting) {
-        // Reset when scrolled out of view, so it can fire again next time they scroll down
-        hasFired.current = false;
       }
     };
 
