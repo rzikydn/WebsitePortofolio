@@ -1537,3 +1537,18 @@ body.dark-mode .site-footer {
         letter-spacing: -3px;
     }
 }
+
+/* Custom Smooth Cursor Utilities (Applied only on desktop fine pointer devices) */
+@media (any-hover: hover) and (any-pointer: fine) {
+    body.custom-cursor-active,
+    body.custom-cursor-active * {
+        cursor: none !important;
+    }
+
+    body.custom-cursor-active input,
+    body.custom-cursor-active textarea,
+    body.custom-cursor-active select,
+    body.custom-cursor-active [contenteditable] {
+        cursor: text !important;
+    }
+}

@@ -7,6 +7,8 @@ import BentoGrid from './BentoGrid'
 import LogoLoop from './LogoLoop'
 import ExperienceAccordion from './ExperienceAccordion'
 import MotionCarousel from './MotionCarousel'
+import { SmoothCursor } from './SmoothCursor'
+import { ConfettiSideCannons } from './ConfettiSideCannons'
 import cardGLB from './card.glb'
 import lanyard from './lanyard.png'
 
@@ -247,4 +249,16 @@ if (experienceRoot) {
 const certificatesRoot = document.getElementById('certificates-root');
 if (certificatesRoot) {
   ReactDOM.createRoot(certificatesRoot).render(<MotionCarousel />);
+}
+
+// Smooth Cursor Mount
+const smoothCursorRoot = document.getElementById('smooth-cursor-root');
+if (smoothCursorRoot) {
+  ReactDOM.createRoot(smoothCursorRoot).render(<SmoothCursor />);
+}
+
+// Confetti Mount
+const confettiRoot = document.getElementById('confetti-root');
+if (confettiRoot) {
+  ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
 }

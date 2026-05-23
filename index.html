@@ -33,8 +33,8 @@
     <meta name="twitter:image" content="https://rzikydn.my.id/images/pp1new.png">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/images/favicon.png">
-    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" type="image/png" href="/images/logox.png">
+    <link rel="apple-touch-icon" href="/images/logox.png">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -145,7 +145,7 @@
         (function () {
             var greetings = ["Hello", "Bonjour", "Hola", "Ciao", "Guten Tag", "안녕하세요", "Привет", "Namaste", "Merhaba", "Halo"];
             var el = document.getElementById("greeting-text");
-            
+
             // Cycle continually through the first 9 greetings (0 to 8) to keep it lively on slow connections
             // Save the 10th one ("Halo") for 100% completion
             var currentGreetingIdx = 0;
@@ -167,17 +167,17 @@
                 if (currentVisualProgress < targetProgress) {
                     var diff = targetProgress - currentVisualProgress;
                     // Linear interpolation (lerp) with a speed cap for seamless gradual rise
-                    var step = Math.max(0.3, diff * 0.05); 
+                    var step = Math.max(0.3, diff * 0.05);
                     currentVisualProgress += step;
-                    
+
                     if (currentVisualProgress > targetProgress) {
                         currentVisualProgress = targetProgress;
                     }
-                    
+
                     if (fillEl) fillEl.style.width = currentVisualProgress + "%";
                     if (textEl) textEl.textContent = Math.round(currentVisualProgress) + "%";
                 }
-                
+
                 if (currentVisualProgress >= 100) {
                     window.preloaderVisualComplete = true;
                     // Stop the cycling loop once load is finished
@@ -187,10 +187,10 @@
                         el.textContent = greetings[greetings.length - 1];
                     }
                 }
-                
+
                 requestAnimationFrame(animateProgress);
             }
-            
+
             // Trigger animation loop
             requestAnimationFrame(animateProgress);
 
@@ -210,7 +210,7 @@
 
             // Expose globally so main.jsx can feed real loading data
             window.updatePreloaderProgress = function (value) {
-                if (value < targetProgress) return; 
+                if (value < targetProgress) return;
                 targetProgress = value;
             };
 
@@ -363,6 +363,8 @@
         </div>
     </footer>
 
+    <div id="smooth-cursor-root"></div>
+    <div id="confetti-root"></div>
     <script type="module" src="./script.js"></script>
     <script type="module" src="/main.jsx"></script>
 </body>
