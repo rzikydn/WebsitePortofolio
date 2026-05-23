@@ -4,22 +4,19 @@ const fs = require("fs");
 
 async function deploy() {
     const client = new ftp.Client();
-    client.ftp.verbose = false; // Set to false to keep log output clean and readable
+    client.ftp.verbose = true; // Enabled full logs to monitor progress in real-time
     
     const host = process.env.FTP_SERVER;
     const user = process.env.FTP_USERNAME;
     const password = process.env.FTP_PASSWORD;
 
     async function connect() {
-        console.log("Connecting to FTP server via FTPS...");
+        console.log("Connecting to FTP server (Standard FTP)...");
         await client.access({
             host: host,
             user: user,
             password: password,
-            secure: true,
-            options: {
-                rejectUnauthorized: false // loose SSL verification to bypass firewall restrictions
-            }
+            secure: false // Standard FTP to guarantee 100% connection compatibility with Aren Host
         });
         console.log("Connected successfully.");
     }
@@ -44,16 +41,15 @@ async function deploy() {
                     await uploadDir(localItemPath, remoteItemPath);
                 } else {
                     let attempts = 0;
-                    const maxAttempts = 6; // Try up to 6 times per file to completely neutralize drops
+                    const maxAttempts = 6; // Try up to 6 times per file to completely bypass server drops
                     
                     while (attempts < maxAttempts) {
                         try {
                             console.log(`[DEPLOY] Uploading ${item} -> ${remoteItemPath} (Attempt ${attempts + 1}/${maxAttempts})`);
-                            // Navigate to directory and upload
                             await client.ensureDir(remotePath);
                             await client.uploadFrom(localItemPath, item);
                             console.log(`[SUCCESS] Uploaded ${item} successfully.`);
-                            break; // Exit loop on success
+                            break; // Success!
                         } catch (err) {
                             attempts++;
                             console.error(`[ERROR] Failed to upload ${item}: ${err.message}`);
@@ -65,13 +61,12 @@ async function deploy() {
                             console.log("[RECOVERY] Waiting 3 seconds before retrying...");
                             await new Promise(resolve => setTimeout(resolve, 3000));
                             
-                            if (client.closed || !client.ftp.isConnected) {
-                                console.log("[RECOVERY] Connection lost. Re-establishing FTP connection...");
-                                try {
-                                    await connect();
-                                } catch (reconnErr) {
-                                    console.error(`[RECOVERY] Reconnection failed: ${reconnErr.message}`);
-                                }
+                            console.log("[RECOVERY] Closing and re-establishing clean FTP connection...");
+                            try {
+                                client.close(); // Force destroy current client socket to clean up corrupted state
+                                await connect();
+                            } catch (reconnErr) {
+                                console.error(`[RECOVERY] Reconnection failed: ${reconnErr.message}`);
                             }
                         }
                     }
