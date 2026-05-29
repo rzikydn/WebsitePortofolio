@@ -14,7 +14,6 @@ const EXPERIENCES = [
       'Organized and archived certification documents for easy accessibility.',
       'Provided information services to participants directly and via email.',
     ],
-    active: true,
   },
   {
     yearStart: '2025',
@@ -29,6 +28,22 @@ const EXPERIENCES = [
       'Compiled data summaries and web-based visual reports to support internal monitoring and decision-making.',
       'Collaborated with the administrative team to automate reporting and streamline data collection workflows for greater efficiency.',
     ],
+  },
+  {
+    yearStart: '2026',
+    yearEnd: 'Present',
+    company: 'CakrawalaEduCentre',
+    role: 'Information Technology Web Developer',
+    period: 'May 2026 - Present · 1 mo',
+    bullets: [
+      'Designed system architecture and drafted comprehensive technical documentation as the foundation for the Learning Management System (LMS) platform development.',
+      'Built and developed the LMS website end-to-end, spanning both frontend and backend architectures, to support institutional operations.',
+      'Maintained website infrastructure and mobile applications, including implementing new features and debugging, with a consistent target of completing at least 5 development tasks per week.',
+      'Integrated and managed digital analytics tools (Google Analytics, Google Search Console, and Google Ads) to monitor website performance and compiled weekly conversion rate reports.',
+      'Managed databases and ensured robust system security through routine backups and the application of cybersecurity standards to protect data from external threats.',
+      'Provided advanced troubleshooting for internal technical incidents, ensuring all company IT infrastructure operates optimally on a daily basis.',
+    ],
+    active: true,
   },
 ];
 
@@ -46,6 +61,7 @@ function AccordionItem({ item, isOpen, onToggle }) {
 
   return (
     <div className={`acc-item ${isOpen ? 'acc-item--open' : ''} ${item.active ? 'acc-item--active' : ''}`}>
+      <div className="acc-item-dot"></div>
       <button className="acc-trigger" onClick={onToggle}>
         <div className="acc-trigger-info">
           <h3 className="acc-company">{item.company}</h3>
