@@ -276,3 +276,5 @@ const globeRoot = document.getElementById('globe-root');
 if (globeRoot) {
   ReactDOM.createRoot(globeRoot).render(<Globe />);
 }
+
+

@@ -12,24 +12,24 @@ jobs:
 
     steps:
       # Langkah 1: Unduh kode terbaru dari Repositori GitHub Anda ke mesin server GitHub Actions
-      - name: 🚚 Get latest code
+      - name: Get latest code
         uses: actions/checkout@v4
 
       # Langkah 2: Siapkan lingkungan Node.js
-      - name: ⚙️ Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
       # Langkah 3: Install seluruh dependencies dan jalankan build produksi (Vite akan menghasilkan folder 'dist')
-      - name: 📦 Install dependencies & Build Production
+      - name: Install dependencies & Build Production
         run: |
           npm install
           npm run build
 
       # Langkah 4: Unggah isi folder 'dist' ke public_html di hosting menggunakan Script Self-Healing
-      - name: 🚀 Deploy to Hosting via Self-Healing Deploy Script
+      - name: Deploy to Hosting via Self-Healing Deploy Script
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
