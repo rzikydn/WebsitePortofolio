@@ -11,6 +11,7 @@ import { SmoothCursor } from './SmoothCursor'
 import { ConfettiSideCannons } from './ConfettiSideCannons'
 import { ArrowBigDownDashIcon } from './ArrowBigDownDashIcon'
 import { Globe } from './Globe'
+import CrowdCanvas from './CrowdCanvas'
 import cardGLB from './card.glb'
 import lanyard from './lanyard.png'
 
@@ -49,7 +50,8 @@ const CRITICAL_IMAGES = [
   "/images/Tailwindcss6.png",
   "/images/Vite.png",
   "/images/HTML.png",
-  "/images/GitLab.png"
+  "/images/GitLab.png",
+  "/images/peeps/all-peeps.png"
 ];
 
 function startAssetPreload() {
@@ -265,16 +267,17 @@ if (confettiRoot) {
   ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
 }
 
-// Mobile Arrow Indicator Mount
-const mobileArrowRoot = document.getElementById('mobile-arrow-root');
-if (mobileArrowRoot) {
-  ReactDOM.createRoot(mobileArrowRoot).render(<ArrowBigDownDashIcon size={38} />);
-}
 
 // Globe Mount (for contact page)
 const globeRoot = document.getElementById('globe-root');
 if (globeRoot) {
   ReactDOM.createRoot(globeRoot).render(<Globe />);
+}
+
+// Crowd Canvas Mount
+const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
+if (crowdCanvasRoot) {
+  ReactDOM.createRoot(crowdCanvasRoot).render(<CrowdCanvas />);
 }
 
 

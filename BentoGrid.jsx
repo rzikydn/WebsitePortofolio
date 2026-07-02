@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './BentoGrid.css';
+import CardStackScroll from './CardStackScroll';
 
 const projects = [
   {
@@ -37,6 +38,23 @@ const projects = [
 ];
 
 export default function BentoGrid() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    // Run immediately
+    checkMobile();
+    
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  if (isMobile) {
+    return <CardStackScroll />;
+  }
+
   return (
     <div className="bento-grid-container">
       {projects.map((project, idx) => (
