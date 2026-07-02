@@ -166,7 +166,11 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
     };
 
     const initCrowd = () => {
-      while (availablePeeps.length) {
+      const isMobile = window.innerWidth <= 768;
+      const maxActivePeeps = isMobile ? 18 : 45;
+      const count = Math.min(availablePeeps.length, maxActivePeeps);
+
+      for (let i = 0; i < count; i++) {
         const peep = addPeepToCrowd();
         if (peep && peep.walk) {
           const walk = peep.walk;
@@ -226,16 +230,16 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       ctx.restore();
     };
 
-    const resize = () => {
+    const resize = (currentWidth, currentHeight) => {
       if (!canvas) return;
-      const currentWidth = canvas.clientWidth;
-      const currentHeight = canvas.clientHeight;
+      if (!currentWidth || !currentHeight) {
+        currentWidth = canvas.clientWidth;
+        currentHeight = canvas.clientHeight;
+      }
+      if (!currentWidth || !currentHeight) return;
 
-      // If only height changed (e.g. mobile URL bar expand/collapse on scroll),
-      // just update dimensions to prevent distortion but keep the crowd running.
+      // Ignore height-only resizes (caused by mobile URL bar show/hide) to prevent canvas reset and flickering
       if (currentWidth === lastWidth) {
-        stage.height = currentHeight;
-        canvas.height = currentHeight * devicePixelRatio;
         return;
       }
 
@@ -256,20 +260,25 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       initCrowd();
     };
 
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width, height } = entry.contentRect;
+        resize(width, height);
+      }
+    });
+
     const init = () => {
       createPeeps();
       resize();
+      resizeObserver.observe(canvas);
       gsap.ticker.add(render);
     };
 
     img.onload = init;
     img.src = config.src;
 
-    const handleResize = () => resize();
-    window.addEventListener("resize", handleResize);
-
     return () => {
-      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
       gsap.ticker.remove(render);
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
@@ -288,6 +297,9 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
         height: "45vh",
         pointerEvents: "none",
         zIndex: 1,
+        transform: "translate3d(0, 0, 0)",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
       }}
     />
   );

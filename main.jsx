@@ -12,6 +12,8 @@ import { ConfettiSideCannons } from './ConfettiSideCannons'
 import { ArrowBigDownDashIcon } from './ArrowBigDownDashIcon'
 import { Globe } from './Globe'
 import CrowdCanvas from './CrowdCanvas'
+import SvgFollowScroll from './SvgFollowScroll'
+import SvgWorksScroll from './SvgWorksScroll'
 import cardGLB from './card.glb'
 import lanyard from './lanyard.png'
 
@@ -278,6 +280,18 @@ if (globeRoot) {
 const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
 if (crowdCanvasRoot) {
   ReactDOM.createRoot(crowdCanvasRoot).render(<CrowdCanvas />);
+}
+
+// SVG Follow Scroll Mount
+const svgFollowScrollRoot = document.getElementById('svg-follow-scroll-root');
+if (svgFollowScrollRoot) {
+  ReactDOM.createRoot(svgFollowScrollRoot).render(<SvgFollowScroll />);
+}
+
+// Works SVG Mount
+const worksSvgRoot = document.getElementById('works-svg-root');
+if (worksSvgRoot) {
+  ReactDOM.createRoot(worksSvgRoot).render(<SvgWorksScroll />);
 }
 
 

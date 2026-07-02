@@ -823,7 +823,7 @@ body.dark-mode .about-text {
     width: 100%;
     min-height: 100vh;
     background-color: var(--black-section-bg, #0f172a);
-    z-index: 50;
+    z-index: 51;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -855,7 +855,6 @@ body.dark-mode .about-text {
     min-height: auto;
     /* Shrink height to pull MY EXPERIENCE section up on desktop */
     background-color: var(--black-section-bg, #0f172a);
-    z-index: 50;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -868,6 +867,7 @@ body.dark-mode .about-text {
 
 .skills-section .bg-text {
     position: relative;
+    z-index: 52;
     font-size: clamp(3rem, 15vw, 20rem);
     /* Matches MY WORKS size */
     font-weight: 900;

@@ -33,4 +33,6 @@
   margin: 0 auto !important;
   text-decoration: none;
   background-color: #0a0f1e !important; /* Fully opaque solid background to prevent overlap transparency bleeding */
+  will-change: transform;
+  contain: layout style paint;
 }
