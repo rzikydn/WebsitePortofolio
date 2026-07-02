@@ -175,21 +175,30 @@ if (document.readyState === 'loading') {
     init();
 }
 
-// Smooth scroll navigation using Lenis
-document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(link => {
+// Smooth scroll navigation using Lenis for all anchor links starting with "#"
+document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
-        e.preventDefault();
         const targetId = link.getAttribute('href');
-        const target = document.querySelector(targetId);
-        if (target) {
-            // Update active state instantly on click
-            document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(item => item.classList.remove('active'));
-            link.classList.add('active');
-            
-            lenis.scrollTo(target, {
-                duration: 2,
-                easing: (t) => 1 - Math.pow(1 - t, 4), // easeOutQuart
-            });
+        if (!targetId || targetId === '#') return;
+        
+        try {
+            const target = document.querySelector(targetId);
+            if (target) {
+                e.preventDefault();
+                // Update active state instantly on click for navbar items
+                document.querySelectorAll('.floating-navbar a[href^="#"]').forEach(item => item.classList.remove('active'));
+                const matchingNavLink = document.querySelector(`.floating-navbar a[href="${targetId}"]`);
+                if (matchingNavLink) {
+                    matchingNavLink.classList.add('active');
+                }
+                
+                lenis.scrollTo(target, {
+                    duration: 2,
+                    easing: (t) => 1 - Math.pow(1 - t, 4), // easeOutQuart
+                });
+            }
+        } catch (err) {
+            console.error('Error in smooth scroll selector:', err);
         }
     });
 });
