@@ -34,28 +34,10 @@ setTimeout(() => {
   signalReady();
 }, 8500);
 
-// Comprehensive list of all high-resolution/heavy assets to preload
-const CRITICAL_IMAGES = [
-  "/images/pp2new.png",
-  "/images/pp1new.png",
-  "/images/SER1.png",
-  "/images/SER2.png",
-  "/images/SER3.png",
-  "/images/mockup1.png",
-  "/images/mockup2.png",
-  "/images/mockup3.png",
-  "/images/mockup4.png",
-  "/images/React.png",
-  "/images/Vue.png",
-  "/images/Node.js.png",
-  "/images/Python.png",
-  "/images/TypeScript.png",
-  "/images/Tailwindcss6.png",
-  "/images/Vite.png",
-  "/images/HTML.png",
-  "/images/GitLab.png",
-  "/images/peeps/all-peeps.png"
-];
+// Only preload essential above-the-fold assets required for the hero section
+// to prevent network congestion and slow FCP/LCP on mobile devices.
+const CRITICAL_IMAGES = [];
+
 
 function startAssetPreload() {
   const assetsToLoad = [
