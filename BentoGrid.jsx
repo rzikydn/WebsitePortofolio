@@ -46,7 +46,7 @@ export default function BentoGrid() {
     };
     // Run immediately
     checkMobile();
-    
+
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -58,21 +58,21 @@ export default function BentoGrid() {
   return (
     <div className="bento-grid-container">
       {projects.map((project, idx) => (
-        <a 
-          key={idx} 
-          href={project.link} 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          key={idx}
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
           className={`bento-card ${project.className}`}
         >
           {/* Zooming image background */}
           <div className="bento-bg">
             <img src={project.image} alt={project.title} loading="lazy" width="600" height="400" />
           </div>
-          
+
           {/* Premium gradient overlay */}
           <div className="bento-gradient-overlay"></div>
-          
+
           {/* Content Block */}
           <div className="bento-info">
             <h3 className="bento-title">{project.title}</h3>

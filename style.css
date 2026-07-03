@@ -1274,12 +1274,13 @@ body.dark-mode .exp-desc {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     overflow: hidden;
-    padding: 5vh 5vw 15vh;
+    padding: 5vh 0 15vh;
 }
 
 .contact-section .bg-text {
+    align-self: center;
     position: relative;
     font-size: clamp(3.75rem, 16vw, 19rem);
     font-weight: 900;
