@@ -110,6 +110,7 @@ if (document.readyState === 'complete') {
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
   const [inViewport, setInViewport] = useState(true);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
 
   useEffect(() => {
     // Listen for custom event dispatched by script.js when preloader finishes
@@ -118,6 +119,11 @@ function App() {
     };
 
     window.addEventListener('lanyard-drop', handleDrop);
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', checkMobile);
 
     // High-performance IntersectionObserver to pause/unmount canvas off-screen
     const observer = new IntersectionObserver(
@@ -132,9 +138,28 @@ function App() {
 
     return () => {
       window.removeEventListener('lanyard-drop', handleDrop);
+      window.removeEventListener('resize', checkMobile);
       if (rootEl) observer.unobserve(rootEl);
     };
   }, []);
+
+  if (isMobile) {
+    return (
+      <div className="mobile-lanyard-fallback">
+        <div className="mobile-badge-card">
+          <div className="mobile-badge-top"></div>
+          <div className="mobile-badge-body">
+            <div className="mobile-badge-avatar-wrap">
+              <img src="/images/pp2new.png" className="mobile-badge-avatar mobile-badge-avatar--dark" alt="Avatar" />
+              <img src="/images/pp1new.png" className="mobile-badge-avatar mobile-badge-avatar--light" alt="Avatar" />
+            </div>
+            <h3 className="mobile-badge-name">Rizky Wijaya</h3>
+            <p className="mobile-badge-role">Data Analyst</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <React.Suspense fallback={null}>

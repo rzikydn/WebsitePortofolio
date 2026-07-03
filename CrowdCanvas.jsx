@@ -265,11 +265,30 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       }
     });
 
+    let inViewport = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting;
+        if (inViewport) {
+          crowd.forEach(peep => {
+            if (peep.walk) peep.walk.resume();
+          });
+          gsap.ticker.add(render);
+        } else {
+          crowd.forEach(peep => {
+            if (peep.walk) peep.walk.pause();
+          });
+          gsap.ticker.remove(render);
+        }
+      },
+      { threshold: 0.01 }
+    );
+
     const init = () => {
       createPeeps();
       resize();
       resizeObserver.observe(canvas);
-      gsap.ticker.add(render);
+      io.observe(canvas);
     };
 
     img.onload = init;
@@ -277,6 +296,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
 
     return () => {
       resizeObserver.disconnect();
+      io.disconnect();
       gsap.ticker.remove(render);
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
