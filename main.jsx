@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-import Lanyard from './Lanyard'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
-import BentoGrid from './BentoGrid'
-import LogoLoop from './LogoLoop'
-import ExperienceAccordion from './ExperienceAccordion'
-import MotionCarousel from './MotionCarousel'
-import { SmoothCursor } from './SmoothCursor'
-import { ConfettiSideCannons } from './ConfettiSideCannons'
-import { ArrowBigDownDashIcon } from './ArrowBigDownDashIcon'
-import { Globe } from './Globe'
-import CrowdCanvas from './CrowdCanvas'
-import SvgFollowScroll from './SvgFollowScroll'
-import SvgWorksScroll from './SvgWorksScroll'
 import cardGLB from './card.glb'
 import lanyard from './lanyard.png'
+
+// Lazy loaded heavy components for optimal page-load performance
+const Lanyard = React.lazy(() => import('./Lanyard'));
+const BentoGrid = React.lazy(() => import('./BentoGrid'));
+const LogoLoop = React.lazy(() => import('./LogoLoop'));
+const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
+const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
+const SmoothCursor = React.lazy(() => import('./SmoothCursor'));
+const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
+const Globe = React.lazy(() => import('./Globe'));
+const CrowdCanvas = React.lazy(() => import('./CrowdCanvas'));
+const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
+const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
 
 // ============================================
 // Real Asset Preloader & Loader Tracker
@@ -198,7 +199,9 @@ if (scrollRevealRoot) {
 const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
   ReactDOM.createRoot(flowingMenuRoot).render(
-    <BentoGrid />
+    <Suspense fallback={null}>
+      <BentoGrid />
+    </Suspense>
   );
 }
 
@@ -227,18 +230,20 @@ if (logoLoopRoot) {
     }, []);
 
     return (
-      <LogoLoop
-        logos={imageLogos}
-        speed={120}
-        direction="left"
-        logoHeight={isMobile ? 80 : "8.75rem"}
-        gap={isMobile ? 50 : "8.75rem"}
-        hoverSpeed={0}
-        scaleOnHover
-        fadeOut
-        fadeOutColor="transparent"
-        ariaLabel="Technology skills"
-      />
+      <Suspense fallback={null}>
+        <LogoLoop
+          logos={imageLogos}
+          speed={120}
+          direction="left"
+          logoHeight={isMobile ? 80 : "8.75rem"}
+          gap={isMobile ? 50 : "8.75rem"}
+          hoverSpeed={0}
+          scaleOnHover
+          fadeOut
+          fadeOutColor="transparent"
+          ariaLabel="Technology skills"
+        />
+      </Suspense>
     );
   };
 
@@ -248,50 +253,81 @@ if (logoLoopRoot) {
 // Experience Accordion Mount
 const experienceRoot = document.getElementById('experience-root');
 if (experienceRoot) {
-  ReactDOM.createRoot(experienceRoot).render(<ExperienceAccordion />);
+  ReactDOM.createRoot(experienceRoot).render(
+    <Suspense fallback={null}>
+      <ExperienceAccordion />
+    </Suspense>
+  );
 }
 
 // Certificates Carousel Mount
 const certificatesRoot = document.getElementById('certificates-root');
 if (certificatesRoot) {
-  ReactDOM.createRoot(certificatesRoot).render(<MotionCarousel />);
+  ReactDOM.createRoot(certificatesRoot).render(
+    <Suspense fallback={null}>
+      <MotionCarousel />
+    </Suspense>
+  );
 }
 
 // Smooth Cursor Mount
 const smoothCursorRoot = document.getElementById('smooth-cursor-root');
 if (smoothCursorRoot) {
-  ReactDOM.createRoot(smoothCursorRoot).render(<SmoothCursor />);
+  ReactDOM.createRoot(smoothCursorRoot).render(
+    <Suspense fallback={null}>
+      <SmoothCursor />
+    </Suspense>
+  );
 }
 
 // Confetti Mount
 const confettiRoot = document.getElementById('confetti-root');
 if (confettiRoot) {
-  ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
+  ReactDOM.createRoot(confettiRoot).render(
+    <Suspense fallback={null}>
+      <ConfettiSideCannons />
+    </Suspense>
+  );
 }
-
 
 // Globe Mount (for contact page)
 const globeRoot = document.getElementById('globe-root');
 if (globeRoot) {
-  ReactDOM.createRoot(globeRoot).render(<Globe />);
+  ReactDOM.createRoot(globeRoot).render(
+    <Suspense fallback={null}>
+      <Globe />
+    </Suspense>
+  );
 }
 
 // Crowd Canvas Mount
 const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
 if (crowdCanvasRoot) {
-  ReactDOM.createRoot(crowdCanvasRoot).render(<CrowdCanvas />);
+  ReactDOM.createRoot(crowdCanvasRoot).render(
+    <Suspense fallback={null}>
+      <CrowdCanvas />
+    </Suspense>
+  );
 }
 
 // SVG Follow Scroll Mount
 const svgFollowScrollRoot = document.getElementById('svg-follow-scroll-root');
 if (svgFollowScrollRoot) {
-  ReactDOM.createRoot(svgFollowScrollRoot).render(<SvgFollowScroll />);
+  ReactDOM.createRoot(svgFollowScrollRoot).render(
+    <Suspense fallback={null}>
+      <SvgFollowScroll />
+    </Suspense>
+  );
 }
 
 // Works SVG Mount
 const worksSvgRoot = document.getElementById('works-svg-root');
 if (worksSvgRoot) {
-  ReactDOM.createRoot(worksSvgRoot).render(<SvgWorksScroll />);
+  ReactDOM.createRoot(worksSvgRoot).render(
+    <Suspense fallback={null}>
+      <SvgWorksScroll />
+    </Suspense>
+  );
 }
 
 

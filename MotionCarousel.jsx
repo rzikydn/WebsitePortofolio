@@ -117,7 +117,7 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
                   <div className={`certificate-card ${isActive ? 'active' : ''}`}>
                     {/* Zooming background image exactly matching Bento design */}
                     <div className="cert-bg">
-                      <img src={cert.image} alt={cert.title} loading="lazy" className="cert-bg-img" />
+                      <img src={cert.image} alt={cert.title} loading="lazy" className="cert-bg-img" width="400" height="300" />
                     </div>
 
                     {/* Premium gradient overlay matching Bento grid overlay */}

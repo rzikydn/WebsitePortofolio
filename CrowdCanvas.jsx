@@ -167,15 +167,13 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
 
     const initCrowd = () => {
       const isMobile = window.innerWidth <= 768;
-      const maxActivePeeps = isMobile ? 18 : 45;
+      const maxActivePeeps = isMobile ? 18 : 85;
       const count = Math.min(availablePeeps.length, maxActivePeeps);
 
       for (let i = 0; i < count; i++) {
         const peep = addPeepToCrowd();
         if (peep && peep.walk) {
-          const walk = peep.walk;
-          const elapsed = Math.random() * walk.totalDuration();
-          walk.startTime(gsap.globalTimeline.time() - elapsed / walk.timeScale());
+          peep.walk.progress(Math.random());
         }
       }
     };

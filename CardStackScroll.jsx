@@ -59,7 +59,7 @@ const StickyCard_001 = ({
       >
         {/* Zooming image background */}
         <div className="bento-bg">
-          <img src={src} alt={title} loading="lazy" />
+          <img src={src} alt={title} loading="lazy" width="600" height="400" />
         </div>
         
         {/* Premium gradient overlay */}
@@ -87,7 +87,7 @@ export default function CardStackScroll() {
   });
 
   return (
-    <main
+    <div
       ref={container}
       className="card-stack-main"
     >
@@ -107,6 +107,6 @@ export default function CardStackScroll() {
           />
         );
       })}
-    </main>
+    </div>
   );
 }

@@ -73,55 +73,57 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
 </head>
 
 <body>
-    <nav class="floating-navbar">
+    <nav class="floating-navbar" aria-label="Main Navigation">
         <div class="nav-group">
-            <a href="#home" class="nav-item active" data-tooltip="Home">
+            <a href="#home" class="nav-item active" data-tooltip="Home" aria-label="Home">
                 <i class="ph ph-house"></i>
             </a>
-            <a href="#about" class="nav-item" data-tooltip="About Me">
+            <a href="#about" class="nav-item" data-tooltip="About Me" aria-label="About Me">
                 <i class="ph ph-user"></i>
             </a>
-            <a href="#works" class="nav-item" data-tooltip="My Works">
+            <a href="#works" class="nav-item" data-tooltip="My Works" aria-label="My Works">
                 <i class="ph ph-code"></i>
             </a>
-            <a href="#skills" class="nav-item" data-tooltip="Technical Skill">
+            <a href="#skills" class="nav-item" data-tooltip="Technical Skill" aria-label="Technical Skill">
                 <i class="ph ph-cpu"></i>
             </a>
-            <a href="#experience" class="nav-item" data-tooltip="My Experience">
+            <a href="#experience" class="nav-item" data-tooltip="My Experience" aria-label="My Experience">
                 <i class="ph ph-briefcase"></i>
             </a>
-            <a href="#certificates" class="nav-item" data-tooltip="My Certificates">
+            <a href="#certificates" class="nav-item" data-tooltip="My Certificates" aria-label="My Certificates">
                 <i class="ph ph-medal"></i>
             </a>
-            <a href="#contact" class="nav-item" data-tooltip="Contact Me">
+            <a href="#contact" class="nav-item" data-tooltip="Contact Me" aria-label="Contact Me">
                 <i class="ph ph-envelope"></i>
             </a>
         </div>
         <div class="nav-divider nav-divider--socials"></div>
         <div class="nav-group nav-group--socials">
             <a href="https://www.instagram.com/rzikydn/" target="_blank" rel="noopener noreferrer" class="nav-item"
-                data-tooltip="Instagram">
+                data-tooltip="Instagram" aria-label="Instagram">
                 <i class="ph ph-instagram-logo"></i>
             </a>
             <a href="https://www.linkedin.com/in/rzikydn" target="_blank" rel="noopener noreferrer" class="nav-item"
-                data-tooltip="LinkedIn">
+                data-tooltip="LinkedIn" aria-label="LinkedIn">
                 <i class="ph-fill ph-linkedin-logo"></i>
             </a>
         </div>
         <div class="nav-divider"></div>
         <div class="nav-group">
-            <button class="theme-toggle" data-tooltip="Toggle Theme">
+            <button class="theme-toggle" data-tooltip="Toggle Theme" aria-label="Toggle Theme">
                 <i class="ph ph-sun"></i>
             </button>
-            <a href="#contact" class="btn-hire" data-tooltip="Contact Me">
+            <a href="#contact" class="btn-hire" data-tooltip="Contact Me" aria-label="Contact Me">
                 <i class="ph ph-envelope"></i>
                 Contact Me
             </a>
@@ -233,116 +235,124 @@
     </script>
 
     <!-- Main Content -->
-    <div class="main-content" id="home">
-        <!-- Background Elements -->
-        <div class="bg-zigzag"></div>
-        <div id="crowd-canvas-root"></div>
+    <main id="main-content">
+        <section class="main-content" id="home">
+            <!-- Background Elements -->
+            <div class="bg-zigzag"></div>
+            <div id="crowd-canvas-root"></div>
 
-        <!-- Konten Website (di atas background) -->
-        <div class="content-wrapper">
+            <!-- Konten Website (di atas background) -->
+            <div class="content-wrapper">
+                <div class="hero-card">
+                    <div class="hero-main">
+                        <div class="hero-content">
+                            <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
+                            <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating
+                                insight</p>
 
-
-
-            <div class="hero-card">
-
-
-                <div class="hero-main">
-                    <div class="hero-content">
-                        <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
-                        <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating
-                            insight</p>
-
-                        <div class="hero-buttons">
-                            <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing"
-                                target="_blank" rel="noopener noreferrer" class="btn-hire">
-                                <i class="ph ph-file-pdf"></i>
-                                View CV
-                            </a>
-                            <a href="#works" class="btn-copy">
-                                <i class="ph ph-code"></i>
-                                View Project
-                            </a>
+                            <div class="hero-buttons">
+                                <a href="https://drive.google.com/file/d/1MkJZjG5VVv_-TwN1FB6U9nt5WXcxBOpi/view?usp=sharing"
+                                    target="_blank" rel="noopener noreferrer" class="btn-hire">
+                                    <i class="ph ph-file-pdf"></i>
+                                    View CV
+                                </a>
+                                <a href="#works" class="btn-copy">
+                                    <i class="ph ph-code"></i>
+                                    View Project
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
-
-        <!-- Tempat render untuk Progressive Blur -->
-        <div id="progressive-blur-root"
-            style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2;">
-        </div>
-
-        <!-- Lanyard 3D Component -->
-        <div id="lanyard-root"></div>
-    </div>
-
-    <!-- About Section Wrapper for sticky effect -->
-    <div class="about-wrapper" id="about">
-        <div class="about-section">
-            <!-- Progressive Blur Top -->
-            <div id="progressive-blur-top-root"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; pointer-events: none; z-index: 1;">
+            <!-- Tempat render untuk Progressive Blur -->
+            <div id="progressive-blur-root"
+                style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2;">
             </div>
 
-            <div id="svg-follow-scroll-root"></div>
+            <!-- Lanyard 3D Component -->
+            <div id="lanyard-root"></div>
+        </section>
 
-            <div class="about-container">
-                <div id="scroll-reveal-root"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="black-section" id="works">
-        <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;">
-            <h2 class="bg-text">MY WORKS</h2>
-        </div>
-        <div id="works-svg-root"></div>
-        <div id="flowing-menu-root" style="width: 100%; position: relative; z-index: 20;"></div>
-    </div>
-
-    <!-- Skills Section -->
-    <div class="skills-section" id="skills">
-        <h2 class="bg-text">TECHNICAL SKILL</h2>
-        <div id="logo-loop-root" style="width: 100%; position: relative; z-index: 20; margin-top: 2rem;"></div>
-    </div>
-
-    <!-- Experience Section -->
-    <div class="experience-section" id="experience">
-        <h2 class="bg-text">MY EXPERIENCE</h2>
-
-        <div id="experience-root"></div>
-    </div>
-
-    <!-- Certificates Section -->
-    <div class="certificates-section" id="certificates">
-        <h2 class="bg-text">MY CERTIFICATES</h2>
-
-        <div id="certificates-root"></div>
-    </div>
-
-    <!-- Contact CTA Section -->
-    <div class="contact-section" id="contact">
-        <h2 class="bg-text">CONTACT ME</h2>
-        <div class="contact-row">
-            <div class="contact-cta-content">
-                <h3 class="contact-subtitle">LET'S BUILD SOMETHING.</h3>
-                <h3 class="contact-subtitle">GREAT TOGETHER.</h3>
-                <p class="contact-desc">Whether you need a scalable web solution, an automated system, or just want to
-                    technical-proof your next big idea, my inbox is always open.</p>
-                <div class="contact-image">
-                    <img src="/images/pp2new.png" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                        class="contact-img contact-img--dark" />
-                    <img src="/images/pp1new.png" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                        class="contact-img contact-img--light" />
+        <!-- About Section Wrapper for sticky effect -->
+        <section class="about-wrapper" id="about">
+            <div class="about-section">
+                <!-- Progressive Blur Top -->
+                <div id="progressive-blur-top-root"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; pointer-events: none; z-index: 1;">
                 </div>
-                <a href="mailto:rzikydn@gmail.com" class="contact-btn contact-btn--primary">
-                    Get In Touch
-                </a>
+
+                <div id="svg-follow-scroll-root"></div>
+
+                <div class="about-container">
+                    <h2 class="sr-only">About Me</h2>
+                    <div id="scroll-reveal-root"></div>
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
+
+        <section class="black-section" id="works">
+            <h2 class="sr-only">My Works</h2>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+                <span class="bg-text">MY WORKS</span>
+            </div>
+            <div id="works-svg-root"></div>
+            <div id="flowing-menu-root" style="width: 100%; position: relative; z-index: 20;"></div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills-section" id="skills">
+            <h2 class="sr-only">Technical Skill</h2>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+                <span class="bg-text">TECHNICAL SKILL</span>
+            </div>
+            <div id="logo-loop-root" style="width: 100%; position: relative; z-index: 20; margin-top: 2rem;"></div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="experience-section" id="experience">
+            <h2 class="sr-only">My Experience</h2>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+                <span class="bg-text">MY EXPERIENCE</span>
+            </div>
+            <div id="experience-root"></div>
+        </section>
+
+        <!-- Certificates Section -->
+        <section class="certificates-section" id="certificates">
+            <h2 class="sr-only">My Certificates</h2>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+                <span class="bg-text">MY CERTIFICATES</span>
+            </div>
+            <div id="certificates-root"></div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section class="contact-section" id="contact">
+            <h2 class="sr-only">Contact Me</h2>
+            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+                <span class="bg-text">CONTACT ME</span>
+            </div>
+            <div class="contact-row">
+                <div class="contact-cta-content">
+                    <h3 class="contact-subtitle">LET'S BUILD SOMETHING.</h3>
+                    <h3 class="contact-subtitle">GREAT TOGETHER.</h3>
+                    <p class="contact-desc">Whether you need a scalable web solution, an automated system, or just want to
+                        technical-proof your next big idea, my inbox is always open.</p>
+                    <div class="contact-image">
+                        <img src="/images/pp2new.png" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                            class="contact-img contact-img--dark" width="400" height="400" />
+                        <img src="/images/pp1new.png" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                            class="contact-img contact-img--light" width="400" height="400" />
+                    </div>
+                    <a href="mailto:rzikydn@gmail.com" class="contact-btn contact-btn--primary">
+                        Get In Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="site-footer">

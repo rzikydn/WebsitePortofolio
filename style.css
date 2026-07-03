@@ -319,7 +319,7 @@ body {
     width: 3.125rem;
     height: 3.125rem;
     border-radius: 50%;
-    color: #94a3b8;
+    color: #475569; /* Increased contrast from #94a3b8 */
     text-decoration: none;
     transition: all 0.3s ease;
 }
@@ -346,7 +346,9 @@ body {
     align-items: center;
     justify-content: center;
     transition: color 0.3s ease;
-    padding: 0.625rem;
+    width: 3.125rem; /* Match nav-item size for touch target */
+    height: 3.125rem; /* Match nav-item size for touch target */
+    border-radius: 50%;
 }
 
 .theme-toggle i {
@@ -355,6 +357,18 @@ body {
 
 .theme-toggle:hover {
     color: #000;
+}
+
+/* Screen reader utility for accessibility landmarks */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 /* Premium Custom Tooltips for Navbar */
@@ -497,7 +511,7 @@ body {
 
 .hero-desc {
     font-size: clamp(1.2rem, 1.8vw, 1.6rem);
-    color: #64748b;
+    color: #475569; /* Increased contrast from #64748b */
     line-height: 1.6;
     margin-bottom: 3.125rem;
     max-width: 50rem;
@@ -541,7 +555,7 @@ body {
 
 .btn-copy i {
     font-size: 1.5rem;
-    color: #94a3b8;
+    color: #64748b; /* Increased contrast from #94a3b8 */
 }
 
 .btn-copy:hover {
@@ -565,17 +579,17 @@ body {
     }
 
     .floating-navbar {
-        padding: 10px 12px;
+        padding: 8px 10px;
         border-radius: 18px;
     }
 
     .nav-links {
-        gap: 4px;
+        gap: 6px;
     }
 
     .nav-item {
-        width: 38px;
-        height: 38px;
+        width: 44px; /* Increased from 38px for touch target accessibility */
+        height: 44px; /* Increased from 38px for touch target accessibility */
     }
 
     .nav-item i {
@@ -587,7 +601,12 @@ body {
     }
 
     .theme-toggle {
-        padding: 6px;
+        width: 44px; /* Increased from 38px for touch target accessibility */
+        height: 44px; /* Increased from 38px for touch target accessibility */
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .theme-toggle i {
@@ -1151,10 +1170,12 @@ body.dark-mode .exp-desc {
         transform: translateX(-50%);
         width: max-content;
         max-width: 95vw;
-        padding: 5px 8px;
+        padding: 5px 6px;
         border-radius: 50px;
-        justify-content: space-around;
-        gap: 3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
         z-index: 100;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         background-color: rgba(255, 255, 255, 0.95);
@@ -1171,37 +1192,41 @@ body.dark-mode .exp-desc {
         display: none;
     }
 
-    /* Keep socials visible but hyper-compact to prevent wide navbar stretching */
+    /* Hide socials on mobile to allow larger touch targets for main items */
     .nav-divider--socials,
     .nav-group--socials {
-        display: flex !important;
+        display: none !important;
     }
 
     .floating-navbar .nav-group {
-        gap: 1.5px;
+        gap: 2px;
     }
 
     .floating-navbar .nav-item {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
     }
 
     .floating-navbar .nav-item i {
-        font-size: 0.95rem;
+        font-size: 1.15rem;
     }
 
     .floating-navbar .theme-toggle {
-        padding: 4px;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .floating-navbar .theme-toggle i {
-        font-size: 0.95rem;
+        font-size: 1.15rem;
     }
 
+    /* Hide dividers on mobile to prevent navbar from being too wide */
     .floating-navbar .nav-divider {
-        width: 1px;
-        height: 16px;
-        margin: 0 2px;
+        display: none !important;
     }
 
     .skills-section {
