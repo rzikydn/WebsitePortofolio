@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 
-export function ConfettiSideCannons() {
+export default function ConfettiSideCannons() {
   const hasFired = useRef(false);
 
   const triggerConfetti = () => {
