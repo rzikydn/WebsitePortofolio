@@ -154,6 +154,32 @@ function init() {
         }, 400); // Wait 400ms for text fade-out
     }
 
+    // --- Floating Navbar Show/Hide on Scroll ---
+    const navbar = document.querySelector('.floating-navbar');
+    if (navbar) {
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // Only hide the navbar if we have scrolled past 100px (warm-up zone)
+            if (currentScrollY > 100) {
+                if (currentScrollY > lastScrollY) {
+                    // Scrolling down - hide navbar
+                    navbar.classList.add('navbar--hidden');
+                } else {
+                    // Scrolling up - show navbar
+                    navbar.classList.remove('navbar--hidden');
+                }
+            } else {
+                // Near the top - always show
+                navbar.classList.remove('navbar--hidden');
+            }
+            
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+    }
+
     // --- Dark Mode Toggle Logic ---
     const themeToggleBtn = document.querySelector('.theme-toggle');
     const themeIcon = themeToggleBtn.querySelector('i');

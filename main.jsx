@@ -96,12 +96,8 @@ function startAssetPreload() {
   });
 }
 
-// Start asset downloading immediately on load
-if (document.readyState === 'complete') {
-  startAssetPreload();
-} else {
-  window.addEventListener('load', startAssetPreload);
-}
+// Start asset downloading immediately
+startAssetPreload();
 
 // ============================================
 // React Component Mounts

@@ -295,9 +295,15 @@ body {
     max-width: 46.875rem;
     height: max-content;
     border: 1px solid rgba(0, 0, 0, 0.04);
-    transition: background-color 0.4s ease, border-color 0.4s ease;
-    will-change: transform; /* Promote navbar to its own GPU compositor layer */
+    transition: background-color 0.4s ease, border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    will-change: transform, opacity; /* Promote navbar to its own GPU compositor layer */
     contain: layout style; /* Isolate repaints */
+}
+
+.floating-navbar.navbar--hidden {
+    transform: translateX(-50%) translateY(-120%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .nav-group {
