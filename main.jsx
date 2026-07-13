@@ -13,7 +13,6 @@ const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
 const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
 const SmoothCursor = React.lazy(() => import('./SmoothCursor'));
 const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
-const Globe = React.lazy(() => import('./Globe'));
 const CrowdCanvas = React.lazy(() => import('./CrowdCanvas'));
 const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
 const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
@@ -268,15 +267,6 @@ if (confettiRoot) {
   );
 }
 
-// Globe Mount (for contact page)
-const globeRoot = document.getElementById('globe-root');
-if (globeRoot) {
-  ReactDOM.createRoot(globeRoot).render(
-    <Suspense fallback={null}>
-      <Globe />
-    </Suspense>
-  );
-}
 
 // Crowd Canvas Mount
 const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
