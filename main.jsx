@@ -11,7 +11,6 @@ const BentoGrid = React.lazy(() => import('./BentoGrid'));
 const LogoLoop = React.lazy(() => import('./LogoLoop'));
 const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
 const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
-const SmoothCursor = React.lazy(() => import('./SmoothCursor'));
 const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
 const CrowdCanvas = React.lazy(() => import('./CrowdCanvas'));
 const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
@@ -28,75 +27,22 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Safety timeout fallback: never let preloader loop more than 8.5 seconds
+// Signal ready after initial render to avoid blocking FCP/LCP
 setTimeout(() => {
   signalReady();
-}, 8500);
+}, 100);
 
-// Only preload essential above-the-fold assets required for the hero section
-// to prevent network congestion and slow FCP/LCP on mobile devices.
-const CRITICAL_IMAGES = [];
-
-
-function startAssetPreload() {
-  const assetsToLoad = [
-    ...CRITICAL_IMAGES,
-    lanyard,
-    cardGLB
-  ];
-
-  let loadedCount = 0;
-  const totalAssets = assetsToLoad.length;
-
-  function handleAssetLoaded(url, success) {
-    loadedCount++;
-    const progressPercentage = 15 + ((loadedCount / totalAssets) * 85); // Scale from 15% to 100%
-    
-    if (typeof window.updatePreloaderProgress === 'function') {
-      window.updatePreloaderProgress(progressPercentage);
-    }
-
-    if (loadedCount >= totalAssets) {
-      // Wait for the visual progress animation to smoothly hit 100%
-      const checkVisualComplete = setInterval(() => {
-        if (window.preloaderVisualComplete) {
-          clearInterval(checkVisualComplete);
-          // Small visual buffer so the user sees 100% before it fades out
-          setTimeout(() => {
-            signalReady();
-          }, 350);
-        }
-      }, 30);
-    }
-  }
-
-  assetsToLoad.forEach(url => {
-    if (!url) {
-      handleAssetLoaded(url, false);
-      return;
-    }
-
-    // Check if the asset is a 3D model (.glb)
-    if (url.endsWith('.glb') || url.includes('.glb') || url.includes('data:application/octet-stream')) {
-      fetch(url)
-        .then(res => {
-          if (!res.ok) throw new Error();
-          return res.blob(); // fully downloads GLB into browser cache
-        })
-        .then(() => handleAssetLoaded(url, true))
-        .catch(() => handleAssetLoaded(url, false));
-    } else {
-      // Standard image preloading
-      const img = new Image();
-      img.src = url;
-      img.onload = () => handleAssetLoaded(url, true);
-      img.onerror = () => handleAssetLoaded(url, false);
-    }
-  });
+// A simple wrapper to defer rendering of heavy non-critical components to optimize initial load
+function Defer({ children, delay = 1000 }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setReady(true);
+    }, delay);
+    return () => clearTimeout(handle);
+  }, [delay]);
+  return ready ? children : null;
 }
-
-// Start asset downloading immediately
-startAssetPreload();
 
 // ============================================
 // React Component Mounts
@@ -107,22 +53,21 @@ function App() {
   const [inViewport, setInViewport] = useState(true);
 
   useEffect(() => {
-    // Listen for custom event dispatched by script.js when preloader finishes
     const handleDrop = () => {
       setShowLanyard(true);
     };
 
     window.addEventListener('lanyard-drop', handleDrop);
 
-    // High-performance IntersectionObserver to pause/unmount canvas off-screen
+    // Observe the entire Hero container to pause/unmount Canvas offscreen
     const observer = new IntersectionObserver(
       ([entry]) => {
         setInViewport(entry.isIntersecting);
       },
-      { threshold: 0.01 } // Trigger even if 1% is visible
+      { threshold: 0.01 }
     );
 
-    const rootEl = document.getElementById('lanyard-root');
+    const rootEl = document.getElementById('home');
     if (rootEl) observer.observe(rootEl);
 
     return () => {
@@ -177,7 +122,9 @@ const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
   ReactDOM.createRoot(flowingMenuRoot).render(
     <Suspense fallback={null}>
-      <BentoGrid />
+      <Defer delay={1500}>
+        <BentoGrid />
+      </Defer>
     </Suspense>
   );
 }
@@ -208,18 +155,20 @@ if (logoLoopRoot) {
 
     return (
       <Suspense fallback={null}>
-        <LogoLoop
-          logos={imageLogos}
-          speed={120}
-          direction="left"
-          logoHeight={isMobile ? 80 : "8.75rem"}
-          gap={isMobile ? 50 : "8.75rem"}
-          hoverSpeed={0}
-          scaleOnHover
-          fadeOut
-          fadeOutColor="transparent"
-          ariaLabel="Technology skills"
-        />
+        <Defer delay={1500}>
+          <LogoLoop
+            logos={imageLogos}
+            speed={120}
+            direction="left"
+            logoHeight={isMobile ? 80 : "8.75rem"}
+            gap={isMobile ? 50 : "8.75rem"}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            fadeOutColor="transparent"
+            ariaLabel="Technology skills"
+          />
+        </Defer>
       </Suspense>
     );
   };
@@ -232,7 +181,9 @@ const experienceRoot = document.getElementById('experience-root');
 if (experienceRoot) {
   ReactDOM.createRoot(experienceRoot).render(
     <Suspense fallback={null}>
-      <ExperienceAccordion />
+      <Defer delay={2000}>
+        <ExperienceAccordion />
+      </Defer>
     </Suspense>
   );
 }
@@ -242,27 +193,23 @@ const certificatesRoot = document.getElementById('certificates-root');
 if (certificatesRoot) {
   ReactDOM.createRoot(certificatesRoot).render(
     <Suspense fallback={null}>
-      <MotionCarousel />
+      <Defer delay={2500}>
+        <MotionCarousel />
+      </Defer>
     </Suspense>
   );
 }
 
-// Smooth Cursor Mount
-const smoothCursorRoot = document.getElementById('smooth-cursor-root');
-if (smoothCursorRoot) {
-  ReactDOM.createRoot(smoothCursorRoot).render(
-    <Suspense fallback={null}>
-      <SmoothCursor />
-    </Suspense>
-  );
-}
+
 
 // Confetti Mount
 const confettiRoot = document.getElementById('confetti-root');
 if (confettiRoot) {
   ReactDOM.createRoot(confettiRoot).render(
     <Suspense fallback={null}>
-      <ConfettiSideCannons />
+      <Defer delay={3500}>
+        <ConfettiSideCannons />
+      </Defer>
     </Suspense>
   );
 }
@@ -283,7 +230,9 @@ const svgFollowScrollRoot = document.getElementById('svg-follow-scroll-root');
 if (svgFollowScrollRoot) {
   ReactDOM.createRoot(svgFollowScrollRoot).render(
     <Suspense fallback={null}>
-      <SvgFollowScroll />
+      <Defer delay={1200}>
+        <SvgFollowScroll />
+      </Defer>
     </Suspense>
   );
 }
@@ -293,7 +242,9 @@ const worksSvgRoot = document.getElementById('works-svg-root');
 if (worksSvgRoot) {
   ReactDOM.createRoot(worksSvgRoot).render(
     <Suspense fallback={null}>
-      <SvgWorksScroll />
+      <Defer delay={1800}>
+        <SvgWorksScroll />
+      </Defer>
     </Suspense>
   );
 }

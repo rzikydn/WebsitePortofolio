@@ -26,7 +26,6 @@
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
     box-sizing: border-box;
     contain: layout style paint; /* Isolate paint/layout to this subtree */
-    will-change: transform; /* Promote to compositor layer permanently */
 }
 
 /* Desktop Grid Spans */
@@ -62,7 +61,6 @@
     object-fit: cover;
     opacity: 0.3;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-    will-change: transform, opacity;
 }
 
 .bento-card:hover .bento-bg img {

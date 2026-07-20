@@ -24,10 +24,18 @@
 #svg-follow-scroll-root {
   position: absolute;
   top: -100vh; /* Shift up to cover the Hero section */
-  left: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2.5rem); /* Matches content-wrapper desktop padding of 1.25rem on each side */
+  max-width: 75rem; /* Matches .hero-card max-width */
   height: 200vh; /* Cover 100vh of Hero + 100vh of About Me */
   pointer-events: none;
   z-index: 2; /* Render above backgrounds, but below about-container (z-index: 20) and content-wrapper (z-index: 10) */
   overflow: visible;
+}
+
+@media (max-width: 768px) {
+  #svg-follow-scroll-root {
+    width: calc(100% - 30px); /* Matches content-wrapper mobile padding of 15px on each side */
+  }
 }

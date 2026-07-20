@@ -79,8 +79,8 @@
     </noscript>
 
     <!-- Phosphor Icons (Load only Regular & Fill weights for optimal performance) -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" media="print" onload="this.media='all'" />
 </head>
 
 <body>
@@ -207,19 +207,20 @@
             // Trigger animation loop
             requestAnimationFrame(animateProgress);
 
-            // Initial warm-up simulation up to 15% (first 250ms)
+            // Smooth progress simulation to 100% over ~800-1000ms
             var initialProgress = 0;
             var interval = setInterval(function () {
-                if (initialProgress >= 15) {
+                if (initialProgress >= 100) {
                     clearInterval(interval);
                     return;
                 }
-                initialProgress += 3;
-                if (initialProgress > 15) initialProgress = 15;
+                initialProgress += Math.floor(Math.random() * 8) + 4; // Increments of 4-11%
+                if (initialProgress > 100) initialProgress = 100;
+                
                 if (initialProgress > targetProgress) {
                     targetProgress = initialProgress;
                 }
-            }, 50);
+            }, 60);
 
             // Expose globally so main.jsx can feed real loading data
             window.updatePreloaderProgress = function (value) {
@@ -386,7 +387,6 @@
         </div>
     </footer>
 
-    <div id="smooth-cursor-root"></div>
     <div id="confetti-root"></div>
     <script type="module" src="./script.js"></script>
     <script type="module" src="/main.jsx"></script>

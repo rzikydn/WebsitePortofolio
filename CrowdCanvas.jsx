@@ -167,7 +167,8 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
 
     const initCrowd = () => {
       const isMobile = window.innerWidth <= 768;
-      const maxActivePeeps = isMobile ? 18 : 85;
+      // Denser crowd to match the second image (45 on desktop, 28 on mobile)
+      const maxActivePeeps = isMobile ? 28 : 45;
       const count = Math.min(availablePeeps.length, maxActivePeeps);
 
       for (let i = 0; i < count; i++) {
@@ -193,6 +194,11 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       });
 
       peep.walk = walk;
+      
+      // If canvas is currently not visible, pause the new walk immediately
+      if (!isCanvasVisible) {
+        walk.pause();
+      }
 
       crowd.push(peep);
       crowd.sort((a, b) => a.anchorY - b.anchorY);
@@ -206,7 +212,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
     };
 
     const render = () => {
-      if (!canvas) return;
+      if (!canvas || !isCanvasVisible) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.scale(devicePixelRatio, devicePixelRatio);
@@ -215,16 +221,22 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
         peep.render(ctx);
       });
 
-      // Apply linear gradient fade-out mask to bottom of crowd
-      const fadeHeight = stage.height * 0.45;
-      const gradient = ctx.createLinearGradient(0, stage.height - fadeHeight, 0, stage.height);
-      gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
-      gradient.addColorStop(1, "rgba(0, 0, 0, 1)");
+      ctx.restore();
 
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, stage.height - fadeHeight, stage.width, fadeHeight);
-
+      // Apply the transparency mask directly inside the 2D canvas context.
+      // This is extremely fast, hardware-accelerated, and keeps the background grid fully visible!
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-in';
+      const maskGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      // Replicate the original CSS mask logic: fully solid black up to 120px from the bottom,
+      // and only fade to transparent in the final 120px.
+      const fadeStart = Math.max(0, canvas.height - 120 * devicePixelRatio);
+      const fadeStartRatio = fadeStart / canvas.height;
+      maskGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      maskGradient.addColorStop(fadeStartRatio, 'rgba(0, 0, 0, 1)');
+      maskGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = maskGradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.restore();
     };
 
@@ -265,11 +277,26 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       }
     });
 
+    let isCanvasVisible = true;
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isCanvasVisible = entry.isIntersecting;
+      if (isCanvasVisible) {
+        // Resume walks and start render loop
+        crowd.forEach(peep => peep.walk?.play());
+        gsap.ticker.add(render);
+      } else {
+        // Pause walks and stop render loop to save CPU/GPU cycles
+        crowd.forEach(peep => peep.walk?.pause());
+        gsap.ticker.remove(render);
+      }
+    }, { threshold: 0.01 });
+
     const init = () => {
       createPeeps();
       resize();
       resizeObserver.observe(canvas);
-      gsap.ticker.add(render);
+      visibilityObserver.observe(canvas);
     };
 
     img.onload = init;
@@ -277,6 +304,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
 
     return () => {
       resizeObserver.disconnect();
+      visibilityObserver.disconnect();
       gsap.ticker.remove(render);
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
@@ -285,21 +313,23 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
   }, [src, rows, cols]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        width: "100%",
-        height: "45vh",
-        pointerEvents: "none",
-        zIndex: 1,
-        transform: "translate3d(0, 0, 0)",
-        backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden",
-      }}
-    />
+    <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "45vh", pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          transform: "translate3d(0, 0, 0)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+      />
+      {/* Transparency mask is handled programmatically inside the 2D canvas context for optimal performance and grid visibility */}
+    </div>
   );
 };
 

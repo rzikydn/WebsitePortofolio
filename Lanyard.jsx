@@ -138,7 +138,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 10 : 18));
+      band.current.geometry.setPoints(curve.getPoints(isMobile ? 8 : 12));
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
@@ -177,7 +177,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
             <mesh geometry={nodes.card.geometry}>
               <meshStandardMaterial
                 map={materials.base.map}
-                map-anisotropy={16} // Force 16 on all devices for sharp, highly legible text at sharp angles
+                map-anisotropy={16}
                 roughness={0.85}
                 metalness={0.7}
               />
