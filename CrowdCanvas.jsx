@@ -1,12 +1,20 @@
 import { gsap } from "gsap";
 import React, { useEffect, useRef } from "react";
 
-const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 }) => {
+const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7, onLoaded }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    
+    // Check if onLoaded is provided
+    let loadedFired = false;
+    const fireLoaded = () => {
+      if (loadedFired) return;
+      loadedFired = true;
+      if (onLoaded) onLoaded();
+    };
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -211,33 +219,27 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       availablePeeps.push(peep);
     };
 
+    let cachedMaskGradient = null;
+
     const render = () => {
       if (!canvas || !isCanvasVisible) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.scale(devicePixelRatio, devicePixelRatio);
 
-      crowd.forEach((peep) => {
-        peep.render(ctx);
-      });
+      for (let i = 0; i < crowd.length; i++) {
+        crowd[i].render(ctx);
+      }
 
       ctx.restore();
 
-      // Apply the transparency mask directly inside the 2D canvas context.
-      // This is extremely fast, hardware-accelerated, and keeps the background grid fully visible!
-      ctx.save();
-      ctx.globalCompositeOperation = 'destination-in';
-      const maskGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      // Replicate the original CSS mask logic: fully solid black up to 120px from the bottom,
-      // and only fade to transparent in the final 120px.
-      const fadeStart = Math.max(0, canvas.height - 120 * devicePixelRatio);
-      const fadeStartRatio = fadeStart / canvas.height;
-      maskGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-      maskGradient.addColorStop(fadeStartRatio, 'rgba(0, 0, 0, 1)');
-      maskGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = maskGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.restore();
+      if (cachedMaskGradient) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.fillStyle = cachedMaskGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+      }
     };
 
     const resize = (currentWidth, currentHeight) => {
@@ -258,6 +260,13 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       stage.height = currentHeight;
       canvas.width = currentWidth * devicePixelRatio;
       canvas.height = currentHeight * devicePixelRatio;
+
+      cachedMaskGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      const fadeStart = Math.max(0, canvas.height - 120 * devicePixelRatio);
+      const fadeStartRatio = fadeStart / canvas.height;
+      cachedMaskGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      cachedMaskGradient.addColorStop(fadeStartRatio, 'rgba(0, 0, 0, 1)');
+      cachedMaskGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
@@ -292,15 +301,23 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7 
       }
     }, { threshold: 0.01 });
 
+    let initialized = false;
     const init = () => {
+      if (initialized) return;
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      initialized = true;
       createPeeps();
       resize();
       resizeObserver.observe(canvas);
       visibilityObserver.observe(canvas);
+      fireLoaded();
     };
 
     img.onload = init;
     img.src = config.src;
+    if (img.complete && img.naturalWidth > 0) {
+      init();
+    }
 
     return () => {
       resizeObserver.disconnect();

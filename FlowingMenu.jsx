@@ -90,12 +90,13 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
         animationRef.current.kill();
       }
 
-      // Animate exactly one content width for seamless loop
+      // Animate exactly one content width for seamless loop, paused by default to save CPU cycles during scroll
       animationRef.current = gsap.to(marqueeInnerRef.current, {
         x: -contentWidth,
         duration: speed,
         ease: 'none',
-        repeat: -1
+        repeat: -1,
+        paused: true
       });
     };
 
@@ -112,6 +113,7 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
 
   const showMarquee = (edge = 'bottom') => {
     if (!marqueeRef.current || !marqueeInnerRef.current) return;
+    if (animationRef.current) animationRef.current.play();
     gsap
       .timeline({ defaults: animationDefaults })
       .set(marqueeRef.current, { y: edge === 'top' ? '-101%' : '101%' }, 0)
@@ -124,7 +126,12 @@ function MenuItem({ link, text, subtitle, image, speed, textColor, marqueeBgColo
     gsap
       .timeline({ defaults: animationDefaults })
       .to(marqueeRef.current, { y: edge === 'top' ? '-101%' : '101%' }, 0)
-      .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' }, 0);
+      .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' }, 0)
+      .eventCallback('onComplete', () => {
+        if (animationRef.current && !activeRef.current) {
+          animationRef.current.pause();
+        }
+      });
   };
 
   const handleMouseEnter = ev => {

@@ -15,12 +15,18 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true }) {
+export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true, onLoaded }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [physicsReady, setPhysicsReady] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleLoaded = () => {
+    setIsLoaded(true);
+    if (onLoaded) onLoaded();
+  };
 
   useEffect(() => {
-    const timeout = setTimeout(() => setPhysicsReady(true), 200);
+    const timeout = setTimeout(() => setPhysicsReady(true), 100);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -37,7 +43,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     <div 
       className="lanyard-wrapper" 
       style={{ 
-        opacity: ready ? 1 : 0, 
+        opacity: isLoaded ? 1 : 0, 
         transition: 'opacity 0.3s ease',
         visibility: inViewport ? 'visible' : 'hidden' // Skip painting completely when off-screen
       }}
@@ -52,7 +58,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         <ambientLight intensity={Math.PI} />
         {physicsReady && (
           <Physics gravity={activeGravity} timeStep={1 / 60} interpolate>
-            <Band isMobile={isMobile} ready={ready} />
+            <Band isMobile={isMobile} ready={ready} onLoaded={handleLoaded} />
           </Physics>
         )}
         {/* Lightweight directional light replaces heavy Environment HDR cubemap */}
@@ -61,7 +67,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     </div>
   );
 }
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, onLoaded }) {
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -75,6 +81,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
   const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyard);
+
+  useEffect(() => {
+    if (onLoaded && nodes && texture) {
+      onLoaded();
+    }
+  }, [nodes, texture, onLoaded]);
+
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -138,7 +151,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false }) 
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 8 : 12));
+      const points = curve.getPoints(isMobile ? 8 : 12);
+      band.current.geometry.setPoints(points);
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });

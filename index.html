@@ -69,6 +69,16 @@
     }
     </script>
 
+    <!-- Image Preloads for Hero, Works, and Certifications -->
+    <link rel="preload" href="/images/peeps/all-peeps.png" as="image">
+    <link rel="preload" href="/images/SER1.png" as="image">
+    <link rel="preload" href="/images/SER2.png" as="image">
+    <link rel="preload" href="/images/SER3.png" as="image">
+    <link rel="preload" href="/images/mockup1.png" as="image">
+    <link rel="preload" href="/images/mockup2.png" as="image">
+    <link rel="preload" href="/images/mockup3.png" as="image">
+    <link rel="preload" href="/images/mockup4.png" as="image">
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -168,7 +178,7 @@
             }, 250);
 
             // Smooth progress interpolation targets
-            var targetProgress = 0;
+            var targetProgress = 15; // Initial progress state
             var currentVisualProgress = 0;
             window.preloaderVisualComplete = false;
 
@@ -180,7 +190,7 @@
                 if (currentVisualProgress < targetProgress) {
                     var diff = targetProgress - currentVisualProgress;
                     // Linear interpolation (lerp) with a speed cap for seamless gradual rise
-                    var step = Math.max(0.3, diff * 0.05);
+                    var step = Math.max(0.3, diff * 0.08);
                     currentVisualProgress += step;
 
                     if (currentVisualProgress > targetProgress) {
@@ -207,20 +217,18 @@
             // Trigger animation loop
             requestAnimationFrame(animateProgress);
 
-            // Smooth progress simulation to 100% over ~800-1000ms
-            var initialProgress = 0;
+            // Initial baseline crawl up to 35% while waiting for JS module manifests
+            var crawlProgress = 15;
             var interval = setInterval(function () {
-                if (initialProgress >= 100) {
+                if (crawlProgress >= 35 || targetProgress > crawlProgress) {
                     clearInterval(interval);
                     return;
                 }
-                initialProgress += Math.floor(Math.random() * 8) + 4; // Increments of 4-11%
-                if (initialProgress > 100) initialProgress = 100;
-                
-                if (initialProgress > targetProgress) {
-                    targetProgress = initialProgress;
+                crawlProgress += 3;
+                if (crawlProgress > targetProgress) {
+                    targetProgress = crawlProgress;
                 }
-            }, 60);
+            }, 100);
 
             // Expose globally so main.jsx can feed real loading data
             window.updatePreloaderProgress = function (value) {

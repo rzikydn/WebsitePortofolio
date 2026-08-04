@@ -2,47 +2,98 @@ import React, { useState, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
-import cardGLB from './card.glb'
-import lanyard from './lanyard.png'
+import Lanyard from './Lanyard'
+import CrowdCanvas from './CrowdCanvas'
 
-// Lazy loaded heavy components for optimal page-load performance
-const Lanyard = React.lazy(() => import('./Lanyard'));
+// Lazy loaded non-hero components
 const BentoGrid = React.lazy(() => import('./BentoGrid'));
 const LogoLoop = React.lazy(() => import('./LogoLoop'));
 const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
 const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
 const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
-const CrowdCanvas = React.lazy(() => import('./CrowdCanvas'));
 const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
 const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
 
 // ============================================
 // Real Asset Preloader & Loader Tracker
 // ============================================
-let assetsReady = false;
+const CRITICAL_IMAGES = [
+  '/images/peeps/all-peeps.png',
+  '/images/SER1.png',
+  '/images/SER2.png',
+  '/images/SER3.png',
+  '/images/mockup1.png',
+  '/images/mockup2.png',
+  '/images/mockup3.png',
+  '/images/mockup4.png',
+  '/images/pp1new.png',
+  '/images/pp2new.png'
+];
+
+let lanyardReady = false;
+let crowdReady = false;
+let imagesReady = false;
+let signalFired = false;
+
+function updateProgress() {
+  let progress = 35;
+  if (imagesReady) progress += 25;
+  if (crowdReady) progress += 20;
+  if (lanyardReady) progress += 20;
+
+  if (typeof window.updatePreloaderProgress === 'function') {
+    window.updatePreloaderProgress(progress);
+  }
+
+  if (imagesReady && crowdReady && lanyardReady) {
+    signalReady();
+  }
+}
 
 function signalReady() {
-  if (assetsReady) return; // Only fire once
-  assetsReady = true;
+  if (signalFired) return;
+  signalFired = true;
+
+  if (typeof window.updatePreloaderProgress === 'function') {
+    window.updatePreloaderProgress(100);
+  }
+
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Signal ready after initial render to avoid blocking FCP/LCP
+// Safety fallback after max 5 seconds even on poor network
 setTimeout(() => {
   signalReady();
-}, 100);
+}, 5000);
 
-// A simple wrapper to defer rendering of heavy non-critical components to optimize initial load
-function Defer({ children, delay = 1000 }) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const handle = setTimeout(() => {
-      setReady(true);
-    }, delay);
-    return () => clearTimeout(handle);
-  }, [delay]);
-  return ready ? children : null;
+// Preload all site images concurrently during preloader greeting
+function preloadImages(urls) {
+  let loadedCount = 0;
+  return new Promise((resolve) => {
+    if (!urls || !urls.length) return resolve();
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+      const handleLoad = () => {
+        loadedCount++;
+        if (loadedCount >= urls.length) {
+          resolve();
+        }
+      };
+      if (img.complete) {
+        handleLoad();
+      } else {
+        img.onload = handleLoad;
+        img.onerror = handleLoad;
+      }
+    });
+  });
 }
+
+preloadImages(CRITICAL_IMAGES).then(() => {
+  imagesReady = true;
+  updateProgress();
+});
 
 // ============================================
 // React Component Mounts
@@ -59,7 +110,6 @@ function App() {
 
     window.addEventListener('lanyard-drop', handleDrop);
 
-    // Observe the entire Hero container to pause/unmount Canvas offscreen
     const observer = new IntersectionObserver(
       ([entry]) => {
         setInViewport(entry.isIntersecting);
@@ -76,16 +126,20 @@ function App() {
     };
   }, []);
 
+  const handleLanyardLoaded = () => {
+    lanyardReady = true;
+    updateProgress();
+  };
+
   return (
-    <React.Suspense fallback={null}>
-      <Lanyard 
-        position={[0, 0, 20]} 
-        gravity={[0, -40, 0]} 
-        transparent={true} 
-        ready={showLanyard} 
-        inViewport={inViewport} 
-      />
-    </React.Suspense>
+    <Lanyard 
+      position={[0, 0, 20]} 
+      gravity={[0, -40, 0]} 
+      transparent={true} 
+      ready={showLanyard} 
+      inViewport={inViewport} 
+      onLoaded={handleLanyardLoaded}
+    />
   );
 }
 
@@ -122,9 +176,7 @@ const flowingMenuRoot = document.getElementById('flowing-menu-root');
 if (flowingMenuRoot) {
   ReactDOM.createRoot(flowingMenuRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={1500}>
-        <BentoGrid />
-      </Defer>
+      <BentoGrid />
     </Suspense>
   );
 }
@@ -155,20 +207,18 @@ if (logoLoopRoot) {
 
     return (
       <Suspense fallback={null}>
-        <Defer delay={1500}>
-          <LogoLoop
-            logos={imageLogos}
-            speed={120}
-            direction="left"
-            logoHeight={isMobile ? 80 : "8.75rem"}
-            gap={isMobile ? 50 : "8.75rem"}
-            hoverSpeed={0}
-            scaleOnHover
-            fadeOut
-            fadeOutColor="transparent"
-            ariaLabel="Technology skills"
-          />
-        </Defer>
+        <LogoLoop
+          logos={imageLogos}
+          speed={120}
+          direction="left"
+          logoHeight={isMobile ? 80 : "8.75rem"}
+          gap={isMobile ? 50 : "8.75rem"}
+          hoverSpeed={0}
+          scaleOnHover
+          fadeOut
+          fadeOutColor="transparent"
+          ariaLabel="Technology skills"
+        />
       </Suspense>
     );
   };
@@ -181,9 +231,7 @@ const experienceRoot = document.getElementById('experience-root');
 if (experienceRoot) {
   ReactDOM.createRoot(experienceRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={2000}>
-        <ExperienceAccordion />
-      </Defer>
+      <ExperienceAccordion />
     </Suspense>
   );
 }
@@ -193,35 +241,31 @@ const certificatesRoot = document.getElementById('certificates-root');
 if (certificatesRoot) {
   ReactDOM.createRoot(certificatesRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={2500}>
-        <MotionCarousel />
-      </Defer>
+      <MotionCarousel />
     </Suspense>
   );
 }
-
-
 
 // Confetti Mount
 const confettiRoot = document.getElementById('confetti-root');
 if (confettiRoot) {
   ReactDOM.createRoot(confettiRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={3500}>
-        <ConfettiSideCannons />
-      </Defer>
+      <ConfettiSideCannons />
     </Suspense>
   );
 }
 
-
 // Crowd Canvas Mount
 const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
 if (crowdCanvasRoot) {
+  const handleCrowdLoaded = () => {
+    crowdReady = true;
+    updateProgress();
+  };
+
   ReactDOM.createRoot(crowdCanvasRoot).render(
-    <Suspense fallback={null}>
-      <CrowdCanvas />
-    </Suspense>
+    <CrowdCanvas onLoaded={handleCrowdLoaded} />
   );
 }
 
@@ -230,9 +274,7 @@ const svgFollowScrollRoot = document.getElementById('svg-follow-scroll-root');
 if (svgFollowScrollRoot) {
   ReactDOM.createRoot(svgFollowScrollRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={1200}>
-        <SvgFollowScroll />
-      </Defer>
+      <SvgFollowScroll />
     </Suspense>
   );
 }
@@ -242,11 +284,7 @@ const worksSvgRoot = document.getElementById('works-svg-root');
 if (worksSvgRoot) {
   ReactDOM.createRoot(worksSvgRoot).render(
     <Suspense fallback={null}>
-      <Defer delay={1800}>
-        <SvgWorksScroll />
-      </Defer>
+      <SvgWorksScroll />
     </Suspense>
   );
 }
-
-

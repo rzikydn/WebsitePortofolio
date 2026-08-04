@@ -32,10 +32,12 @@
   pointer-events: none;
   z-index: 2; /* Render above backgrounds, but below about-container (z-index: 20) and content-wrapper (z-index: 10) */
   overflow: visible;
+  display: none; /* Hide on desktop view as requested */
 }
 
 @media (max-width: 768px) {
   #svg-follow-scroll-root {
+    display: block; /* Display on mobile and tablet views */
     width: calc(100% - 30px); /* Matches content-wrapper mobile padding of 15px on each side */
   }
 }

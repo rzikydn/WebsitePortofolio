@@ -83,7 +83,8 @@ gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
 });
 
-gsap.ticker.lagSmoothing(0);
+// Use standard GSAP lag smoothing budget (500ms max lag, 33ms target) to prevent stuttering
+gsap.ticker.lagSmoothing(500, 33);
 
 function init() {
     const preloaderContent = document.querySelector(".preloader-content");

@@ -510,6 +510,19 @@ body {
 
 .hero-content {
     flex: 1;
+    padding-left: 3.5rem;
+}
+
+@media (max-width: 1024px) {
+    .hero-content {
+        padding-left: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        padding-left: 0;
+    }
 }
 
 .hero-title {
@@ -864,8 +877,6 @@ body.dark-mode .about-text {
     overflow: visible;
     padding-top: 5vh;
     border-radius: 30px 30px 0 0;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
 }
 
 .black-section .bg-text {
@@ -897,8 +908,7 @@ body.dark-mode .about-text {
     padding-top: 5vh;
     padding-bottom: 8vh;
     /* Balanced spacing before MY EXPERIENCE starts */
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    margin-top: -2px; /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
 }
 
 .skills-section .bg-text {
@@ -928,8 +938,7 @@ body.dark-mode .about-text {
     align-items: flex-start;
     overflow: hidden;
     padding-top: 5vh;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    margin-top: -2px; /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
 }
 
 .experience-section .bg-text {
@@ -963,8 +972,7 @@ body.dark-mode .about-text {
     overflow: hidden;
     padding-top: 5vh;
     padding-bottom: 8vh;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    margin-top: -2px; /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
 }
 
 #certificates-root {
