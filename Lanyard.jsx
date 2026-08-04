@@ -17,18 +17,13 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true, onLoaded }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
-  const [physicsReady, setPhysicsReady] = useState(false);
+  const [physicsReady] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleLoaded = () => {
     setIsLoaded(true);
     if (onLoaded) onLoaded();
   };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setPhysicsReady(true), 100);
-    return () => clearTimeout(timeout);
-  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);

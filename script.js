@@ -135,17 +135,15 @@ function init() {
             preloaderContent.classList.add("fade-out");
         }
         
-        // 3. Slide up the background after text fades out
+        // 3. Drop the lanyard immediately as preloader completes loading to 100%
+        window.dispatchEvent(new CustomEvent('lanyard-drop'));
+        
+        // 4. Slide up the background after text fades out
         setTimeout(() => {
             preloaderWrap.classList.add("slide-up");
             
             // Allow scrolling on the main body
             document.body.style.overflow = "auto";
-            
-            // 4. Drop the lanyard after preloader clears and page is quiet
-            setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('lanyard-drop'));
-            }, 200);
             
             // 5. Remove preloader from DOM after transition completes (1.4s)
             setTimeout(() => {

@@ -4,6 +4,7 @@ import { ProgressiveBlur } from './ProgressiveBlur'
 import ScrollReveal from './ScrollReveal'
 import Lanyard from './Lanyard'
 import CrowdCanvas from './CrowdCanvas'
+import { Highlighter } from '@/registry/magicui/highlighter'
 
 // Lazy loaded non-hero components
 const BentoGrid = React.lazy(() => import('./BentoGrid'));
@@ -14,10 +15,15 @@ const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
 const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
 const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
 
+import cardGLB from './card.glb'
+import lanyardImg from './lanyard.png'
+
 // ============================================
 // Real Asset Preloader & Loader Tracker
 // ============================================
 const CRITICAL_IMAGES = [
+  cardGLB,
+  lanyardImg,
   '/images/peeps/all-peeps.png',
   '/images/SER1.png',
   '/images/SER2.png',
@@ -66,31 +72,48 @@ setTimeout(() => {
   signalReady();
 }, 5000);
 
-// Preload all site images concurrently during preloader greeting
-function preloadImages(urls) {
+// Preload all site assets concurrently during preloader greeting
+function preloadAssets(urls) {
   let loadedCount = 0;
   return new Promise((resolve) => {
     if (!urls || !urls.length) return resolve();
     urls.forEach((url) => {
-      const img = new Image();
-      img.src = url;
-      const handleLoad = () => {
+      if (!url) {
         loadedCount++;
-        if (loadedCount >= urls.length) {
-          resolve();
-        }
-      };
-      if (img.complete) {
-        handleLoad();
+        if (loadedCount >= urls.length) resolve();
+        return;
+      }
+      if (typeof url === 'string' && url.endsWith('.glb')) {
+        fetch(url)
+          .then(() => {
+            loadedCount++;
+            if (loadedCount >= urls.length) resolve();
+          })
+          .catch(() => {
+            loadedCount++;
+            if (loadedCount >= urls.length) resolve();
+          });
       } else {
-        img.onload = handleLoad;
-        img.onerror = handleLoad;
+        const img = new Image();
+        img.src = url;
+        const handleLoad = () => {
+          loadedCount++;
+          if (loadedCount >= urls.length) {
+            resolve();
+          }
+        };
+        if (img.complete) {
+          handleLoad();
+        } else {
+          img.onload = handleLoad;
+          img.onerror = handleLoad;
+        }
       }
     });
   });
 }
 
-preloadImages(CRITICAL_IMAGES).then(() => {
+preloadAssets(CRITICAL_IMAGES).then(() => {
   imagesReady = true;
   updateProgress();
 });
@@ -167,7 +190,15 @@ if (scrollRevealRoot) {
       baseRotation={0}
       blurStrength={0}
     >
-      Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on analyzing data and creating insights. I love exploring datasets and visualizing compelling data stories.
+      Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
+      <Highlighter action="underline" color="#FF9800">
+        analyzing data
+      </Highlighter>{' '}
+      and{' '}
+      <Highlighter action="highlight" color="#87CEFA">
+        creating insights.
+      </Highlighter>{' '}
+      I love exploring datasets and visualizing compelling data stories.
     </ScrollReveal>
   );
 }

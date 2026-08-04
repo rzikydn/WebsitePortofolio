@@ -1,10 +1,38 @@
-import { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import './ScrollReveal.css';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const processChildren = (children, keyPrefix = 'sr') => {
+  return React.Children.map(children, (child, childIndex) => {
+    if (typeof child === 'string') {
+      return child.split(/(\s+)/).map((word, wordIndex) => {
+        if (word.match(/^\s+$/)) return word;
+        return (
+          <span className="word" key={`${keyPrefix}-${childIndex}-${wordIndex}`}>
+            {word}
+          </span>
+        );
+      });
+    }
+
+    if (React.isValidElement(child)) {
+      return React.cloneElement(
+        child,
+        {
+          key: `${keyPrefix}-${childIndex}`,
+          ...child.props,
+        },
+        processChildren(child.props.children, `${keyPrefix}-${childIndex}`)
+      );
+    }
+
+    return child;
+  });
+};
 
 const ScrollReveal = ({
   children,
@@ -18,15 +46,7 @@ const ScrollReveal = ({
   const containerRef = useRef(null);
 
   const splitText = useMemo(() => {
-    const text = typeof children === 'string' ? children : '';
-    return text.split(/(\s+)/).map((word, index) => {
-      if (word.match(/^\s+$/)) return word;
-      return (
-        <span className="word" key={index}>
-          {word}
-        </span>
-      );
-    });
+    return processChildren(children);
   }, [children]);
 
   useEffect(() => {
