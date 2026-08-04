@@ -94,7 +94,8 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7,
 
     const walks = [normalWalk];
 
-    const scaleFactor = 0.32;
+    const isMobile = window.innerWidth <= 768;
+    const scaleFactor = isMobile ? 0.32 : 0.52;
 
     // FACTORY FUNCTIONS
     const createPeep = ({ image, rect }) => {
@@ -329,8 +330,10 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7,
     };
   }, [src, rows, cols]);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
   return (
-    <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "45vh", pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
+    <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: isMobile ? "45vh" : "55vh", pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
       <canvas
         ref={canvasRef}
         style={{
