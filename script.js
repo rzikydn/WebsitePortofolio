@@ -110,10 +110,10 @@ function init() {
         tryFinish();
     }, minDelay);
     
-    // Fallback: finish preloader after max 8 seconds even if assets-ready never fires
+    // Fallback: finish preloader after max 3 seconds even if assets-ready never fires
     setTimeout(() => {
         finishPreloader();
-    }, 8000);
+    }, 3000);
     
     function tryFinish() {
         if (assetsReady && minTimeReached) {

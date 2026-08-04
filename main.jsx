@@ -22,8 +22,6 @@ import lanyardImg from './lanyard.png'
 // Real Asset Preloader & Loader Tracker
 // ============================================
 const CRITICAL_IMAGES = [
-  cardGLB,
-  lanyardImg,
   '/images/peeps/all-peeps.png',
   '/images/SER1.png',
   '/images/SER2.png',
@@ -36,14 +34,13 @@ const CRITICAL_IMAGES = [
   '/images/pp2new.png'
 ];
 
+let imagesLoadedRatio = 0;
 let lanyardReady = false;
 let crowdReady = false;
-let imagesReady = false;
 let signalFired = false;
 
 function updateProgress() {
-  let progress = 35;
-  if (imagesReady) progress += 25;
+  let progress = 35 + Math.round(imagesLoadedRatio * 25);
   if (crowdReady) progress += 20;
   if (lanyardReady) progress += 20;
 
@@ -51,7 +48,7 @@ function updateProgress() {
     window.updatePreloaderProgress(progress);
   }
 
-  if (imagesReady && crowdReady && lanyardReady) {
+  if (imagesLoadedRatio >= 1 && crowdReady && lanyardReady) {
     signalReady();
   }
 }
@@ -67,56 +64,52 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Safety fallback after max 5 seconds even on poor network
+// Safety fallback after max 2.5 seconds even on poor network
 setTimeout(() => {
   signalReady();
-}, 5000);
+}, 2500);
 
-// Preload all site assets concurrently during preloader greeting
-function preloadAssets(urls) {
+// Preload all site images concurrently with incremental progress & 1s per-asset timeout
+function preloadImages(urls) {
+  const total = urls.length;
+  if (!total) {
+    imagesLoadedRatio = 1;
+    updateProgress();
+    return;
+  }
+
   let loadedCount = 0;
-  return new Promise((resolve) => {
-    if (!urls || !urls.length) return resolve();
-    urls.forEach((url) => {
-      if (!url) {
-        loadedCount++;
-        if (loadedCount >= urls.length) resolve();
-        return;
-      }
-      if (typeof url === 'string' && url.endsWith('.glb')) {
-        fetch(url)
-          .then(() => {
-            loadedCount++;
-            if (loadedCount >= urls.length) resolve();
-          })
-          .catch(() => {
-            loadedCount++;
-            if (loadedCount >= urls.length) resolve();
-          });
-      } else {
-        const img = new Image();
-        img.src = url;
-        const handleLoad = () => {
-          loadedCount++;
-          if (loadedCount >= urls.length) {
-            resolve();
-          }
-        };
-        if (img.complete) {
-          handleLoad();
-        } else {
-          img.onload = handleLoad;
-          img.onerror = handleLoad;
-        }
-      }
-    });
+
+  urls.forEach((url) => {
+    let doneCalled = false;
+    const done = () => {
+      if (doneCalled) return;
+      doneCalled = true;
+      loadedCount++;
+      imagesLoadedRatio = loadedCount / total;
+      updateProgress();
+    };
+
+    const timer = setTimeout(done, 1000);
+
+    const img = new Image();
+    img.onload = () => {
+      clearTimeout(timer);
+      done();
+    };
+    img.onerror = () => {
+      clearTimeout(timer);
+      done();
+    };
+    img.src = url;
+    if (img.complete) {
+      clearTimeout(timer);
+      done();
+    }
   });
 }
 
-preloadAssets(CRITICAL_IMAGES).then(() => {
-  imagesReady = true;
-  updateProgress();
-});
+preloadImages(CRITICAL_IMAGES);
 
 // ============================================
 // React Component Mounts

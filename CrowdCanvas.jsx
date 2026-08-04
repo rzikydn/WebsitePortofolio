@@ -263,11 +263,9 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7,
       canvas.height = currentHeight * devicePixelRatio;
 
       cachedMaskGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      const fadeStart = Math.max(0, canvas.height - 120 * devicePixelRatio);
-      const fadeStartRatio = fadeStart / canvas.height;
-      cachedMaskGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-      cachedMaskGradient.addColorStop(fadeStartRatio, 'rgba(0, 0, 0, 1)');
-      cachedMaskGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      cachedMaskGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      cachedMaskGradient.addColorStop(0.35, 'rgba(0, 0, 0, 1)');
+      cachedMaskGradient.addColorStop(1, 'rgba(0, 0, 0, 1)');
 
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();

@@ -8,7 +8,7 @@
   font-weight: 500;
   color: #1e293b;
   text-align: center;
-  margin: 0;
+  margin: 0 auto;
   letter-spacing: -0.5px;
   font-family: "Elms Sans", sans-serif;
 }
@@ -17,11 +17,19 @@
   display: inline-block;
 }
 
+.rough-annotation-svg {
+  pointer-events: none !important;
+  overflow: visible !important;
+}
+
 @media (max-width: 768px) {
   .scroll-reveal-text {
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
-    line-height: 1.4;
+    font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+    line-height: 1.6;
     letter-spacing: normal;
+    max-width: 290px;
+    margin: 0 auto;
+    text-align: center;
   }
 }
 
