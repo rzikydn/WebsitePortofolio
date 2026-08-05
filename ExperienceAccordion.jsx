@@ -31,10 +31,10 @@ const EXPERIENCES = [
   },
   {
     yearStart: '2026',
-    yearEnd: 'Present',
+    yearEnd: '2026',
     company: 'CakrawalaEduCentre',
     role: 'Information Technology Web Developer',
-    period: 'May 2026 - Present · 1 mo',
+    period: 'May 2026 - Jul 2026 · 3 mos',
     bullets: [
       'Designed system architecture and drafted comprehensive technical documentation as the foundation for the Learning Management System (LMS) platform development.',
       'Built and developed the LMS website end-to-end, spanning both frontend and backend architectures, to support institutional operations.',
@@ -43,7 +43,6 @@ const EXPERIENCES = [
       'Managed databases and ensured robust system security through routine backups and the application of cybersecurity standards to protect data from external threats.',
       'Provided advanced troubleshooting for internal technical incidents, ensuring all company IT infrastructure operates optimally on a daily basis.',
     ],
-    active: true,
   },
 ];
 

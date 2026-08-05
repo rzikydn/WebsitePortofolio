@@ -1397,14 +1397,21 @@ body.dark-mode .contact-img--light {
 }
 
 .contact-btn--primary {
-    background: rgba(255, 255, 255, 0.95);
-    color: #0f172a;
+    background: linear-gradient(to right, #f5f5f5, #f5f5f5, #ffffff);
+    color: #000000;
+    box-shadow: inset 0px 2px 0px 0px #fafafa, 0px 0.5px 1px 0px #a3a3a3;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
 }
 
 .contact-btn--primary:hover {
-    background: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+    background: #ffffff;
+    transform: scale(1.02);
+    box-shadow: inset 0px 2px 0px 0px #ffffff, 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+}
+
+.contact-btn--primary:active {
+    transform: scale(0.98);
 }
 
 .contact-btn--secondary {
@@ -1540,6 +1547,7 @@ body.dark-mode {
     line-height: 0.85;
     letter-spacing: -5px;
     user-select: none;
+    margin-left: -0.038em;
 }
 
 .footer-bottom {
@@ -1596,6 +1604,7 @@ body.dark-mode .site-footer {
     .footer-brand span {
         font-size: clamp(4rem, 20vw, 8rem);
         letter-spacing: -3px;
+        margin-left: -0.038em;
     }
 }
 

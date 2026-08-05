@@ -5,6 +5,7 @@ import ScrollReveal from './ScrollReveal'
 import Lanyard from './Lanyard'
 import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
+import { NoiseBackground } from '@/components/ui/noise-background'
 
 // Lazy loaded non-hero components
 const BentoGrid = React.lazy(() => import('./BentoGrid'));
@@ -310,5 +311,27 @@ if (worksSvgRoot) {
     <Suspense fallback={null}>
       <SvgWorksScroll />
     </Suspense>
+  );
+}
+
+// Contact Noise Button Mount
+const contactBtnRoot = document.getElementById('contact-btn-root');
+if (contactBtnRoot) {
+  ReactDOM.createRoot(contactBtnRoot).render(
+    <NoiseBackground
+      containerClassName="w-fit p-[3px] rounded-full"
+      gradientColors={[
+        "rgb(255, 100, 150)",
+        "rgb(100, 150, 255)",
+        "rgb(255, 200, 100)",
+      ]}
+    >
+      <a
+        href="mailto:rzikydn@gmail.com"
+        className="contact-btn contact-btn--primary"
+      >
+        Get In Touch &rarr;
+      </a>
+    </NoiseBackground>
   );
 }
