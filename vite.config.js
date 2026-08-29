@@ -15,6 +15,7 @@ export default defineConfig({
   assetsInclude: ['**/*.glb'],
   build: {
     target: 'es2015',
+    modulePreload: false,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),

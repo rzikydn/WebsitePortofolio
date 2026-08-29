@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wildan Rizky Wijaya (Rizky Wijaya) - Portfolio &amp; Data Analyst</title>
+    <title>Wildan Rizky Wijaya - Portfolio</title>
 
     <!-- SEO Meta Tags -->
     <meta name="description"
@@ -19,18 +19,24 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://rzikydn.my.id/">
-    <meta property="og:title" content="Wildan Rizky Wijaya - Personal Portfolio">
+    <meta property="og:title" content="Wildan Rizky Wijaya - Portfolio">
     <meta property="og:description"
         content="Data Analyst Enthusiast from Jakarta, Indonesia. Portfolio of Wildan Rizky Wijaya (Rizky Wijaya / Rizky Wildan). Exploring datasets, creating insights.">
-    <meta property="og:image" content="https://rzikydn.my.id/images/pp1new.webp">
+    <meta property="og:image" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta property="og:image:secure_url" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:image:alt" content="Wildan Rizky Wijaya - Data Analyst Portfolio">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Wildan Rizky Wijaya - Personal Portfolio">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Wildan Rizky Wijaya - Portfolio">
     <meta name="twitter:description"
         content="Data Analyst Enthusiast from Jakarta, Indonesia. Portfolio of Wildan Rizky Wijaya (Rizky Wijaya / Rizky Wildan). Exploring datasets, creating insights.">
-    <meta name="twitter:image" content="https://rzikydn.my.id/images/pp1new.webp">
+    <meta name="twitter:image" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta name="twitter:image:alt" content="Wildan Rizky Wijaya - Data Analyst Portfolio">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -38,47 +44,97 @@
     <link rel="icon" type="image/png" href="/images/logox.webp" sizes="192x192">
     <link rel="apple-touch-icon" href="/images/logox.webp">
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (JSON-LD) with SiteNavigationElement for Google Sitelinks -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Wildan Rizky Wijaya",
-        "alternateName": [
-            "Wildan",
-            "Wildan Rizky",
-            "Rizky Wildan",
-            "Rizky Wijaya",
-            "Wijaya",
-            "Wijaya Rizky",
-            "Wijaya Rizky Wildan"
-        ],
-        "url": "https://rzikydn.my.id/",
-        "jobTitle": "Data Analyst",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Jakarta",
-            "addressCountry": "ID"
-        },
-        "email": "rzikydn@gmail.com",
-        "sameAs": [
-            "https://www.linkedin.com/in/rzikydn",
-            "https://github.com/rzikydn",
-            "https://www.instagram.com/rzikydn/"
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://rzikydn.my.id/#website",
+                "url": "https://rzikydn.my.id/",
+                "name": "Wildan Rizky Wijaya Portfolio",
+                "description": "Portfolio of Wildan Rizky Wijaya - Data Analyst Enthusiast from Jakarta, Indonesia.",
+                "publisher": {
+                    "@id": "https://rzikydn.my.id/#person"
+                },
+                "inLanguage": "en-US"
+            },
+            {
+                "@type": "Person",
+                "@id": "https://rzikydn.my.id/#person",
+                "name": "Wildan Rizky Wijaya",
+                "alternateName": [
+                    "Wildan",
+                    "Wildan Rizky",
+                    "Rizky Wildan",
+                    "Rizky Wijaya",
+                    "Wijaya",
+                    "Wijaya Rizky",
+                    "Wijaya Rizky Wildan"
+                ],
+                "url": "https://rzikydn.my.id/",
+                "image": "https://rzikydn.my.id/images/lanyard-thumbnail.png",
+                "jobTitle": "Data Analyst",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Jakarta",
+                    "addressCountry": "ID"
+                },
+                "email": "rzikydn@gmail.com",
+                "sameAs": [
+                    "https://www.linkedin.com/in/rzikydn",
+                    "https://github.com/rzikydn",
+                    "https://www.instagram.com/rzikydn/"
+                ]
+            },
+            {
+                "@type": "ItemList",
+                "@id": "https://rzikydn.my.id/#sitenavigation",
+                "name": "Site Navigation",
+                "description": "Key sections and pages of Wildan Rizky Wijaya's Portfolio",
+                "itemListElement": [
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 1,
+                        "name": "Projects & Works",
+                        "description": "Interactive data analytics projects, dashboards, and visualizations.",
+                        "url": "https://rzikydn.my.id/projects.html"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 2,
+                        "name": "About Wildan",
+                        "description": "Profile, story, and data philosophy of Wildan Rizky Wijaya.",
+                        "url": "https://rzikydn.my.id/#about"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 3,
+                        "name": "Work Experience",
+                        "description": "Professional experience in risk management and database administration.",
+                        "url": "https://rzikydn.my.id/#experience"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 4,
+                        "name": "Certifications",
+                        "description": "Data Scientist and Data Analysis certified credentials.",
+                        "url": "https://rzikydn.my.id/#certificates"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 5,
+                        "name": "Contact Me",
+                        "description": "Direct communication channel for collaborations and hiring inquiries.",
+                        "url": "https://rzikydn.my.id/#contact"
+                    }
+                ]
+            }
         ]
     }
     </script>
 
-    <!-- Image Preloads for Hero, Works, and Certifications -->
-    <link rel="preload" href="/images/peeps/all-peeps.webp" as="image">
-    <link rel="preload" href="/images/SER1.webp" as="image">
-    <link rel="preload" href="/images/SER2.webp" as="image">
-    <link rel="preload" href="/images/SER3.webp" as="image">
-    <link rel="preload" href="/images/mockup1.webp" as="image">
-    <link rel="preload" href="/images/mockup2.webp" as="image">
-    <link rel="preload" href="/images/mockup3.webp" as="image">
-    <link rel="preload" href="/images/mockup4.webp" as="image">
-    <link rel="preload" href="/lanyard.png" as="image">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">

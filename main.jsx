@@ -1,12 +1,12 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ProgressiveBlur } from './ProgressiveBlur'
-import ScrollReveal from './ScrollReveal'
-import Lanyard from './Lanyard'
 import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
 
-// Lazy loaded non-hero components
+// Dynamically imported components (Look-ahead code-split)
+const Lanyard = React.lazy(() => import('./Lanyard'));
+const ScrollReveal = React.lazy(() => import('./ScrollReveal'));
 const BentoGrid = React.lazy(() => import('./BentoGrid'));
 const LogoLoop = React.lazy(() => import('./LogoLoop'));
 const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
@@ -16,40 +16,24 @@ const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
 const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
 const ExpandableScreenDemo = React.lazy(() => import('./ExpandableScreenDemo'));
 
-import cardGLB from './card.glb'
-import lanyardImg from './lanyard.png'
-
-// ============================================
-// Real Asset Preloader & Loader Tracker
-// ============================================
+// Only preload critical hero peeps background
 const CRITICAL_IMAGES = [
-  '/images/peeps/all-peeps.webp',
-  '/images/SER1.webp',
-  '/images/SER2.webp',
-  '/images/SER3.webp',
-  '/images/mockup1.webp',
-  '/images/mockup2.webp',
-  '/images/mockup3.webp',
-  '/images/mockup4.webp',
-  '/images/pp1new.webp',
-  '/images/pp2new.png'
+  '/images/peeps/all-peeps.webp'
 ];
 
 let imagesLoadedRatio = 0;
-let lanyardReady = false;
 let crowdReady = false;
 let signalFired = false;
 
 function updateProgress() {
-  let progress = 35 + Math.round(imagesLoadedRatio * 25);
+  let progress = 50 + Math.round(imagesLoadedRatio * 30);
   if (crowdReady) progress += 20;
-  if (lanyardReady) progress += 20;
 
   if (typeof window.updatePreloaderProgress === 'function') {
     window.updatePreloaderProgress(progress);
   }
 
-  if (imagesLoadedRatio >= 1 && crowdReady && lanyardReady) {
+  if (imagesLoadedRatio >= 1 && crowdReady) {
     signalReady();
   }
 }
@@ -65,12 +49,11 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Safety fallback after max 2.5 seconds even on poor network
+// Safety fallback after max 800ms
 setTimeout(() => {
   signalReady();
-}, 2500);
+}, 800);
 
-// Preload all site images concurrently with incremental progress & 1s per-asset timeout
 function preloadImages(urls) {
   const total = urls.length;
   if (!total) {
@@ -91,7 +74,7 @@ function preloadImages(urls) {
       updateProgress();
     };
 
-    const timer = setTimeout(done, 1000);
+    const timer = setTimeout(done, 800);
 
     const img = new Image();
     img.onload = () => {
@@ -139,21 +122,40 @@ function App() {
     };
   }, []);
 
-  const handleLanyardLoaded = () => {
-    lanyardReady = true;
-    updateProgress();
-  };
-
   return (
-    <Lanyard 
-      position={[0, 0, 20]} 
-      gravity={[0, -40, 0]} 
-      transparent={true} 
-      ready={showLanyard} 
-      inViewport={inViewport} 
-      onLoaded={handleLanyardLoaded}
-    />
+    <Suspense fallback={null}>
+      <Lanyard 
+        position={[0, 0, 20]} 
+        gravity={[0, -40, 0]} 
+        transparent={true} 
+        ready={showLanyard} 
+        inViewport={inViewport} 
+      />
+    </Suspense>
   );
+}
+
+// Look-ahead Lazy Mount Helper
+function lazyMount(elementId, renderFn, rootMargin = '400px 0px') {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  if (typeof IntersectionObserver === 'undefined') {
+    renderFn(el);
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        renderFn(el);
+      }
+    },
+    { rootMargin, threshold: 0.01 }
+  );
+
+  observer.observe(el);
 }
 
 // ============================================
@@ -163,173 +165,165 @@ function App() {
 if (!window.__MAIN_JSX_MOUNTED__) {
   window.__MAIN_JSX_MOUNTED__ = true;
 
+  // Hero Lanyard Mount
   const root = document.getElementById('lanyard-root');
   if (root) {
     ReactDOM.createRoot(root).render(<App />);
   }
 
+  // Hero Blurs Mount
+  const blurRoot = document.getElementById('progressive-blur-root');
+  if (blurRoot) {
+    ReactDOM.createRoot(blurRoot).render(<ProgressiveBlur height="120px" position="bottom" />);
+  }
 
-const blurRoot = document.getElementById('progressive-blur-root');
-if (blurRoot) {
-  ReactDOM.createRoot(blurRoot).render(<ProgressiveBlur height="120px" position="bottom" />);
-}
+  const blurTopRoot = document.getElementById('progressive-blur-top-root');
+  if (blurTopRoot) {
+    ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
+  }
 
-const blurTopRoot = document.getElementById('progressive-blur-top-root');
-if (blurTopRoot) {
-  ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
-}
+  // Hero Crowd Canvas Mount
+  const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
+  if (crowdCanvasRoot) {
+    const handleCrowdLoaded = () => {
+      crowdReady = true;
+      updateProgress();
+    };
 
-const scrollRevealRoot = document.getElementById('scroll-reveal-root');
-if (scrollRevealRoot) {
-  ReactDOM.createRoot(scrollRevealRoot).render(
-    <ScrollReveal
-      baseOpacity={0.1}
-      enableBlur={false}
-      baseRotation={0}
-      blurStrength={0}
-    >
-      Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
-      <Highlighter action="underline" color="#FF9800">
-        analyzing data
-      </Highlighter>{' '}
-      and{' '}
-      <Highlighter action="highlight" color="#87CEFA">
-        creating insights.
-      </Highlighter>{' '}
-      I love exploring datasets and visualizing compelling data stories.
-    </ScrollReveal>
-  );
-}
+    ReactDOM.createRoot(crowdCanvasRoot).render(
+      <CrowdCanvas onLoaded={handleCrowdLoaded} />
+    );
+  }
 
-const flowingMenuRoot = document.getElementById('flowing-menu-root');
-if (flowingMenuRoot) {
-  ReactDOM.createRoot(flowingMenuRoot).render(
-    <Suspense fallback={null}>
-      <BentoGrid />
-    </Suspense>
-  );
-}
-
-// Logo Loop Mount
-const logoLoopRoot = document.getElementById('logo-loop-root');
-if (logoLoopRoot) {
-  const imageLogos = [
-    { src: "/images/React.webp", alt: "React" },
-    { src: "/images/Vue.webp", alt: "Vue" },
-    { src: "/images/Node.js.webp", alt: "Node.js" },
-    { src: "/images/Python.webp", alt: "Python" },
-    { src: "/images/TypeScript.webp", alt: "TypeScript" },
-    { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS" },
-    { src: "/images/Vite.webp", alt: "Vite" },
-    { src: "/images/HTML.webp", alt: "HTML" },
-    { src: "/images/GitLab.webp", alt: "GitLab" },
-  ];
-
-  const LogoLoopWrapper = () => {
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth <= 768);
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return (
+  // Look-Ahead 1: About Section (triggers when within 400px)
+  lazyMount('scroll-reveal-root', (el) => {
+    ReactDOM.createRoot(el).render(
       <Suspense fallback={null}>
-        <LogoLoop
-          logos={imageLogos}
-          speed={120}
-          direction="left"
-          logoHeight={isMobile ? 80 : "8.75rem"}
-          gap={isMobile ? 50 : "8.75rem"}
-          hoverSpeed={0}
-          scaleOnHover
-          fadeOut
-          fadeOutColor="transparent"
-          ariaLabel="Technology skills"
-        />
+        <ScrollReveal
+          baseOpacity={0.1}
+          enableBlur={false}
+          baseRotation={0}
+          blurStrength={0}
+        >
+          Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
+          <Highlighter action="underline" color="#FF9800">
+            analyzing data
+          </Highlighter>{' '}
+          and{' '}
+          <Highlighter action="highlight" color="#87CEFA">
+            creating insights.
+          </Highlighter>{' '}
+          I love exploring datasets and visualizing compelling data stories.
+        </ScrollReveal>
       </Suspense>
     );
-  };
+  }, '400px 0px');
 
-  ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
+  // Look-Ahead 2: Works Section (Bento Grid & Works SVG)
+  lazyMount('flowing-menu-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <BentoGrid />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  lazyMount('works-svg-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <SvgWorksScroll />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  // Look-Ahead 3: Skills Section (LogoLoop)
+  lazyMount('logo-loop-root', (el) => {
+    const imageLogos = [
+      { src: "/images/React.webp", alt: "React" },
+      { src: "/images/Vue.webp", alt: "Vue" },
+      { src: "/images/Node.js.webp", alt: "Node.js" },
+      { src: "/images/Python.webp", alt: "Python" },
+      { src: "/images/TypeScript.webp", alt: "TypeScript" },
+      { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS" },
+      { src: "/images/Vite.webp", alt: "Vite" },
+      { src: "/images/HTML.webp", alt: "HTML" },
+      { src: "/images/GitLab.webp", alt: "GitLab" },
+    ];
+
+    const LogoLoopWrapper = () => {
+      const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+      useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+
+      return (
+        <Suspense fallback={null}>
+          <LogoLoop
+            logos={imageLogos}
+            speed={120}
+            direction="left"
+            logoHeight={isMobile ? 80 : "8.75rem"}
+            gap={isMobile ? 50 : "8.75rem"}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            fadeOutColor="transparent"
+            ariaLabel="Technology skills"
+          />
+        </Suspense>
+      );
+    };
+
+    ReactDOM.createRoot(el).render(<LogoLoopWrapper />);
+  }, '450px 0px');
+
+  // Look-Ahead 4: Experience Section
+  lazyMount('experience-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <ExperienceAccordion />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  lazyMount('svg-follow-scroll-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <SvgFollowScroll />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  // Look-Ahead 5: Certificates Section
+  lazyMount('certificates-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <MotionCarousel />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  // Look-Ahead 6: Contact & Confetti Section
+  lazyMount('confetti-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={null}>
+        <ConfettiSideCannons />
+      </Suspense>
+    );
+  }, '450px 0px');
+
+  lazyMount('contact-btn-root', (el) => {
+    ReactDOM.createRoot(el).render(
+      <Suspense fallback={
+        <a href="mailto:rzikydn@gmail.com" className="contact-btn contact-btn--primary">
+          Get In Touch &rarr;
+        </a>
+      }>
+        <ExpandableScreenDemo />
+      </Suspense>
+    );
+  }, '450px 0px');
 }
-
-// Experience Accordion Mount
-const experienceRoot = document.getElementById('experience-root');
-if (experienceRoot) {
-  ReactDOM.createRoot(experienceRoot).render(
-    <Suspense fallback={null}>
-      <ExperienceAccordion />
-    </Suspense>
-  );
-}
-
-// Certificates Carousel Mount
-const certificatesRoot = document.getElementById('certificates-root');
-if (certificatesRoot) {
-  ReactDOM.createRoot(certificatesRoot).render(
-    <Suspense fallback={null}>
-      <MotionCarousel />
-    </Suspense>
-  );
-}
-
-// Confetti Mount
-const confettiRoot = document.getElementById('confetti-root');
-if (confettiRoot) {
-  ReactDOM.createRoot(confettiRoot).render(
-    <Suspense fallback={null}>
-      <ConfettiSideCannons />
-    </Suspense>
-  );
-}
-
-// Crowd Canvas Mount
-const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
-if (crowdCanvasRoot) {
-  const handleCrowdLoaded = () => {
-    crowdReady = true;
-    updateProgress();
-  };
-
-  ReactDOM.createRoot(crowdCanvasRoot).render(
-    <CrowdCanvas onLoaded={handleCrowdLoaded} />
-  );
-}
-
-// SVG Follow Scroll Mount
-const svgFollowScrollRoot = document.getElementById('svg-follow-scroll-root');
-if (svgFollowScrollRoot) {
-  ReactDOM.createRoot(svgFollowScrollRoot).render(
-    <Suspense fallback={null}>
-      <SvgFollowScroll />
-    </Suspense>
-  );
-}
-
-// Works SVG Mount
-const worksSvgRoot = document.getElementById('works-svg-root');
-if (worksSvgRoot) {
-  ReactDOM.createRoot(worksSvgRoot).render(
-    <Suspense fallback={null}>
-      <SvgWorksScroll />
-    </Suspense>
-  );
-}
-
-// Contact Btn (Expandable Screen) Mount
-const contactBtnRoot = document.getElementById('contact-btn-root');
-if (contactBtnRoot) {
-  ReactDOM.createRoot(contactBtnRoot).render(
-    <Suspense fallback={
-      <a href="mailto:rzikydn@gmail.com" className="contact-btn contact-btn--primary">
-        Get In Touch &rarr;
-      </a>
-    }>
-      <ExpandableScreenDemo />
-    </Suspense>
-  );
-}
-}
-
