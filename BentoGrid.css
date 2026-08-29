@@ -134,12 +134,13 @@
 
 /* Card Title */
 .bento-title {
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-family: "Elms Sans", sans-serif;
+    font-size: 1.35rem;
+    font-weight: 300;
     color: #ffffff;
     margin: 8px 0 0 0;
-    font-family: inherit;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
+    line-height: 1.25;
     transition: color 0.3s ease;
 }
 
@@ -149,23 +150,26 @@
 
 /* Card Description */
 .bento-desc {
-    font-size: 0.9rem;
+    font-family: "Elms Sans", sans-serif;
+    font-size: 0.92rem;
     color: #94a3b8;
-    line-height: 1.5;
+    line-height: 1.6;
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
+    letter-spacing: -0.01em;
 }
 
 /* CTA View Project Link */
 .bento-cta {
+    font-family: "Elms Sans", sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     font-size: 0.88rem;
-    font-weight: 500;
+    font-weight: 400;
     color: #38bdf8;
     margin-top: 10px;
-    opacity: 0.4;
+    opacity: 0.5;
     transform: translateY(4px);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

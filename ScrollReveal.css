@@ -3,18 +3,19 @@
 }
 
 .scroll-reveal-text {
+  font-family: "Elms Sans", sans-serif;
   font-size: clamp(2rem, 3.6vw, 3.6rem);
-  line-height: 1.35;
-  font-weight: 500;
+  line-height: 1.4;
+  font-weight: 300;
   color: #1e293b;
   text-align: center;
   margin: 0 auto;
-  letter-spacing: -0.5px;
-  font-family: "Elms Sans", sans-serif;
+  letter-spacing: -0.04em;
 }
 
 .word {
   display: inline-block;
+  font-family: "Elms Sans", sans-serif;
 }
 
 .rough-annotation-svg {
@@ -23,10 +24,17 @@
 }
 
 @media (max-width: 768px) {
+  .rough-annotation-svg {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
   .scroll-reveal-text {
     font-size: clamp(1.45rem, 5.5vw, 1.9rem);
     line-height: 1.5;
-    letter-spacing: -0.3px;
+    font-weight: 300;
+    letter-spacing: -0.03em;
     width: 100%;
     max-width: 290px;
     margin: 0 auto;
@@ -39,6 +47,7 @@
   .scroll-reveal-text {
     font-size: clamp(1.35rem, 5.2vw, 1.75rem);
     line-height: 1.48;
+    font-weight: 300;
     max-width: 270px;
   }
 }

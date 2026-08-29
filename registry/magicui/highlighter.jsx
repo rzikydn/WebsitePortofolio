@@ -19,6 +19,11 @@ export function Highlighter({
     const element = elementRef.current;
     if (!element) return;
 
+    // Disable highlights/annotations completely on mobile screens
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      return;
+    }
+
     let annotation = null;
     let resizeObserver = null;
     let isShown = false;

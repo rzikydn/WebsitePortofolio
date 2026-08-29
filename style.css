@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 html {
     scroll-behavior: auto; /* Lenis handles smooth scrolling — CSS smooth-scroll creates double-interpolation */
     /* Base font-size: default 16px on standard displays */
@@ -494,66 +496,75 @@ body {
 }
 
 .hero-title {
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(3rem, 7vw, 7.2rem);
     color: #1e293b;
     margin-bottom: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -2.5px;
+    font-weight: 300;
+    letter-spacing: -0.055em;
     line-height: 1.08;
 }
 
 .hero-desc {
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(1.35rem, 2.2vw, 2.1rem);
     color: #475569; /* Increased contrast from #64748b */
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 3.5rem;
     max-width: 58rem;
+    font-weight: 300;
+    letter-spacing: -0.015em;
 }
 
 .hero-buttons {
     display: flex;
     align-items: center;
-    gap: 1.75rem;
+    gap: 1.25rem;
     position: relative;
     z-index: 20;
 }
 
 .hero-buttons .btn-hire {
-    padding: 1.35rem 2.75rem;
-    font-size: 1.55rem;
-    border-radius: 1.125rem;
+    padding: 0.95rem 2rem;
+    font-size: 1.2rem;
+    font-family: "Elms Sans", sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    border-radius: 0.875rem;
 }
 
 .hero-buttons .btn-hire i {
-    font-size: 1.85rem;
+    font-size: 1.35rem;
 }
 
 .btn-copy {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
     background-color: #ffffff;
     color: #334155;
     border: 1px solid #e2e8f0;
-    padding: 1.35rem 2.75rem;
-    border-radius: 1.125rem;
-    font-size: 1.55rem;
-    font-weight: 500;
+    padding: 0.95rem 2rem;
+    border-radius: 0.875rem;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
     cursor: pointer;
-    font-family: inherit;
+    font-family: "Elms Sans", sans-serif;
     text-decoration: none;
     /* Prevent underline style on link tag */
     transition: all 0.3s ease;
 }
 
 .btn-copy i {
-    font-size: 1.85rem;
+    font-size: 1.35rem;
     color: #64748b; /* Increased contrast from #94a3b8 */
 }
 
 .btn-copy:hover {
     background-color: #f8fafc;
     border-color: #cbd5e1;
+    transform: translateY(-2px);
 }
 
 /* Navbar Mobile Optimization */
@@ -646,14 +657,22 @@ body {
     }
 
     .hero-title {
+        font-family: "Elms Sans", sans-serif;
         font-size: clamp(1.8rem, 7vw, 2.5rem);
         margin-bottom: 12px;
-        letter-spacing: -1px;
+        font-weight: 300;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
     }
 
     .hero-desc {
+        font-family: "Elms Sans", sans-serif;
         font-size: 0.95rem;
-        margin-bottom: 25px;
+        margin: 0 auto 24px auto;
+        max-width: 19rem;
+        font-weight: 300;
+        line-height: 1.65;
+        padding: 0 0.5rem;
     }
 
     .hero-buttons .btn-hire,
@@ -787,10 +806,12 @@ body.dark-mode .btn-copy:hover {
 }
 
 .about-text {
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(2rem, 3.6vw, 3.6rem);
     color: #cbd5e1;
-    line-height: 1.35;
-    font-weight: 500;
+    line-height: 1.4;
+    font-weight: 300;
+    letter-spacing: -0.04em;
     margin: 0;
 }
 
@@ -1356,31 +1377,36 @@ body.dark-mode .contact-img--light {
 }
 
 .contact-subtitle {
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(2rem, 4.5vw, 3rem);
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300;
+    letter-spacing: -0.045em;
     margin: 0;
-    line-height: 1.2;
+    line-height: 1.18;
 }
 
 .contact-desc {
-    font-size: clamp(1rem, 1.5vw, 3rem);
-    color: rgba(255, 255, 255, 0.4);
-    font-weight: 400;
-    line-height: 1.7;
+    font-family: "Elms Sans", sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 300;
+    letter-spacing: -0.015em;
+    line-height: 1.75;
     margin: 0;
     max-width: 800px;
 }
 
 .contact-btn {
+    font-family: "Elms Sans", sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.9rem 2rem;
     border-radius: 50px;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: -0.015em;
     text-decoration: none;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.3px;
