@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Wildan Rizky Wijaya</title>
+    <meta name="description" content="Projects by Wildan Rizky Wijaya - Data Analyst and Full-Stack Developer.">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/images/logox.webp" sizes="32x32">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+    <style>
+        body.projects-page {
+            min-height: 100vh;
+            background-color: #292929;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Section 1: Morphing Tabs Full Section */
+        .projects-hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background-color: #292929;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            z-index: 20;
+        }
+
+        .morphing-tabs-section-inner {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Section 2: Footer automatically overlaps cleanly with border-radius 30px */
+    </style>
+</head>
+
+<body class="projects-page">
+    <!-- Part 1: Morphing Tabs Full Section -->
+    <section class="projects-hero-section">
+        <div id="morphing-tabs-root" class="morphing-tabs-section-inner"></div>
+    </section>
+
+    <!-- Part 2: Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4 class="footer-heading">Navigation</h4>
+                <a href="/#home" class="footer-link">Home</a>
+                <a href="/#about" class="footer-link">About</a>
+                <a href="/#skills" class="footer-link">Skills</a>
+                <a href="/#works" class="footer-link">Works</a>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-heading">Experience</h4>
+                <a href="/#experience" class="footer-link">Experience</a>
+                <a href="/#contact" class="footer-link">Contact</a>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-heading">Socials</h4>
+                <a href="https://www.linkedin.com/in/rzikydn" target="_blank" rel="noopener"
+                    class="footer-link">LinkedIn</a>
+                <a href="https://github.com/rzikydn" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+                <a href="mailto:rzikydn@gmail.com" class="footer-link">Email</a>
+            </div>
+        </div>
+        <div class="footer-brand">
+            <span>RZIKYDN</span>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Wildan Rizky Wijaya. All rights reserved. | Wijaya Rizky Wildan Portfolio</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/projects.jsx"></script>
+</body>
+
+</html>

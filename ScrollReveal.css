@@ -24,12 +24,22 @@
 
 @media (max-width: 768px) {
   .scroll-reveal-text {
-    font-size: clamp(1.2rem, 4.5vw, 1.8rem);
-    line-height: 1.6;
-    letter-spacing: normal;
+    font-size: clamp(1.45rem, 5.5vw, 1.9rem);
+    line-height: 1.5;
+    letter-spacing: -0.3px;
+    width: 100%;
     max-width: 290px;
     margin: 0 auto;
     text-align: center;
+    word-break: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-reveal-text {
+    font-size: clamp(1.35rem, 5.2vw, 1.75rem);
+    line-height: 1.48;
+    max-width: 270px;
   }
 }
 

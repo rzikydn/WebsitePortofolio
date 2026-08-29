@@ -5,7 +5,6 @@ import "./SvgWorksScroll.css";
 const SvgWorksScroll = () => {
   const { scrollY } = useScroll();
   const [vh, setVh] = useState(typeof window !== "undefined" ? window.innerHeight : 900);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setVh(window.innerHeight);
@@ -14,8 +13,6 @@ const SvgWorksScroll = () => {
   }, []);
 
   // Map absolute scrollY to drawing progress (0 to 1)
-  // Start drawing much earlier (vh * 2.8) so the line begins when MY WORKS is ~10-20% visible
-  // Complete drawing by vh * 5.0 (balanced drawing speed)
   const pathLength = useTransform(scrollY, (y) => {
     const startDrawing = vh * 2.8;
     const endDrawing = vh * 5.0;
@@ -25,17 +22,14 @@ const SvgWorksScroll = () => {
     return (y - startDrawing) / (endDrawing - startDrawing);
   });
 
-  // Listen to pathLength changes to toggle visibility (hides the green dot at pathLength=0)
-  useMotionValueEvent(pathLength, "change", (latest) => {
-    setIsVisible(latest > 0.001);
-  });
+  // Native Framer Motion opacity motion value (0 when pathLength is 0, 1 when drawing starts)
+  const opacity = useTransform(pathLength, [0, 0.001, 1], [0, 1, 1]);
 
   return (
-    <div
+    <motion.div
       className="svg-works-background"
       style={{
-        opacity: isVisible ? 1 : 0,
-        transition: "opacity 0.15s ease",
+        opacity,
       }}
     >
       <svg
@@ -57,7 +51,7 @@ const SvgWorksScroll = () => {
           }}
         />
       </svg>
-    </div>
+    </motion.div>
   );
 };
 

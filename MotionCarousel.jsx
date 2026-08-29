@@ -12,7 +12,7 @@ const CERTIFICATES = [
     skills: ["Data Wrangling", "R Programming", "SQL", "Tableau", "Data Cleansing"],
     bgClass: "cert-bg-google",
     icon: "ph ph-chart-bar",
-    image: "/images/SER1.png"
+    image: "/images/SER1.webp"
   },
   {
     title: "Associate Data Scientist",
@@ -23,7 +23,7 @@ const CERTIFICATES = [
     skills: ["SQL Queries", "Data Analysis", "SQLite", "Database Joins"],
     bgClass: "cert-bg-sql",
     icon: "ph ph-database",
-    image: "/images/SER2.png"
+    image: "/images/SER2.webp"
   },
   {
     title: "Pengenalan Data Science dan Pemanfaatannya di Berbagai Sektor",
@@ -34,7 +34,7 @@ const CERTIFICATES = [
     skills: ["Machine Learning", "Statistical Modeling", "Python", "Data Pipelines"],
     bgClass: "cert-bg-ds",
     icon: "ph ph-brain",
-    image: "/images/SER3.png"
+    image: "/images/SER3.webp"
   }
 ];
 

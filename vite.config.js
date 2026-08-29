@@ -5,11 +5,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    react(),
-    legacy({
-      targets: ['defaults', 'not IE 11', 'iOS >= 15'],
-      polyfills: true,
-    })
+    react()
   ],
   resolve: {
     alias: {
@@ -20,6 +16,10 @@ export default defineConfig({
   build: {
     target: 'es2015',
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        projects: path.resolve(__dirname, 'projects.html'),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {

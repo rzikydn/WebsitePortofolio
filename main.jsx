@@ -5,7 +5,6 @@ import ScrollReveal from './ScrollReveal'
 import Lanyard from './Lanyard'
 import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
-import { NoiseBackground } from '@/components/ui/noise-background'
 
 // Lazy loaded non-hero components
 const BentoGrid = React.lazy(() => import('./BentoGrid'));
@@ -15,6 +14,7 @@ const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
 const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
 const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
 const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
+const ExpandableScreenDemo = React.lazy(() => import('./ExpandableScreenDemo'));
 
 import cardGLB from './card.glb'
 import lanyardImg from './lanyard.png'
@@ -23,15 +23,15 @@ import lanyardImg from './lanyard.png'
 // Real Asset Preloader & Loader Tracker
 // ============================================
 const CRITICAL_IMAGES = [
-  '/images/peeps/all-peeps.png',
-  '/images/SER1.png',
-  '/images/SER2.png',
-  '/images/SER3.png',
-  '/images/mockup1.png',
-  '/images/mockup2.png',
-  '/images/mockup3.png',
-  '/images/mockup4.png',
-  '/images/pp1new.png',
+  '/images/peeps/all-peeps.webp',
+  '/images/SER1.webp',
+  '/images/SER2.webp',
+  '/images/SER3.webp',
+  '/images/mockup1.webp',
+  '/images/mockup2.webp',
+  '/images/mockup3.webp',
+  '/images/mockup4.webp',
+  '/images/pp1new.webp',
   '/images/pp2new.png'
 ];
 
@@ -112,10 +112,6 @@ function preloadImages(urls) {
 
 preloadImages(CRITICAL_IMAGES);
 
-// ============================================
-// React Component Mounts
-// ============================================
-
 function App() {
   const [showLanyard, setShowLanyard] = useState(false);
   const [inViewport, setInViewport] = useState(true);
@@ -160,10 +156,18 @@ function App() {
   );
 }
 
-const root = document.getElementById('lanyard-root');
-if (root) {
-  ReactDOM.createRoot(root).render(<App />);
-}
+// ============================================
+// React Component Mounts (Guarded to prevent duplicate rendering)
+// ============================================
+
+if (!window.__MAIN_JSX_MOUNTED__) {
+  window.__MAIN_JSX_MOUNTED__ = true;
+
+  const root = document.getElementById('lanyard-root');
+  if (root) {
+    ReactDOM.createRoot(root).render(<App />);
+  }
+
 
 const blurRoot = document.getElementById('progressive-blur-root');
 if (blurRoot) {
@@ -210,15 +214,15 @@ if (flowingMenuRoot) {
 const logoLoopRoot = document.getElementById('logo-loop-root');
 if (logoLoopRoot) {
   const imageLogos = [
-    { src: "/images/React.png", alt: "React" },
-    { src: "/images/Vue.png", alt: "Vue" },
-    { src: "/images/Node.js.png", alt: "Node.js" },
-    { src: "/images/Python.png", alt: "Python" },
-    { src: "/images/TypeScript.png", alt: "TypeScript" },
-    { src: "/images/Tailwindcss6.png", alt: "Tailwind CSS" },
-    { src: "/images/Vite.png", alt: "Vite" },
-    { src: "/images/HTML.png", alt: "HTML" },
-    { src: "/images/GitLab.png", alt: "GitLab" },
+    { src: "/images/React.webp", alt: "React" },
+    { src: "/images/Vue.webp", alt: "Vue" },
+    { src: "/images/Node.js.webp", alt: "Node.js" },
+    { src: "/images/Python.webp", alt: "Python" },
+    { src: "/images/TypeScript.webp", alt: "TypeScript" },
+    { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS" },
+    { src: "/images/Vite.webp", alt: "Vite" },
+    { src: "/images/HTML.webp", alt: "HTML" },
+    { src: "/images/GitLab.webp", alt: "GitLab" },
   ];
 
   const LogoLoopWrapper = () => {
@@ -314,24 +318,18 @@ if (worksSvgRoot) {
   );
 }
 
-// Contact Noise Button Mount
+// Contact Btn (Expandable Screen) Mount
 const contactBtnRoot = document.getElementById('contact-btn-root');
 if (contactBtnRoot) {
   ReactDOM.createRoot(contactBtnRoot).render(
-    <NoiseBackground
-      containerClassName="w-fit p-[3px] rounded-full"
-      gradientColors={[
-        "rgb(255, 100, 150)",
-        "rgb(100, 150, 255)",
-        "rgb(255, 200, 100)",
-      ]}
-    >
-      <a
-        href="mailto:rzikydn@gmail.com"
-        className="contact-btn contact-btn--primary"
-      >
+    <Suspense fallback={
+      <a href="mailto:rzikydn@gmail.com" className="contact-btn contact-btn--primary">
         Get In Touch &rarr;
       </a>
-    </NoiseBackground>
+    }>
+      <ExpandableScreenDemo />
+    </Suspense>
   );
 }
+}
+

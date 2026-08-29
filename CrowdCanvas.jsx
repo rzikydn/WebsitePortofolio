@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import React, { useEffect, useRef } from "react";
 
-const CrowdCanvas = ({ src = "/images/peeps/all-peeps.png", rows = 15, cols = 7, onLoaded }) => {
+const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7, onLoaded }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {

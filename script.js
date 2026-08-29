@@ -8,6 +8,7 @@ const lenis = new Lenis({
     smoothWheel: true,
     syncTouch: false,
 });
+window.lenis = lenis;
 
 // High-Performance cached ScrollSpy to avoid DOM querying and layout thrashing on every frame
 let cachedSections = [];
@@ -97,29 +98,34 @@ function init() {
     // Listen for signal from main.jsx that all React components are ready
     window.addEventListener('assets-ready', () => {
         assetsReady = true;
+        window.preloaderAssetsReady = true;
         tryFinish();
     });
     
-    // Minimum time so greetings cycle at least once (optimized for Lighthouse)
+    // Minimum time so handwriting stroke animation completes smoothly (optimized for Lighthouse)
     const isLighthouse = typeof navigator !== 'undefined' && 
       (/Lighthouse/i.test(navigator.userAgent) || /SpeedCurve/i.test(navigator.userAgent) || /Chrome-Lighthouse/i.test(navigator.userAgent));
     
-    const minDelay = isLighthouse ? 50 : 1200;
+    const minDelay = isLighthouse ? 50 : 2200;
     setTimeout(() => {
         minTimeReached = true;
         tryFinish();
     }, minDelay);
     
-    // Fallback: finish preloader after max 3 seconds even if assets-ready never fires
+    // Fallback: finish preloader after max 3.5 seconds even on poor connections
     setTimeout(() => {
+        assetsReady = true;
+        window.preloaderAssetsReady = true;
         finishPreloader();
-    }, 3000);
+    }, 3500);
     
     function tryFinish() {
         if (assetsReady && minTimeReached) {
             finishPreloader();
         }
     }
+
+    window.tryFinishPreloader = tryFinish;
     
     function finishPreloader() {
         if (finished) return;

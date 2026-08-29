@@ -169,15 +169,18 @@ body.dark-mode .acc-progress-fill {
     height: 12px;
     border-radius: 50%;
     background: #ffffff;
-    border: 2.5px solid #0f172a; /* blends perfectly with default navy background */
+    border: 2.5px solid #0f172a;
+    /* blends perfectly with default navy background */
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
     z-index: 5;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.dark-mode .acc-item-dot {
-    background: #0f172a; /* dark-blue dot on light-grey background */
-    border-color: #f8fafc; /* blends perfectly with toggled light-grey background */
+    background: #0f172a;
+    /* dark-blue dot on light-grey background */
+    border-color: #f8fafc;
+    /* blends perfectly with toggled light-grey background */
     box-shadow: 0 0 8px rgba(15, 23, 42, 0.3);
 }
 
@@ -221,8 +224,63 @@ body.dark-mode .acc-arrow {
     color: rgba(15, 23, 42, 0.3);
 }
 
+/* Right-Aligned Accordion Arrow Button for Mobile */
+.acc-bullet--cutoff {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.acc-bullet-text {
+    flex: 1;
+}
+
+.acc-right-arrow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 0.2rem;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.acc-right-arrow-btn:hover {
+    color: #ffffff;
+}
+
+.acc-right-arrow-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.acc-right-arrow-icon.open {
+    transform: rotate(180deg);
+}
+
+body.dark-mode .acc-right-arrow-btn {
+    color: rgba(15, 23, 42, 0.6);
+}
+
+body.dark-mode .acc-right-arrow-btn:hover {
+    color: #0f172a;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
+    .acc-bullet--mobile-hidden {
+        display: none !important;
+    }
+
     .acc-wrapper {
         padding: 0 4vw;
         padding-left: calc(3vw + 25px);

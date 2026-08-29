@@ -7,6 +7,19 @@
     border-radius: 9999px;
     overflow: hidden;
     isolation: isolate;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+    /* iOS Safari / WebKit GPU layer overflow clipping fixes */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: -webkit-radial-gradient(white, black);
+    -webkit-clip-path: inset(0 round 9999px);
+    clip-path: inset(0 round 9999px);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .noise-bg-gradient {
@@ -19,6 +32,9 @@
     animation: rotateNoiseBg 6s linear infinite;
     filter: blur(6px);
     opacity: 0.95;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 @keyframes rotateNoiseBg {
@@ -39,6 +55,12 @@
     pointer-events: none;
     mix-blend-mode: overlay;
     border-radius: 9999px;
+    -webkit-clip-path: inset(0 round 9999px);
+    clip-path: inset(0 round 9999px);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .noise-bg-content {
@@ -50,4 +72,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
+    -webkit-clip-path: inset(0 round 9999px);
+    clip-path: inset(0 round 9999px);
+    -webkit-tap-highlight-color: transparent;
 }

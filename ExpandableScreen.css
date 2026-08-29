@@ -1,0 +1,540 @@
+/* Expandable Screen Modal Overlay & Container */
+.expandable-screen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 99999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+}
+
+.expandable-screen-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.expandable-screen-modal {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1050px;
+    max-height: 88vh;
+    max-height: 88dvh;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    background: #0f1015;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding: 2.5rem 2.25rem;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Close Button */
+.expandable-screen-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 50;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.expandable-screen-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.expandable-screen-close svg {
+    width: 16px !important;
+    height: 16px !important;
+    stroke-width: 2.5;
+}
+
+@media (max-width: 640px) {
+    .expandable-screen-close {
+        top: 0.6rem;
+        right: 0.6rem;
+        width: 26px;
+        height: 26px;
+    }
+    .expandable-screen-close svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+}
+
+.expandable-screen-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: #ffffff;
+    margin: 0 0 1.25rem 0;
+    padding-right: 2.75rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 899px) {
+    .expandable-screen-title {
+        font-size: 1.65rem;
+        font-weight: 600;
+        padding-right: 2.25rem;
+        margin-bottom: 0 !important;
+    }
+}
+
+@media (min-width: 900px) {
+    .expandable-screen-title {
+        font-size: 2.85rem;
+    }
+}
+
+/* Modal Inner Grid Layout */
+.expandable-screen-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "info form";
+    gap: 3.5rem;
+    align-items: flex-start;
+}
+
+.expandable-screen-info-wrap {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.expandable-screen-form-wrap {
+    grid-area: form;
+    width: 100%;
+}
+
+@media (max-width: 899px) {
+    .expandable-screen-overlay {
+        padding: 0.5rem 0.35rem;
+        align-items: center;
+    }
+
+    .expandable-screen-modal {
+        padding: 1rem 0.85rem 0.85rem 0.85rem;
+        border-radius: 16px;
+        max-height: 94vh !important;
+        max-height: 94dvh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y;
+        margin: auto;
+    }
+
+    .expandable-screen-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .expandable-screen-info-wrap {
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .expandable-screen-form-wrap {
+        order: 2;
+        width: 100%;
+    }
+
+    .expandable-screen-features {
+        display: none !important;
+    }
+
+    .expandable-screen-quote-block {
+        padding-top: 0;
+        margin-top: -0.65rem;
+        border-top: none !important;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .expandable-screen-quote {
+        font-size: 0.8rem;
+        line-height: 1.35;
+        margin-bottom: 0.15rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-style: normal;
+    }
+
+    .expandable-screen-author {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .expandable-screen-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+    }
+
+    .expandable-screen-author-name {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #ffffff;
+    }
+
+    .expandable-screen-author-role {
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .expandable-screen-form {
+        gap: 0.35rem;
+    }
+
+    .expandable-screen-form-row {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0.4rem;
+        width: 100%;
+    }
+
+    .expandable-screen-form-row > div:first-child {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .expandable-screen-form-row > div:last-child {
+        width: 105px;
+        flex-shrink: 0;
+    }
+
+    .expandable-screen-label {
+        font-size: 0.56rem;
+        margin-bottom: 0.12rem;
+    }
+
+    .expandable-screen-input,
+    .expandable-screen-select-trigger,
+    .expandable-screen-textarea {
+        padding: 0.32rem 0.55rem;
+        font-size: 0.76rem;
+        border-radius: 6px;
+    }
+
+    .expandable-screen-textarea {
+        min-height: 34px;
+        height: 34px;
+    }
+
+    .expandable-screen-submit-btn {
+        padding: 0.42rem 1rem;
+        font-size: 0.78rem;
+        margin-top: 0.15rem;
+    }
+}
+
+/* Feature List */
+.expandable-screen-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.expandable-screen-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.expandable-screen-feature-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.expandable-screen-feature-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.expandable-screen-feature-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+/* Testimonial Quote Block */
+.expandable-screen-quote-block {
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.expandable-screen-quote {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 1.25rem 0;
+}
+
+.expandable-screen-author {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.expandable-screen-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.expandable-screen-author-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0;
+}
+
+.expandable-screen-author-role {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+/* Right Form Section */
+.expandable-screen-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.expandable-screen-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.expandable-screen-label {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.35rem;
+}
+
+.expandable-screen-input,
+.expandable-screen-select-trigger,
+.expandable-screen-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 0.6rem 0.85rem;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.expandable-screen-input:focus,
+.expandable-screen-select-trigger:focus,
+.expandable-screen-textarea:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.expandable-screen-input::placeholder,
+.expandable-screen-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.expandable-screen-form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+@media (min-width: 500px) {
+    .expandable-screen-form-row {
+        flex-direction: row;
+    }
+    .expandable-screen-form-row > div:first-child {
+        flex: 1;
+    }
+    .expandable-screen-form-row > div:last-child {
+        width: 130px;
+    }
+}
+
+.expandable-screen-textarea {
+    resize: none;
+    min-height: 70px;
+}
+
+/* Custom Select Dropdown */
+.expandable-screen-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.expandable-screen-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.expandable-screen-select-trigger svg {
+    width: 16px !important;
+    height: 16px !important;
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.expandable-screen-select-trigger.open svg {
+    transform: rotate(180deg);
+}
+
+.expandable-screen-select-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #1a1c23;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.35rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.expandable-screen-select-option {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.9);
+    transition: background 0.15s ease;
+}
+
+.expandable-screen-select-option:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.expandable-screen-select-option.selected {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+}
+
+/* Submit Button */
+.expandable-screen-submit-btn {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.25rem;
+    letter-spacing: -0.01em;
+}
+
+.expandable-screen-submit-btn:hover {
+    background-color: #e5e5e5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.expandable-screen-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Success Message */
+.expandable-screen-success {
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+}
+
+.expandable-screen-success-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.85rem auto;
+}
+
+.expandable-screen-success-icon svg {
+    width: 24px !important;
+    height: 24px !important;
+}

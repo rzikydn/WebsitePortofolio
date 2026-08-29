@@ -7,25 +7,25 @@ const projects = [
     title: "Jakarta Demographics",
     description: "Interactive Population Data & Analytics Dashboard detailing population statistics, gender distributions, and regional demographics across Jakarta.",
     link: "https://www.linkedin.com/posts/wildan-rizky_datawrangling-python-streamlit-ugcPost-7347899508191653888-traJ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s",
-    src: "/images/mockup1.png",
+    src: "/images/mockup1.webp",
   },
   {
     title: "Mirov Workspace",
     description: "A comprehensive corporate workspace SaaS platform for BSMR organization designed to organize workflows, coordinate collaborative efforts, and streamline professional activities seamlessly.",
     link: "https://planner.bsmr.org",
-    src: "/images/mockup2.png",
+    src: "/images/mockup2.webp",
   },
   {
     title: "Certification Dashboard",
     description: "Enterprise SaaS dashboard mapping certifications, auditing training statistics, and tracking professional compliance rates globally with advanced interactive filters.",
     link: "https://www.linkedin.com/posts/wildan-rizky_dataanalytics-dashboard-streamlit-ugcPost-7371386743175983104-Y5rB?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFi3r_wBZ0KuCEAXJEQ6VKSY8xQfCpqM4_s",
-    src: "/images/mockup3.png",
+    src: "/images/mockup3.webp",
   },
   {
     title: "Olist Market Insight",
     description: "Interactive data warehouse sales analytics dashboard providing crucial retail trends, delivery performance metrics, and consumer purchasing patterns.",
     link: "https://uasdatawarehouse.streamlit.app/",
-    src: "/images/mockup4.png",
+    src: "/images/mockup4.webp",
   }
 ];
 
