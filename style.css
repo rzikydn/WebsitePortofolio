@@ -2,23 +2,36 @@
 
 html {
     scroll-behavior: auto; /* Lenis handles smooth scrolling — CSS smooth-scroll creates double-interpolation */
-    /* Base font-size: default 16px on standard displays */
+    /* Base font-size: default 16px on ultra-wide / large monitors */
     font-size: 16px;
 }
 
-/* ===== High-DPI Display Normalization =====
-   Target laptops with high-resolution panels and OS scaling active (resolution >= 1.5dppx).
-   This scales root font-size down for high-DPI screens (like Yoga Pro 7) to prevent a zoomed-in look,
-   while keeping it at the standard 16px for low/medium-DPI laptops (like HUAWEI MateBook D14). */
+/* ===== Unified Display & Scaling Normalization =====
+   Normalizes display presentation across Windows, Linux (Fedora KDE/GNOME), and macOS:
+   - Windows 11 default 125% scaling on 1080p laptops produces a 1536px viewport with ~1.25dppx.
+   - Standard 1080p laptops and mid-size desktop screens (1025px - 1600px) receive balanced scaling.
+   - High-DPI screens (Yoga Pro 7, Retina, etc.) are scaled proportionally to prevent zoomed-in layouts. */
+@media (min-width: 1025px) and (max-width: 1600px) {
+    html {
+        font-size: 14.5px;
+    }
+}
+
+@media (min-width: 1025px) and (min-resolution: 1.2dppx) and (max-width: 1600px) {
+    html {
+        font-size: 13.8px;
+    }
+}
+
 @media (min-width: 1025px) and (min-resolution: 1.5dppx) {
     html {
-        font-size: 14px;
+        font-size: 13.5px;
     }
 }
 
 @media (min-width: 1025px) and (min-resolution: 2dppx) {
     html {
-        font-size: 13.5px;
+        font-size: 13px;
     }
 }
 
@@ -458,7 +471,7 @@ body {
     width: 100%;
     max-width: 85rem;
     padding: 1.875rem 0;
-    padding-top: 16vh;
+    padding-top: clamp(12vh, 14vh, 16vh);
 }
 
 .hero-top {
@@ -497,9 +510,9 @@ body {
 
 .hero-title {
     font-family: "Elms Sans", sans-serif;
-    font-size: clamp(3rem, 7vw, 7.2rem);
+    font-size: clamp(2.8rem, 6vw, 6.8rem);
     color: #1e293b;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
     font-weight: 300;
     letter-spacing: -0.055em;
     line-height: 1.08;
@@ -507,11 +520,11 @@ body {
 
 .hero-desc {
     font-family: "Elms Sans", sans-serif;
-    font-size: clamp(1.35rem, 2.2vw, 2.1rem);
+    font-size: clamp(1.25rem, 1.85vw, 1.85rem);
     color: #475569; /* Increased contrast from #64748b */
-    line-height: 1.65;
-    margin-bottom: 3.5rem;
-    max-width: 58rem;
+    line-height: 1.62;
+    margin-bottom: clamp(2rem, 3.5vh, 3.2rem);
+    max-width: 54rem;
     font-weight: 300;
     letter-spacing: -0.015em;
 }
@@ -807,7 +820,7 @@ body.dark-mode .btn-copy:hover {
 
 .about-text {
     font-family: "Elms Sans", sans-serif;
-    font-size: clamp(2rem, 3.6vw, 3.6rem);
+    font-size: clamp(1.9rem, 3.2vw, 3.4rem);
     color: #cbd5e1;
     line-height: 1.4;
     font-weight: 300;
@@ -1690,7 +1703,7 @@ body.dark-mode .site-footer {
    ========================================================================== */
 
 :root {
-    --site-framed-width: min(98rem, calc(100% - 44px));
+    --site-framed-width: min(85vw, 98rem);
     --framed-light-line: rgba(15, 23, 42, 0.45);
     --framed-light-stripe: rgba(15, 23, 42, 0.09);
     --framed-dark-line: rgba(255, 255, 255, 0.45);
