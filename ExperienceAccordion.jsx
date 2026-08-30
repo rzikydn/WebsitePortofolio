@@ -77,7 +77,11 @@ function AccordionItem({ item }) {
                 <li
                   key={i}
                   className={`acc-bullet ${isHiddenOnMobile ? 'acc-bullet--mobile-hidden' : ''} ${isCutoffBullet ? 'acc-bullet--cutoff' : ''}`}
-                  onClick={isCutoffBullet ? () => setBulletsExpanded(!bulletsExpanded) : undefined}
+                  onClick={isCutoffBullet ? () => {
+                    if (window.innerWidth <= 768) {
+                      setBulletsExpanded(!bulletsExpanded);
+                    }
+                  } : undefined}
                 >
                   <span className="acc-bullet-text">{bullet}</span>
                   {isCutoffBullet && (

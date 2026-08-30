@@ -241,7 +241,13 @@
 
 @media (max-width: 768px) {
     .works-more-btn-wrap {
-        margin-top: 2rem;
+        margin-top: 1.5rem;
         margin-bottom: 1.5rem;
+    }
+
+    .works-more-btn-wrap .contact-btn {
+        padding: 0.6rem 1.35rem;
+        font-size: 0.85rem;
+        gap: 0.4rem;
     }
 }

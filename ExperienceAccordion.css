@@ -7,14 +7,14 @@
     flex-direction: column;
     z-index: 20;
     position: relative;
-    padding: 0 5vw;
-    padding-left: calc(3vw + 40px);
+    padding: 0 6vw;
+    padding-left: calc(clamp(4.5rem, 6.5vw, 8.5rem) + 40px);
 }
 
 .acc-wrapper::before {
     content: '';
     position: absolute;
-    left: 3vw;
+    left: clamp(4.5rem, 6.5vw, 8.5rem);
     top: 0;
     bottom: 0;
     width: 3px;
@@ -24,7 +24,7 @@
 /* Scroll progress fill */
 .acc-progress-fill {
     position: absolute;
-    left: 3vw;
+    left: clamp(4.5rem, 6.5vw, 8.5rem);
     top: 0;
     width: 3px;
     height: 0;
@@ -70,7 +70,7 @@ body.dark-mode .acc-progress-fill {
 }
 
 .acc-trigger:hover {
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .acc-trigger:focus-visible {
@@ -241,24 +241,12 @@ body.dark-mode .acc-arrow {
     position: relative;
 }
 
-.acc-bullet-text {
-    flex: 1;
+.acc-right-arrow-btn {
+    display: none !important;
 }
 
-.acc-right-arrow-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    padding: 0.2rem;
-    margin-left: auto;
-    flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
+.acc-bullet--cutoff {
+    cursor: default !important;
 }
 
 .acc-right-arrow-btn:hover {
@@ -285,6 +273,26 @@ body.dark-mode .acc-right-arrow-btn:hover {
 
 /* Mobile */
 @media (max-width: 768px) {
+    .acc-right-arrow-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        padding: 0.2rem;
+        margin-left: auto;
+        flex-shrink: 0;
+        transition: color 0.2s ease, transform 0.2s ease;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .acc-bullet--cutoff {
+        cursor: pointer !important;
+    }
+
     .acc-bullet--mobile-hidden {
         display: none !important;
     }
@@ -293,6 +301,11 @@ body.dark-mode .acc-right-arrow-btn:hover {
         padding: 0 4vw;
         padding-left: calc(3vw + 25px);
         margin-top: 2rem;
+    }
+
+    .acc-wrapper::before,
+    .acc-progress-fill {
+        left: 3vw;
     }
 
     .acc-trigger {

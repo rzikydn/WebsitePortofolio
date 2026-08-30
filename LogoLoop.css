@@ -172,3 +172,10 @@
     rgba(0, 0, 0, 0) 100%
   );
 }
+
+@media (max-width: 1179px) {
+  .logoloop--fade::before,
+  .logoloop--fade::after {
+    display: none !important;
+  }
+}

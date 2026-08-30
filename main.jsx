@@ -1,39 +1,69 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
 
-// Dynamically imported components (Look-ahead code-split)
-const Lanyard = React.lazy(() => import('./Lanyard'));
-const ScrollReveal = React.lazy(() => import('./ScrollReveal'));
-const BentoGrid = React.lazy(() => import('./BentoGrid'));
-const LogoLoop = React.lazy(() => import('./LogoLoop'));
-const ExperienceAccordion = React.lazy(() => import('./ExperienceAccordion'));
-const MotionCarousel = React.lazy(() => import('./MotionCarousel'));
-const ConfettiSideCannons = React.lazy(() => import('./ConfettiSideCannons'));
-const SvgFollowScroll = React.lazy(() => import('./SvgFollowScroll'));
-const SvgWorksScroll = React.lazy(() => import('./SvgWorksScroll'));
-const ExpandableScreenDemo = React.lazy(() => import('./ExpandableScreenDemo'));
+// Direct component imports so all components & assets are bundled and mounted immediately
+import Lanyard from './Lanyard'
+import ScrollReveal from './ScrollReveal'
+import BentoGrid from './BentoGrid'
+import LogoLoop from './LogoLoop'
+import ExperienceAccordion from './ExperienceAccordion'
+import MotionCarousel from './MotionCarousel'
+import ConfettiSideCannons from './ConfettiSideCannons'
+import SvgFollowScroll from './SvgFollowScroll'
+import SvgWorksScroll from './SvgWorksScroll'
+import ExpandableScreenDemo from './ExpandableScreenDemo'
 
-// Only preload critical hero peeps background
+// ============================================
+// Comprehensive Preloader Asset Pipeline
+// ============================================
 const CRITICAL_IMAGES = [
-  '/images/peeps/all-peeps.webp'
+  // 1. Hero Peeps Crowd Background
+  '/images/peeps/all-peeps.webp',
+
+  // 2. BentoGrid Project Cards
+  '/images/mockup1.webp',
+  '/images/mockup2.webp',
+  '/images/mockup3.webp',
+  '/images/mockup4.webp',
+
+  // 3. Technical Skill Logos
+  '/images/React.webp',
+  '/images/Vue.webp',
+  '/images/Node.js.webp',
+  '/images/Python.webp',
+  '/images/TypeScript.webp',
+  '/images/Tailwindcss6.webp',
+  '/images/Vite.webp',
+  '/images/HTML.webp',
+  '/images/GitLab.webp',
+
+  // 4. Certificates
+  '/images/SER1.webp',
+  '/images/SER2.webp',
+  '/images/SER3.webp',
+
+  // 5. Contact Me Memoji Avatars
+  '/images/pp2new.webp',
+  '/images/pp1new.webp'
 ];
 
-let imagesLoadedRatio = 0;
-let crowdReady = false;
+const totalUnits = CRITICAL_IMAGES.length + 2; // Images + Lanyard 3D + CrowdCanvas
+let loadedUnits = 0;
 let signalFired = false;
 
-function updateProgress() {
-  let progress = 50 + Math.round(imagesLoadedRatio * 30);
-  if (crowdReady) progress += 20;
+function stepProgress() {
+  loadedUnits++;
+  const ratio = Math.min(1, loadedUnits / totalUnits);
+  const progressPercent = Math.round(ratio * 100);
 
   if (typeof window.updatePreloaderProgress === 'function') {
-    window.updatePreloaderProgress(progress);
+    window.updatePreloaderProgress(progressPercent);
   }
 
-  if (imagesLoadedRatio >= 1 && crowdReady) {
+  if (loadedUnits >= totalUnits) {
     signalReady();
   }
 }
@@ -49,53 +79,36 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Safety fallback after max 800ms
+// Safety fallback: if user has a very slow connection, finish after 4.5s max
 setTimeout(() => {
   signalReady();
-}, 800);
+}, 4500);
 
-function preloadImages(urls) {
-  const total = urls.length;
-  if (!total) {
-    imagesLoadedRatio = 1;
-    updateProgress();
-    return;
-  }
+// Preload & decode all images in parallel during the preloader
+CRITICAL_IMAGES.forEach((url) => {
+  let done = false;
+  const onDone = () => {
+    if (done) return;
+    done = true;
+    stepProgress();
+  };
 
-  let loadedCount = 0;
-
-  urls.forEach((url) => {
-    let doneCalled = false;
-    const done = () => {
-      if (doneCalled) return;
-      doneCalled = true;
-      loadedCount++;
-      imagesLoadedRatio = loadedCount / total;
-      updateProgress();
-    };
-
-    const timer = setTimeout(done, 800);
-
-    const img = new Image();
-    img.onload = () => {
-      clearTimeout(timer);
-      done();
-    };
-    img.onerror = () => {
-      clearTimeout(timer);
-      done();
-    };
-    img.src = url;
-    if (img.complete) {
-      clearTimeout(timer);
-      done();
+  const img = new Image();
+  img.onload = () => {
+    if (img.decode) {
+      img.decode().then(onDone).catch(onDone);
+    } else {
+      onDone();
     }
-  });
-}
+  };
+  img.onerror = onDone; // Don't block preloader if 1 asset fails
+  img.src = url;
+  if (img.complete) {
+    onDone();
+  }
+});
 
-preloadImages(CRITICAL_IMAGES);
-
-function App() {
+function App({ onLanyardReady }) {
   const [showLanyard, setShowLanyard] = useState(false);
   const [inViewport, setInViewport] = useState(true);
 
@@ -123,55 +136,30 @@ function App() {
   }, []);
 
   return (
-    <Suspense fallback={null}>
-      <Lanyard 
-        position={[0, 0, 20]} 
-        gravity={[0, -40, 0]} 
-        transparent={true} 
-        ready={showLanyard} 
-        inViewport={inViewport} 
-      />
-    </Suspense>
+    <Lanyard 
+      position={[0, 0, 20]} 
+      gravity={[0, -40, 0]} 
+      transparent={true} 
+      ready={showLanyard} 
+      inViewport={inViewport} 
+      onLoaded={onLanyardReady}
+    />
   );
 }
 
-// Look-ahead Lazy Mount Helper
-function lazyMount(elementId, renderFn, rootMargin = '400px 0px') {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-
-  if (typeof IntersectionObserver === 'undefined') {
-    renderFn(el);
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting) {
-        observer.disconnect();
-        renderFn(el);
-      }
-    },
-    { rootMargin, threshold: 0.01 }
-  );
-
-  observer.observe(el);
-}
-
 // ============================================
-// React Component Mounts (Guarded to prevent duplicate rendering)
+// Immediate Component Mounts (Rendered under preloader overlay)
 // ============================================
-
 if (!window.__MAIN_JSX_MOUNTED__) {
   window.__MAIN_JSX_MOUNTED__ = true;
 
-  // Hero Lanyard Mount
+  // 1. Hero Lanyard Mount
   const root = document.getElementById('lanyard-root');
   if (root) {
-    ReactDOM.createRoot(root).render(<App />);
+    ReactDOM.createRoot(root).render(<App onLanyardReady={() => stepProgress()} />);
   }
 
-  // Hero Blurs Mount
+  // 2. Hero Blurs Mount
   const blurRoot = document.getElementById('progressive-blur-root');
   if (blurRoot) {
     ReactDOM.createRoot(blurRoot).render(<ProgressiveBlur height="120px" position="bottom" />);
@@ -182,62 +170,51 @@ if (!window.__MAIN_JSX_MOUNTED__) {
     ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
   }
 
-  // Hero Crowd Canvas Mount
+  // 3. Hero Crowd Canvas Mount
   const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
   if (crowdCanvasRoot) {
-    const handleCrowdLoaded = () => {
-      crowdReady = true;
-      updateProgress();
-    };
-
     ReactDOM.createRoot(crowdCanvasRoot).render(
-      <CrowdCanvas onLoaded={handleCrowdLoaded} />
+      <CrowdCanvas onLoaded={() => stepProgress()} />
     );
   }
 
-  // Look-Ahead 1: About Section (triggers when within 400px)
-  lazyMount('scroll-reveal-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <ScrollReveal
-          baseOpacity={0.1}
-          enableBlur={false}
-          baseRotation={0}
-          blurStrength={0}
-        >
-          Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
-          <Highlighter action="underline" color="#FF9800">
-            analyzing data
-          </Highlighter>{' '}
-          and{' '}
-          <Highlighter action="highlight" color="#87CEFA">
-            creating insights.
-          </Highlighter>{' '}
-          I love exploring datasets and visualizing compelling data stories.
-        </ScrollReveal>
-      </Suspense>
+  // 4. About Section (ScrollReveal)
+  const scrollRevealRoot = document.getElementById('scroll-reveal-root');
+  if (scrollRevealRoot) {
+    ReactDOM.createRoot(scrollRevealRoot).render(
+      <ScrollReveal
+        baseOpacity={0.1}
+        enableBlur={false}
+        baseRotation={0}
+        blurStrength={0}
+      >
+        Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
+        <Highlighter action="underline" color="#FF9800">
+          analyzing data
+        </Highlighter>{' '}
+        and{' '}
+        <Highlighter action="highlight" color="#87CEFA">
+          creating insights.
+        </Highlighter>{' '}
+        I love exploring datasets and visualizing compelling data stories.
+      </ScrollReveal>
     );
-  }, '400px 0px');
+  }
 
-  // Look-Ahead 2: Works Section (Bento Grid & Works SVG)
-  lazyMount('flowing-menu-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <BentoGrid />
-      </Suspense>
-    );
-  }, '450px 0px');
+  // 5. Works Section (Bento Grid & Works SVG)
+  const bentoRoot = document.getElementById('flowing-menu-root');
+  if (bentoRoot) {
+    ReactDOM.createRoot(bentoRoot).render(<BentoGrid />);
+  }
 
-  lazyMount('works-svg-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <SvgWorksScroll />
-      </Suspense>
-    );
-  }, '450px 0px');
+  const worksSvgRoot = document.getElementById('works-svg-root');
+  if (worksSvgRoot) {
+    ReactDOM.createRoot(worksSvgRoot).render(<SvgWorksScroll />);
+  }
 
-  // Look-Ahead 3: Skills Section (LogoLoop)
-  lazyMount('logo-loop-root', (el) => {
+  // 6. Skills Section (LogoLoop)
+  const logoLoopRoot = document.getElementById('logo-loop-root');
+  if (logoLoopRoot) {
     const imageLogos = [
       { src: "/images/React.webp", alt: "React" },
       { src: "/images/Vue.webp", alt: "Vue" },
@@ -260,70 +237,49 @@ if (!window.__MAIN_JSX_MOUNTED__) {
       }, []);
 
       return (
-        <Suspense fallback={null}>
-          <LogoLoop
-            logos={imageLogos}
-            speed={120}
-            direction="left"
-            logoHeight={isMobile ? 80 : "8.75rem"}
-            gap={isMobile ? 50 : "8.75rem"}
-            hoverSpeed={0}
-            scaleOnHover
-            fadeOut
-            fadeOutColor="transparent"
-            ariaLabel="Technology skills"
-          />
-        </Suspense>
+        <LogoLoop
+          logos={imageLogos}
+          speed={120}
+          direction="left"
+          logoHeight={isMobile ? 80 : "8.75rem"}
+          gap={isMobile ? 50 : "8.75rem"}
+          hoverSpeed={0}
+          scaleOnHover
+          fadeOut
+          fadeOutColor="transparent"
+          ariaLabel="Technology skills"
+        />
       );
     };
 
-    ReactDOM.createRoot(el).render(<LogoLoopWrapper />);
-  }, '450px 0px');
+    ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
+  }
 
-  // Look-Ahead 4: Experience Section
-  lazyMount('experience-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <ExperienceAccordion />
-      </Suspense>
-    );
-  }, '450px 0px');
+  // 7. Experience Section (Static timeline with SVG follow)
+  const expRoot = document.getElementById('experience-root');
+  if (expRoot) {
+    ReactDOM.createRoot(expRoot).render(<ExperienceAccordion />);
+  }
 
-  lazyMount('svg-follow-scroll-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <SvgFollowScroll />
-      </Suspense>
-    );
-  }, '450px 0px');
+  const svgFollowRoot = document.getElementById('svg-follow-scroll-root');
+  if (svgFollowRoot) {
+    ReactDOM.createRoot(svgFollowRoot).render(<SvgFollowScroll />);
+  }
 
-  // Look-Ahead 5: Certificates Section
-  lazyMount('certificates-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <MotionCarousel />
-      </Suspense>
-    );
-  }, '450px 0px');
+  // 8. Certificates Section (MotionCarousel)
+  const certRoot = document.getElementById('certificates-root');
+  if (certRoot) {
+    ReactDOM.createRoot(certRoot).render(<MotionCarousel />);
+  }
 
-  // Look-Ahead 6: Contact & Confetti Section
-  lazyMount('confetti-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={null}>
-        <ConfettiSideCannons />
-      </Suspense>
-    );
-  }, '450px 0px');
+  // 9. Contact & Confetti Section
+  const confettiRoot = document.getElementById('confetti-root');
+  if (confettiRoot) {
+    ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
+  }
 
-  lazyMount('contact-btn-root', (el) => {
-    ReactDOM.createRoot(el).render(
-      <Suspense fallback={
-        <a href="mailto:rzikydn@gmail.com" className="contact-btn contact-btn--primary">
-          Get In Touch &rarr;
-        </a>
-      }>
-        <ExpandableScreenDemo />
-      </Suspense>
-    );
-  }, '450px 0px');
+  const contactBtnRoot = document.getElementById('contact-btn-root');
+  if (contactBtnRoot) {
+    ReactDOM.createRoot(contactBtnRoot).render(<ExpandableScreenDemo />);
+  }
 }

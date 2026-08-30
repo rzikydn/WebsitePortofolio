@@ -7,7 +7,14 @@
   pointer-events: none;
   overflow: visible;
   background: transparent;
-  z-index: 5; /* Render above background text, but below interactive menu elements */
+  z-index: 35; /* Render above title banner (z-index: 28), but below interactive elements (z-index: 40) */
+
+  /* Hardware acceleration & Layer isolation */
+  isolation: isolate;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: contents;
+  transition: opacity 0.25s ease;
 }
 
 .svg-works-line {
@@ -18,7 +25,7 @@
   height: 100%;
   pointer-events: none;
   opacity: 0.95;
-  will-change: transform;
+  transform: translateZ(0);
 }
 
 @media (max-width: 768px) {

@@ -10,6 +10,8 @@
     /* Clip exactly at screen edges to avoid page scrollbars */
 }
 
+
+
 /* Embla Viewport */
 .motion-carousel-viewport {
     overflow: hidden;
@@ -57,14 +59,25 @@
 
 @media (max-width: 1024px) {
     .motion-carousel-slide {
-        flex: 0 0 75%;
+        flex: 0 0 100%;
+        padding: 0.5rem 1rem;
+        box-sizing: border-box;
+    }
+
+    .carousel-slide-animator.slide-inactive {
+        opacity: 0 !important;
+        pointer-events: none;
+    }
+
+    .carousel-slide-animator.slide-active {
+        transform: scale(1);
     }
 }
 
 @media (max-width: 768px) {
     .motion-carousel-slide {
-        flex: 0 0 88%;
-        padding: 10px 8px;
+        flex: 0 0 100%;
+        padding: 0 16px;
     }
 }
 
@@ -139,6 +152,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    align-items: center;
+    text-align: center;
     height: 100%;
     min-height: 33rem;
     box-sizing: border-box;
@@ -150,8 +165,26 @@
     }
 
     .cert-card-inner {
-        padding: 22px;
+        padding: 20px;
         min-height: 360px;
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+
+    .cert-issuer-badge {
+        align-self: flex-start !important;
+    }
+
+    .cert-body {
+        align-items: flex-start !important;
+    }
+
+    .cert-title {
+        text-align: left !important;
+    }
+
+    .cert-skills-pill-box {
+        justify-content: flex-start !important;
     }
 
     .cert-bg-img {
@@ -179,7 +212,7 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 9999px;
     padding: 0.35rem 0.95rem;
-    align-self: flex-start;
+    align-self: center;
     margin-bottom: 0.5rem;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -232,7 +265,9 @@
     margin: 0.875rem 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.75rem;
+    width: 100%;
 }
 
 .cert-title {
@@ -243,6 +278,7 @@
     margin: 0;
     line-height: 1.25;
     letter-spacing: -0.04em;
+    text-align: center;
     transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -320,6 +356,7 @@
 .cert-skills-pill-box {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5rem;
     margin-top: 0.375rem;
 }
@@ -352,6 +389,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 1.125rem;
     margin-top: 1rem;
+    width: 100%;
 }
 
 .cert-meta {

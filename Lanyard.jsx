@@ -8,12 +8,16 @@ import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
 // replace with your own imports, see the usage snippet for details
 import cardGLB from './card.glb';
-import lanyard from './lanyard.png';
+import lanyard from './lanyard.webp';
 
 import * as THREE from 'three';
 import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+// Preload 3D assets immediately so they are cached before preloader finishes
+useGLTF.preload(cardGLB);
+useTexture.preload(lanyard);
 
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true, onLoaded }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);

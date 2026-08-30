@@ -391,7 +391,7 @@
 
     <!-- Main Content -->
     <main id="main-content">
-        <section class="main-content" id="home">
+        <section class="main-content desktop-framed" id="home">
             <!-- Background Elements -->
             <div class="bg-zigzag"></div>
             <div id="crowd-canvas-root"></div>
@@ -432,7 +432,7 @@
 
         <!-- About Section Wrapper for sticky effect -->
         <section class="about-wrapper" id="about">
-            <div class="about-section">
+            <div class="about-section desktop-framed">
                 <!-- Progressive Blur Top -->
                 <div id="progressive-blur-top-root"
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; pointer-events: none; z-index: 1;">
@@ -447,9 +447,9 @@
             </div>
         </section>
 
-        <section class="black-section" id="works">
+        <section class="black-section desktop-framed" id="works">
             <h2 class="sr-only">My Works</h2>
-            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+            <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">MY WORKS</span>
             </div>
             <div id="works-svg-root"></div>
@@ -457,9 +457,9 @@
         </section>
 
         <!-- Skills Section -->
-        <section class="skills-section" id="skills">
+        <section class="skills-section desktop-framed" id="skills">
             <h2 class="sr-only">Technical Skill</h2>
-            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+            <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">TECHNICAL SKILL</span>
             </div>
             <div id="logo-loop-root" style="width: 100%; position: relative; z-index: 20; margin-top: 2rem;"></div>
@@ -468,44 +468,46 @@
         <!-- Experience Section -->
         <section class="experience-section" id="experience">
             <h2 class="sr-only">My Experience</h2>
-            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+            <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">MY EXPERIENCE</span>
             </div>
             <div id="experience-root"></div>
         </section>
 
         <!-- Certificates Section -->
-        <section class="certificates-section" id="certificates">
+        <section class="certificates-section desktop-framed" id="certificates">
             <h2 class="sr-only">My Certificates</h2>
-            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+            <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">MY CERTIFICATES</span>
             </div>
             <div id="certificates-root"></div>
         </section>
 
         <!-- Contact CTA Section -->
-        <section class="contact-section" id="contact">
+        <section class="contact-section desktop-framed" id="contact">
             <h2 class="sr-only">Contact Me</h2>
-            <div style="width: 100%; overflow: hidden; display: flex; justify-content: center; pointer-events: none;" aria-hidden="true">
+            <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">CONTACT ME</span>
             </div>
             <div class="contact-row">
                 <div class="contact-cta-content">
-                    <h3 class="contact-subtitle">LET'S BUILD SOMETHING.</h3>
-                    <h3 class="contact-subtitle">GREAT TOGETHER.</h3>
+                    <div class="contact-title-group">
+                        <h3 class="contact-subtitle">LET'S BUILD SOMETHING.</h3>
+                        <h3 class="contact-subtitle">GREAT TOGETHER.</h3>
+                    </div>
                     <p class="contact-desc">Whether you need a scalable web solution, an automated system, or just want to
                         technical-proof your next big idea, my inbox is always open.</p>
-                    <div class="contact-image">
-                        <img src="/images/pp2new.png" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                            class="contact-img contact-img--dark" width="400" height="400" />
-                        <img src="/images/pp1new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                            class="contact-img contact-img--light" width="400" height="400" />
-                    </div>
                     <div id="contact-btn-root">
                         <a href="mailto:rzikydn@gmail.com" class="contact-btn contact-btn--primary">
                             Get In Touch &rarr;
                         </a>
                     </div>
+                </div>
+                <div class="contact-image">
+                    <img src="/images/pp2new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                        class="contact-img contact-img--dark" width="400" height="400" />
+                    <img src="/images/pp1new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                        class="contact-img contact-img--light" width="400" height="400" />
                 </div>
             </div>
         </section>

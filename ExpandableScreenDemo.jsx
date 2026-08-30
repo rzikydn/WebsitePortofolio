@@ -101,7 +101,7 @@ export function ExpandableScreenDemo() {
                 </p>
                 <div className="expandable-screen-author">
                   <img
-                    src="/images/pp2new.png"
+                    src="/images/pp2new.webp"
                     alt="Wildan Rizky Wijaya"
                     className="expandable-screen-avatar"
                   />

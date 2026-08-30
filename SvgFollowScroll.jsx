@@ -1,87 +1,98 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./SvgFollowScroll.css";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const SvgFollowScroll = () => {
-  const ref = useRef(null);
-  const { scrollY } = useScroll();
-  const [isVisible, setIsVisible] = useState(false);
-  const [vh, setVh] = useState(typeof window !== "undefined" ? window.innerHeight : 900);
+  const containerRef = useRef(null);
+  const pathRef = useRef(null);
 
   useEffect(() => {
-    const handleResize = () => setVh(window.innerHeight);
-    const handleScroll = () => {
-      // Hide the path (including the starting dot) when at the very top of the page
-      setIsVisible(window.scrollY > 30);
-    };
+    const path = pathRef.current;
+    const container = containerRef.current;
+    if (!path || !container) return;
 
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
+    const pathLength = path.getTotalLength();
+    path.style.strokeDasharray = `${pathLength}`;
+    path.style.strokeDashoffset = `${pathLength}`;
+
+    const st = ScrollTrigger.create({
+      start: 0,
+      end: () => window.innerHeight * 3.1,
+      scrub: 0.3,
+      onUpdate: (self) => {
+        const y = self.scroll();
+        const vh = window.innerHeight;
+        const startReveal = vh;
+        const endReveal = vh * 3.1;
+
+        if (y <= 30) {
+          container.style.opacity = "0";
+          container.style.visibility = "hidden";
+          path.style.strokeDashoffset = `${pathLength}`;
+          return;
+        }
+
+        container.style.visibility = "visible";
+        container.style.opacity = "1";
+
+        let progress = 0;
+        if (y < startReveal) {
+          progress = (y / startReveal) * 0.56;
+        } else if (y < endReveal) {
+          const pct = (y - startReveal) / (endReveal - startReveal);
+          progress = 0.56 + pct * 0.44;
+        } else {
+          progress = 1;
+        }
+
+        path.style.strokeDashoffset = `${pathLength * (1 - Math.min(1, Math.max(0, progress)))}`;
+      },
+      onLeaveBack: () => {
+        container.style.opacity = "0";
+        container.style.visibility = "hidden";
+      }
+    });
+
+    ScrollTrigger.refresh();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll);
+      st.kill();
     };
   }, []);
 
-  // Map scrollY to pathLength dynamically based on viewport height (vh)
-  // vh is the Home section scroll range, and the About reveal ends at vh + (vh * 3.5 * 0.6) = vh * 3.1
-  const pathLength = useTransform(scrollY, (y) => {
-    const startReveal = vh;
-    const endReveal = vh * 3.1;
-
-    if (y <= 0) return 0;
-    if (y < startReveal) {
-      // Draw first half of path (Hero section) from 0 to 0.56
-      return (y / startReveal) * 0.56;
-    }
-    if (y < endReveal) {
-      // Draw second half of path (About section) from 0.56 to 1.0, syncing with text reveal
-      const pct = (y - startReveal) / (endReveal - startReveal);
-      return 0.56 + pct * 0.44;
-    }
-    return 1;
-  });
-
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={containerRef}
       className="svg-scroll-background"
-      style={{ 
-        opacity: isVisible ? 1 : 0, 
-        transition: "opacity 0.3s ease" 
+      style={{
+        opacity: 0,
+        visibility: "hidden",
+        transition: "opacity 0.3s ease",
       }}
+      aria-hidden="true"
     >
-      <LinePath
+      <svg
+        viewBox="0 0 1000 1500"
+        fill="none"
+        overflow="visible"
+        xmlns="http://www.w3.org/2000/svg"
         className="svg-scroll-line"
-        pathLength={pathLength}
-      />
+        preserveAspectRatio="none"
+        shapeRendering="geometricPrecision"
+        style={{ width: "100%", height: "100%" }}
+      >
+        <path
+          ref={pathRef}
+          d="M 352 320 C 282 320, 102 330, 82 400 C 62 480, 500 480, 500 620 C 500 740, 850 740, 850 900 C 850 1040, 150 1040, 150 1200 C 150 1340, 600 1340, 500 1500"
+          stroke="#C2F84F"
+          strokeWidth="8"
+          strokeLinecap="round"
+        />
+      </svg>
     </div>
-  );
-};
-
-const LinePath = ({ className, pathLength }) => {
-  return (
-    <svg
-      viewBox="0 0 1000 1500"
-      fill="none"
-      overflow="visible"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      preserveAspectRatio="none"
-      style={{ width: "100%", height: "100%" }}
-    >
-      <motion.path
-        d="M 352 320 C 282 320, 102 330, 82 400 C 62 480, 500 480, 500 620 C 500 740, 850 740, 850 900 C 850 1040, 150 1040, 150 1200 C 150 1340, 600 1340, 500 1500"
-        stroke="#C2F84F"
-        strokeWidth="8"
-        strokeLinecap="round"
-        style={{
-          pathLength: pathLength,
-        }}
-      />
-    </svg>
   );
 };
 

@@ -114,12 +114,12 @@ function init() {
         tryFinish();
     }, minDelay);
     
-    // Fallback: finish preloader after max 3.5 seconds even on poor connections
+    // Fallback: finish preloader after max 5 seconds even on poor connections
     setTimeout(() => {
         assetsReady = true;
         window.preloaderAssetsReady = true;
         finishPreloader();
-    }, 3500);
+    }, 5000);
     
     function tryFinish() {
         if (assetsReady && minTimeReached) {

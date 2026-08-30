@@ -46,7 +46,7 @@ const DEFAULT_OPTIONS = { loop: true, align: 'center', startIndex: 3 };
 export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
   const [isMounted, setIsMounted] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(options?.startIndex ?? 3);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -77,15 +77,23 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
     setIsMounted(true);
   }, []);
 
-  // Guaranteed measurement after DOM paint
+  // Guaranteed measurement after DOM paint & font loading
   useEffect(() => {
     if (!emblaApi) return;
     
     const timer = setTimeout(() => {
       emblaApi.reInit();
-    }, 200);
+    }, 150);
+
+    const handleResize = () => {
+      emblaApi.reInit();
+    };
+    window.addEventListener('resize', handleResize);
     
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [emblaApi]);
 
   useEffect(() => {
