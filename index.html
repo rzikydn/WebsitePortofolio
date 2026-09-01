@@ -136,11 +136,18 @@
     </script>
 
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Preconnect hints for critical CDNs & Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+    </noscript>
 
     <!-- Phosphor Icons (Load only Regular & Fill weights for optimal performance) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" media="print" onload="this.media='all'" />
@@ -505,9 +512,9 @@
                 </div>
                 <div class="contact-image">
                     <img src="/images/pp2new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                        class="contact-img contact-img--dark" width="400" height="400" />
+                        class="contact-img contact-img--dark" width="400" height="400" loading="lazy" decoding="async" />
                     <img src="/images/pp1new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
-                        class="contact-img contact-img--light" width="400" height="400" />
+                        class="contact-img contact-img--light" width="400" height="400" loading="lazy" decoding="async" />
                 </div>
             </div>
         </section>
@@ -545,8 +552,8 @@
     </footer>
 
     <div id="confetti-root"></div>
-    <script type="module" src="./script.js"></script>
-    <script type="module" src="/main.jsx"></script>
+    <script data-cfasync="false" type="module" src="./script.js"></script>
+    <script data-cfasync="false" type="module" src="/main.jsx"></script>
 </body>
 
 </html>

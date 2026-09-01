@@ -1,4 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+/* Phosphor Font Face with font-display: swap */
+@font-face {
+    font-family: 'Phosphor';
+    src: url('https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/Phosphor.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Phosphor-Fill';
+    src: url('https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/Phosphor-Fill.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
 html {
     scroll-behavior: auto; /* Lenis handles smooth scrolling — CSS smooth-scroll creates double-interpolation */
@@ -471,7 +485,7 @@ body {
     width: 100%;
     max-width: 85rem;
     padding: 1.875rem 0;
-    padding-top: clamp(12vh, 14vh, 16vh);
+    padding-top: clamp(19vh, 23vh, 27vh);
 }
 
 .hero-top {

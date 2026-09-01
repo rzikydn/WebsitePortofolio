@@ -95,7 +95,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
     const walks = [normalWalk];
 
     const isMobile = window.innerWidth <= 768;
-    const scaleFactor = isMobile ? 0.32 : 0.52;
+    const scaleFactor = isMobile ? 0.55 : 0.88;
 
     // FACTORY FUNCTIONS
     const createPeep = ({ image, rect }) => {
@@ -176,8 +176,8 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
 
     const initCrowd = () => {
       const isMobile = window.innerWidth <= 768;
-      // Denser crowd to match the second image (45 on desktop, 28 on mobile)
-      const maxActivePeeps = isMobile ? 28 : 45;
+      // Denser crowd to match the second image (44 on desktop, 12 on mobile)
+      const maxActivePeeps = isMobile ? 12 : 44;
       const count = Math.min(availablePeeps.length, maxActivePeeps);
 
       for (let i = 0; i < count; i++) {

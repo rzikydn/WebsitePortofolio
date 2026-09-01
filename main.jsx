@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ProgressiveBlur } from './ProgressiveBlur'
 import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
 
-// Direct component imports so all components & assets are bundled and mounted immediately
-import Lanyard from './Lanyard'
+// Lazy loaded heavy 3D components to eliminate critical bundle & physics blocking LCP
+const LazyLanyard = lazy(() => import('./Lanyard'))
+
 import ScrollReveal from './ScrollReveal'
 import BentoGrid from './BentoGrid'
 import LogoLoop from './LogoLoop'
@@ -17,40 +18,15 @@ import SvgWorksScroll from './SvgWorksScroll'
 import ExpandableScreenDemo from './ExpandableScreenDemo'
 
 // ============================================
-// Comprehensive Preloader Asset Pipeline
+// Streamlined Preloader Asset Pipeline (Essential Hero Only)
 // ============================================
 const CRITICAL_IMAGES = [
-  // 1. Hero Peeps Crowd Background
+  // Only essential hero assets for instant FCP/LCP
   '/images/peeps/all-peeps.webp',
-
-  // 2. BentoGrid Project Cards
-  '/images/mockup1.webp',
-  '/images/mockup2.webp',
-  '/images/mockup3.webp',
-  '/images/mockup4.webp',
-
-  // 3. Technical Skill Logos
-  '/images/React.webp',
-  '/images/Vue.webp',
-  '/images/Node.js.webp',
-  '/images/Python.webp',
-  '/images/TypeScript.webp',
-  '/images/Tailwindcss6.webp',
-  '/images/Vite.webp',
-  '/images/HTML.webp',
-  '/images/GitLab.webp',
-
-  // 4. Certificates
-  '/images/SER1.webp',
-  '/images/SER2.webp',
-  '/images/SER3.webp',
-
-  // 5. Contact Me Memoji Avatars
-  '/images/pp2new.webp',
-  '/images/pp1new.webp'
+  '/images/logox.webp'
 ];
 
-const totalUnits = CRITICAL_IMAGES.length + 2; // Images + Lanyard 3D + CrowdCanvas
+const totalUnits = CRITICAL_IMAGES.length + 1; // Critical Images + CrowdCanvas
 let loadedUnits = 0;
 let signalFired = false;
 
@@ -79,12 +55,12 @@ function signalReady() {
   window.dispatchEvent(new CustomEvent('assets-ready'));
 }
 
-// Safety fallback: if user has a very slow connection, finish after 4.5s max
+// Safety fallback: if user has a slow connection, finish quickly
 setTimeout(() => {
   signalReady();
-}, 4500);
+}, 2500);
 
-// Preload & decode all images in parallel during the preloader
+// Preload only hero critical images
 CRITICAL_IMAGES.forEach((url) => {
   let done = false;
   const onDone = () => {
@@ -101,7 +77,7 @@ CRITICAL_IMAGES.forEach((url) => {
       onDone();
     }
   };
-  img.onerror = onDone; // Don't block preloader if 1 asset fails
+  img.onerror = onDone;
   img.src = url;
   if (img.complete) {
     onDone();
@@ -135,15 +111,21 @@ function App({ onLanyardReady }) {
     };
   }, []);
 
+  if (!showLanyard) {
+    return null;
+  }
+
   return (
-    <Lanyard 
-      position={[0, 0, 20]} 
-      gravity={[0, -40, 0]} 
-      transparent={true} 
-      ready={showLanyard} 
-      inViewport={inViewport} 
-      onLoaded={onLanyardReady}
-    />
+    <Suspense fallback={null}>
+      <LazyLanyard 
+        position={[0, 0, 20]} 
+        gravity={[0, -40, 0]} 
+        transparent={true} 
+        ready={showLanyard} 
+        inViewport={inViewport} 
+        onLoaded={onLanyardReady}
+      />
+    </Suspense>
   );
 }
 
@@ -153,10 +135,10 @@ function App({ onLanyardReady }) {
 if (!window.__MAIN_JSX_MOUNTED__) {
   window.__MAIN_JSX_MOUNTED__ = true;
 
-  // 1. Hero Lanyard Mount
+  // 1. Hero Lanyard Mount (Lazy loaded)
   const root = document.getElementById('lanyard-root');
   if (root) {
-    ReactDOM.createRoot(root).render(<App onLanyardReady={() => stepProgress()} />);
+    ReactDOM.createRoot(root).render(<App onLanyardReady={() => {}} />);
   }
 
   // 2. Hero Blurs Mount
@@ -216,15 +198,15 @@ if (!window.__MAIN_JSX_MOUNTED__) {
   const logoLoopRoot = document.getElementById('logo-loop-root');
   if (logoLoopRoot) {
     const imageLogos = [
-      { src: "/images/React.webp", alt: "React" },
-      { src: "/images/Vue.webp", alt: "Vue" },
-      { src: "/images/Node.js.webp", alt: "Node.js" },
-      { src: "/images/Python.webp", alt: "Python" },
-      { src: "/images/TypeScript.webp", alt: "TypeScript" },
-      { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS" },
-      { src: "/images/Vite.webp", alt: "Vite" },
-      { src: "/images/HTML.webp", alt: "HTML" },
-      { src: "/images/GitLab.webp", alt: "GitLab" },
+      { src: "/images/React.webp", alt: "React", width: 156, height: 80 },
+      { src: "/images/Vue.webp", alt: "Vue", width: 142, height: 80 },
+      { src: "/images/Node.js.webp", alt: "Node.js", width: 142, height: 80 },
+      { src: "/images/Python.webp", alt: "Python", width: 142, height: 80 },
+      { src: "/images/TypeScript.webp", alt: "TypeScript", width: 142, height: 80 },
+      { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS", width: 157, height: 80 },
+      { src: "/images/Vite.webp", alt: "Vite", width: 142, height: 80 },
+      { src: "/images/HTML.webp", alt: "HTML", width: 142, height: 80 },
+      { src: "/images/GitLab.webp", alt: "GitLab", width: 142, height: 80 },
     ];
 
     const LogoLoopWrapper = () => {

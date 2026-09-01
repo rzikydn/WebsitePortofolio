@@ -104,6 +104,10 @@ export function ExpandableScreenDemo() {
                     src="/images/pp2new.webp"
                     alt="Wildan Rizky Wijaya"
                     className="expandable-screen-avatar"
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div>
                     <p className="expandable-screen-author-name">Wildan Rizky Wijaya</p>

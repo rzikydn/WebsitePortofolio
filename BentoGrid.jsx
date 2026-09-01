@@ -67,7 +67,7 @@ export default function BentoGrid() {
             >
               {/* Zooming image background */}
               <div className="bento-bg">
-                <img src={project.image} alt={project.title} loading="eager" width="600" height="400" />
+                <img src={project.image} alt={project.title} loading="lazy" decoding="async" width="600" height="400" />
               </div>
 
               {/* Premium gradient overlay */}
