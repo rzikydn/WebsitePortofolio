@@ -44,7 +44,7 @@ setTimeout(cacheSectionPositions, 3000);
 // Dynamic active navbar link on scroll (ScrollSpy) — with dirty flag to skip redundant DOM updates
 let lastActiveId = "";
 
-lenis.on('scroll', () => {
+lenis.on('scroll', (e) => {
     ScrollTrigger.update();
     
     if (cachedSections.length === 0) {
@@ -53,7 +53,7 @@ lenis.on('scroll', () => {
     }
     
     let currentActive = "";
-    const scrollPos = window.scrollY + window.innerHeight / 3;
+    const scrollPos = (e?.scroll ?? window.scrollY) + window.innerHeight / 3;
     
     for (let i = 0; i < cachedSections.length; i++) {
         const section = cachedSections[i];
@@ -84,8 +84,8 @@ gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
 });
 
-// Use standard GSAP lag smoothing budget (500ms max lag, 33ms target) to prevent stuttering
-gsap.ticker.lagSmoothing(500, 33);
+// Disable GSAP lag smoothing when coupled with Lenis to prevent scroll stutter / input lag
+gsap.ticker.lagSmoothing(0);
 
 function init() {
     const preloaderContent = document.querySelector(".preloader-content");

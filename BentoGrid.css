@@ -36,9 +36,6 @@
     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s ease;
     box-sizing: border-box;
     contain: layout style paint;
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
 }
 
 /* Desktop Grid Spans */
@@ -55,6 +52,7 @@
     transform: translate3d(0, -8px, 0); /* GPU-accelerated transform */
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16), 0 0 30px rgba(56, 189, 248, 0.05);
+    will-change: transform;
 }
 
 /* Card Background Media Showcase */
@@ -74,14 +72,12 @@
     object-fit: cover;
     opacity: 0.3;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-    will-change: transform, opacity;
-    transform: translateZ(0);
-    backface-visibility: hidden;
 }
 
 .bento-card:hover .bento-bg img {
     transform: scale3d(1.06, 1.06, 1) translate3d(0, -4px, 0); /* GPU-accelerated */
     opacity: 0.55;
+    will-change: transform, opacity;
 }
 
 /* Ambient Gradient Overlay */

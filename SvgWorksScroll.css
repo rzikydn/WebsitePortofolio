@@ -9,12 +9,9 @@
   background: transparent;
   z-index: 35; /* Render above title banner (z-index: 28), but below interactive elements (z-index: 40) */
 
-  /* Hardware acceleration & Layer isolation */
-  isolation: isolate;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: contents;
-  transition: opacity 0.25s ease;
+  /* Hardware acceleration & Layer isolation without CPU re-rasterization */
+  contain: paint layout;
+  transform: translateZ(0);
 }
 
 .svg-works-line {
@@ -33,3 +30,4 @@
     display: none !important;
   }
 }
+

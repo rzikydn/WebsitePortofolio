@@ -7,10 +7,8 @@
   pointer-events: none;
   overflow: visible;
   background: transparent; /* Keep it transparent */
-  isolation: isolate;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: contents;
+  contain: paint layout;
+  transform: translateZ(0);
 }
 
 .svg-scroll-line {

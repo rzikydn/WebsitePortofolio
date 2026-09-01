@@ -21,7 +21,7 @@ const SvgFollowScroll = () => {
     const st = ScrollTrigger.create({
       start: 0,
       end: () => window.innerHeight * 3.1,
-      scrub: 0.3,
+      scrub: true,
       onUpdate: (self) => {
         const y = self.scroll();
         const vh = window.innerHeight;
@@ -81,7 +81,7 @@ const SvgFollowScroll = () => {
         xmlns="http://www.w3.org/2000/svg"
         className="svg-scroll-line"
         preserveAspectRatio="none"
-        shapeRendering="geometricPrecision"
+        shapeRendering="auto"
         style={{ width: "100%", height: "100%" }}
       >
         <path

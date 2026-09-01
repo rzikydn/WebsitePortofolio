@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
@@ -99,7 +99,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.5, 0]
+    [0, isMobile ? 1.5 : 1.7, 0]
   ]);
 
   // Wake up all rigid bodies when ready (gravity activates)
@@ -175,10 +175,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
           <BallCollider args={[0.1]} mass={1} sensor />
         </RigidBody>
         <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-          <CuboidCollider args={[0.8, 1.125, 0.01]} mass={1} sensor />
+          <CuboidCollider args={[isMobile ? 0.8 : 0.92, isMobile ? 1.125 : 1.28, 0.01]} mass={1} sensor />
           <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
+            scale={isMobile ? 2.25 : 2.55}
+            position={[0, isMobile ? -1.2 : -1.36, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}

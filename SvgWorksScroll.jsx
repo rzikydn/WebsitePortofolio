@@ -11,11 +11,8 @@ const SvgWorksScroll = () => {
 
   useEffect(() => {
     const path = pathRef.current;
-    const container = containerRef.current;
-    if (!path || !container) return;
-
     const worksSection = document.getElementById("works");
-    if (!worksSection) return;
+    if (!path || !worksSection) return;
 
     // Get exact length of the SVG curve
     const pathLength = path.getTotalLength();
@@ -24,46 +21,26 @@ const SvgWorksScroll = () => {
     path.style.strokeDasharray = `${pathLength}`;
     path.style.strokeDashoffset = `${pathLength}`;
 
-    // Create ScrollTrigger tied to #works section, integrated directly with Lenis ticker
-    const st = ScrollTrigger.create({
-      trigger: worksSection,
-      start: "top 75%", // Starts drawing smoothly as Works enters viewport
-      end: "bottom 35%", // Finishes drawing near the end of Works
-      scrub: 0.4, // Silky smooth interpolation synchronized with Lenis
-      onUpdate: (self) => {
-        const progress = self.progress;
-        if (progress > 0.005) {
-          if (container.style.visibility !== "visible") {
-            container.style.visibility = "visible";
-            container.style.opacity = "1";
-          }
-          path.style.strokeDashoffset = `${pathLength * (1 - progress)}`;
-        } else {
-          if (container.style.visibility !== "hidden") {
-            container.style.visibility = "hidden";
-            container.style.opacity = "0";
-          }
-          path.style.strokeDashoffset = `${pathLength}`;
-        }
-      },
-      onLeaveBack: () => {
-        container.style.visibility = "hidden";
-        container.style.opacity = "0";
-      },
-      onToggle: (self) => {
-        // Culling: completely hide container when out of trigger area
-        if (!self.isActive && self.progress === 0) {
-          container.style.visibility = "hidden";
-          container.style.opacity = "0";
-        }
+    // Native GSAP Tween directly synchronized 1:1 with Lenis
+    const tween = gsap.fromTo(
+      path,
+      { strokeDashoffset: pathLength },
+      {
+        strokeDashoffset: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: worksSection,
+          start: "top 75%",
+          end: "bottom 35%",
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
       }
-    });
-
-    // Refresh ScrollTrigger to calculate exact section geometry
-    ScrollTrigger.refresh();
+    );
 
     return () => {
-      st.kill();
+      if (tween.scrollTrigger) tween.scrollTrigger.kill();
+      tween.kill();
     };
   }, []);
 
@@ -71,7 +48,6 @@ const SvgWorksScroll = () => {
     <div
       ref={containerRef}
       className="svg-works-background"
-      style={{ visibility: "hidden", opacity: 0 }}
       aria-hidden="true"
     >
       <svg
@@ -81,7 +57,7 @@ const SvgWorksScroll = () => {
         xmlns="http://www.w3.org/2000/svg"
         className="svg-works-line"
         preserveAspectRatio="none"
-        shapeRendering="geometricPrecision"
+        shapeRendering="auto"
         style={{ width: "100%", height: "100%" }}
       >
         <path
