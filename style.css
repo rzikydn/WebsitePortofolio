@@ -221,7 +221,7 @@ body {
 #lanyard-root {
     position: absolute;
     top: 0;
-    right: 0;
+    right: clamp(1.5%, 3vw, 4%);
     width: 35%;
     height: 100vh;
     z-index: 15;
@@ -230,26 +230,6 @@ body {
 
 #lanyard-root canvas {
     pointer-events: auto;
-}
-
-#crowd-canvas-root {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-}
-
-#crowd-canvas-root canvas {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 45vh;
-    pointer-events: none;
-    z-index: 1;
 }
 
 .bg-zigzag {
@@ -921,17 +901,25 @@ body.dark-mode .about-text {
     position: relative;
     width: 100%;
     min-height: auto;
-    /* Shrink height to pull MY EXPERIENCE section up on desktop */
     background-color: var(--black-section-bg, #0f172a);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     overflow: hidden;
-    padding-top: 5vh;
-    padding-bottom: 8vh;
-    /* Balanced spacing before MY EXPERIENCE starts */
+    padding-top: 0;
+    padding-bottom: 0;
     margin-top: -2px; /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
+}
+
+#logo-loop-root {
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    padding: clamp(3.5rem, 6vh, 5.5rem) 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .skills-section .bg-text {
@@ -1283,11 +1271,9 @@ body.dark-mode .exp-desc {
 
     .skills-section {
         margin-top: -2px;
-        /* Prevent sub-pixel white gaps by slightly overlapping adjacent sections */
         min-height: auto;
-        /* Shrink height to pull MY EXPERIENCE section up on mobile */
-        padding-bottom: 3rem;
-        /* Breathing room below the logo loop */
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     .skills-section .bg-text {
@@ -1295,7 +1281,8 @@ body.dark-mode .exp-desc {
     }
 
     #logo-loop-root {
-        margin-top: 3rem !important;
+        padding: 2.5rem 0 !important;
+        margin: 0 !important;
     }
 
     .experience-section {

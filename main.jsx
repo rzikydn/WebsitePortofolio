@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ProgressiveBlur } from './ProgressiveBlur'
-import CrowdCanvas from './CrowdCanvas'
 import { Highlighter } from '@/registry/magicui/highlighter'
 
 // Lazy loaded heavy 3D components to eliminate critical bundle & physics blocking LCP
@@ -21,12 +20,10 @@ import ExpandableScreenDemo from './ExpandableScreenDemo'
 // Streamlined Preloader Asset Pipeline (Essential Hero Only)
 // ============================================
 const CRITICAL_IMAGES = [
-  // Only essential hero assets for instant FCP/LCP
-  '/images/peeps/all-peeps.webp',
   '/images/logox.webp'
 ];
 
-const totalUnits = CRITICAL_IMAGES.length + 1; // Critical Images + CrowdCanvas
+const totalUnits = CRITICAL_IMAGES.length;
 let loadedUnits = 0;
 let signalFired = false;
 
@@ -152,15 +149,7 @@ if (!window.__MAIN_JSX_MOUNTED__) {
     ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
   }
 
-  // 3. Hero Crowd Canvas Mount
-  const crowdCanvasRoot = document.getElementById('crowd-canvas-root');
-  if (crowdCanvasRoot) {
-    ReactDOM.createRoot(crowdCanvasRoot).render(
-      <CrowdCanvas onLoaded={() => stepProgress()} />
-    );
-  }
-
-  // 4. About Section (ScrollReveal)
+  // 3. About Section (ScrollReveal)
   const scrollRevealRoot = document.getElementById('scroll-reveal-root');
   if (scrollRevealRoot) {
     ReactDOM.createRoot(scrollRevealRoot).render(
