@@ -1,4 +1,3 @@
-import { gsap } from "gsap";
 import React, { useEffect, useRef } from "react";
 
 const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7, onLoaded }) => {
@@ -7,8 +6,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    // Check if onLoaded is provided
+
     let loadedFired = false;
     const fireLoaded = () => {
       if (loadedFired) return;
@@ -16,14 +14,10 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
       if (onLoaded) onLoaded();
     };
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const config = {
-      src,
-      rows,
-      cols,
-    };
+    const config = { src, rows, cols };
 
     // UTILS
     const randomRange = (min, max) => min + Math.random() * (max - min);
@@ -31,71 +25,11 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
     const removeFromArray = (array, i) => array.splice(i, 1)[0];
     const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item));
     const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array));
-    const getRandomFromArray = (array) => array[randomIndex(array) | 0];
-
-    // TWEEN FACTORIES
-    const resetPeep = ({ stage, peep }) => {
-      const direction = Math.random() > 0.5 ? 1 : -1;
-      const offsetY = randomRange(-20, 40);
-      const startY = stage.height - peep.height + offsetY;
-      let startX;
-      let endX;
-
-      if (direction === 1) {
-        startX = -peep.width;
-        endX = stage.width;
-        peep.scaleX = 1;
-      } else {
-        startX = stage.width + peep.width;
-        endX = 0;
-        peep.scaleX = -1;
-      }
-
-      peep.x = startX;
-      peep.y = startY;
-      peep.anchorY = startY;
-
-      return {
-        startX,
-        startY,
-        endX,
-      };
-    };
-
-    const normalWalk = ({ peep, props }) => {
-      const { startX, startY, endX } = props;
-      const xDuration = 10;
-      const yDuration = 0.25;
-
-      const tl = gsap.timeline();
-      tl.timeScale(randomRange(0.5, 1.5));
-      tl.to(
-        peep,
-        {
-          duration: xDuration,
-          x: endX,
-          ease: "none",
-        },
-        0,
-      );
-      tl.to(
-        peep,
-        {
-          duration: yDuration,
-          repeat: xDuration / yDuration,
-          yoyo: true,
-          y: startY - 10,
-        },
-        0,
-      );
-
-      return tl;
-    };
-
-    const walks = [normalWalk];
 
     const isMobile = window.innerWidth <= 768;
     const scaleFactor = isMobile ? 0.55 : 0.88;
+    const targetFps = isMobile ? 35 : 60;
+    const frameInterval = 1000 / targetFps;
 
     // FACTORY FUNCTIONS
     const createPeep = ({ image, rect }) => {
@@ -104,17 +38,19 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
         rect: [],
         width: 0,
         height: 0,
-        drawArgs: [],
         x: 0,
         y: 0,
         anchorY: 0,
         scaleX: 1,
-        walk: null,
+        speed: 40,
+        direction: 1,
+        bounceSpeed: 18,
+        bounceHeight: 8,
+        bouncePhase: 0,
         setRect: (rect) => {
           peep.rect = rect;
           peep.width = rect[2] * scaleFactor;
           peep.height = rect[3] * scaleFactor;
-          peep.drawArgs = [peep.image, ...rect, 0, 0, peep.width, peep.height];
         },
         render: (ctx) => {
           ctx.save();
@@ -129,7 +65,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
             0,
             0,
             peep.width,
-            peep.height,
+            peep.height
           );
           ctx.restore();
         },
@@ -139,13 +75,32 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
       return peep;
     };
 
-    // MAIN
-    const img = document.createElement("img");
-    const stage = {
-      width: 0,
-      height: 0,
+    const resetPeep = (peep, stage, randomizeInitialX = false) => {
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      const offsetY = randomRange(-20, 40);
+      const startY = stage.height - peep.height + offsetY;
+
+      peep.direction = direction;
+      peep.scaleX = direction;
+      // Realistic walking speed: traverses screen in ~8-14 seconds
+      const baseDuration = randomRange(8, 14);
+      peep.speed = (stage.width + peep.width * 2) / baseDuration;
+      peep.bounceSpeed = randomRange(14, 22); // footstep bounce frequency
+      peep.bounceHeight = randomRange(4, 8);
+      peep.bouncePhase = randomRange(0, Math.PI * 2);
+      peep.anchorY = startY;
+      peep.y = startY;
+
+      if (randomizeInitialX) {
+        // Spread across screen initially
+        peep.x = randomRange(0, stage.width);
+      } else {
+        peep.x = direction === 1 ? -peep.width * 1.2 : stage.width + peep.width * 0.2;
+      }
     };
 
+    const img = document.createElement("img");
+    const stage = { width: 0, height: 0 };
     let lastWidth = 0;
 
     const allPeeps = [];
@@ -169,64 +124,31 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
               rectWidth,
               rectHeight,
             ],
-          }),
+          })
         );
       }
     };
 
     const initCrowd = () => {
-      const isMobile = window.innerWidth <= 768;
-      // Denser crowd to match the second image (44 on desktop, 12 on mobile)
-      const maxActivePeeps = isMobile ? 12 : 44;
+      const maxActivePeeps = isMobile ? 6 : 42;
       const count = Math.min(availablePeeps.length, maxActivePeeps);
 
       for (let i = 0; i < count; i++) {
-        const peep = addPeepToCrowd();
-        if (peep && peep.walk) {
-          peep.walk.progress(Math.random());
-        }
+        if (availablePeeps.length === 0) break;
+        const peep = removeRandomFromArray(availablePeeps);
+        resetPeep(peep, stage, true);
+        crowd.push(peep);
       }
-    };
-
-    const addPeepToCrowd = () => {
-      if (availablePeeps.length === 0) return;
-      const peep = removeRandomFromArray(availablePeeps);
-      const walk = getRandomFromArray(walks)({
-        peep,
-        props: resetPeep({
-          peep,
-          stage,
-        }),
-      }).eventCallback("onComplete", () => {
-        removePeepFromCrowd(peep);
-        addPeepToCrowd();
-      });
-
-      peep.walk = walk;
-      
-      // If canvas is currently not visible, pause the new walk immediately
-      if (!isCanvasVisible) {
-        walk.pause();
-      }
-
-      crowd.push(peep);
       crowd.sort((a, b) => a.anchorY - b.anchorY);
-
-      return peep;
-    };
-
-    const removePeepFromCrowd = (peep) => {
-      removeItemFromArray(crowd, peep);
-      availablePeeps.push(peep);
     };
 
     let cachedMaskGradient = null;
 
     const render = () => {
-      if (!canvas || !isCanvasVisible) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       ctx.save();
-      ctx.scale(devicePixelRatio, devicePixelRatio);
+      ctx.scale(dpr, dpr);
 
       for (let i = 0; i < crowd.length; i++) {
         crowd[i].render(ctx);
@@ -236,10 +158,72 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
 
       if (cachedMaskGradient) {
         ctx.save();
-        ctx.globalCompositeOperation = 'destination-in';
+        ctx.globalCompositeOperation = "destination-in";
         ctx.fillStyle = cachedMaskGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
+      }
+    };
+
+    let rafId = null;
+    let lastTime = 0;
+    let isCanvasVisible = true;
+
+    const tick = (timestamp) => {
+      if (!isCanvasVisible || document.visibilityState === "hidden") {
+        rafId = null;
+        return;
+      }
+
+      if (!lastTime) lastTime = timestamp;
+      const elapsed = timestamp - lastTime;
+
+      if (elapsed >= frameInterval) {
+        // Cap dt to prevent huge jumps if tab was unfocused
+        const dt = Math.min(elapsed / 1000, 0.1);
+        lastTime = timestamp - (elapsed % frameInterval);
+
+        // Update peep positions (ultra-lightweight coordinate math, 0 GSAP overhead)
+        for (let i = 0; i < crowd.length; i++) {
+          const peep = crowd[i];
+          peep.x += peep.direction * peep.speed * dt;
+          peep.bouncePhase += peep.bounceSpeed * dt;
+          peep.y = peep.anchorY - Math.abs(Math.sin(peep.bouncePhase)) * peep.bounceHeight;
+
+          // Check if peep has left the viewport boundaries
+          const outRight = peep.direction === 1 && peep.x > stage.width + peep.width * 0.5;
+          const outLeft = peep.direction === -1 && peep.x < -peep.width * 1.5;
+
+          if (outRight || outLeft) {
+            removeItemFromArray(crowd, peep);
+            availablePeeps.push(peep);
+
+            // Spawn next peep from pool
+            if (availablePeeps.length > 0) {
+              const newPeep = removeRandomFromArray(availablePeeps);
+              resetPeep(newPeep, stage, false);
+              crowd.push(newPeep);
+            }
+          }
+        }
+
+        render();
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const startAnimation = () => {
+      if (!rafId && isCanvasVisible) {
+        lastTime = 0;
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    const stopAnimation = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
       }
     };
 
@@ -251,31 +235,27 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
       }
       if (!currentWidth || !currentHeight) return;
 
-      // Ignore height-only resizes (caused by mobile URL bar show/hide) to prevent canvas reset and flickering
-      if (currentWidth === lastWidth) {
-        return;
-      }
+      // Ignore height-only resizes (caused by mobile URL bar show/hide)
+      if (currentWidth === lastWidth) return;
 
       lastWidth = currentWidth;
       stage.width = currentWidth;
       stage.height = currentHeight;
-      canvas.width = currentWidth * devicePixelRatio;
-      canvas.height = currentHeight * devicePixelRatio;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = currentWidth * dpr;
+      canvas.height = currentHeight * dpr;
 
       cachedMaskGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      cachedMaskGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      cachedMaskGradient.addColorStop(0.35, 'rgba(0, 0, 0, 1)');
-      cachedMaskGradient.addColorStop(1, 'rgba(0, 0, 0, 1)');
-
-      crowd.forEach((peep) => {
-        if (peep.walk) peep.walk.kill();
-      });
+      cachedMaskGradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+      cachedMaskGradient.addColorStop(0.35, "rgba(0, 0, 0, 1)");
+      cachedMaskGradient.addColorStop(1, "rgba(0, 0, 0, 1)");
 
       crowd.length = 0;
       availablePeeps.length = 0;
       availablePeeps.push(...allPeeps);
 
       initCrowd();
+      render();
     };
 
     const resizeObserver = new ResizeObserver((entries) => {
@@ -285,20 +265,27 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
       }
     });
 
-    let isCanvasVisible = true;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isCanvasVisible = entry.isIntersecting;
+        if (isCanvasVisible) {
+          startAnimation();
+        } else {
+          stopAnimation();
+        }
+      },
+      { threshold: 0.01 }
+    );
 
-    const visibilityObserver = new IntersectionObserver(([entry]) => {
-      isCanvasVisible = entry.isIntersecting;
-      if (isCanvasVisible) {
-        // Resume walks and start render loop
-        crowd.forEach(peep => peep.walk?.play());
-        gsap.ticker.add(render);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && isCanvasVisible) {
+        startAnimation();
       } else {
-        // Pause walks and stop render loop to save CPU/GPU cycles
-        crowd.forEach(peep => peep.walk?.pause());
-        gsap.ticker.remove(render);
+        stopAnimation();
       }
-    }, { threshold: 0.01 });
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     let initialized = false;
     const init = () => {
@@ -310,6 +297,7 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
       resizeObserver.observe(canvas);
       visibilityObserver.observe(canvas);
       fireLoaded();
+      startAnimation();
     };
 
     img.onload = init;
@@ -319,19 +307,28 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
     }
 
     return () => {
+      stopAnimation();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
-      gsap.ticker.remove(render);
-      crowd.forEach((peep) => {
-        if (peep.walk) peep.walk.kill();
-      });
     };
   }, [src, rows, cols]);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   return (
-    <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: isMobile ? "45vh" : "55vh", pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
+    <div
+      style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height: isMobile ? "45vh" : "55vh",
+        pointerEvents: "none",
+        zIndex: 1,
+        overflow: "hidden",
+      }}
+    >
       <canvas
         ref={canvasRef}
         style={{
@@ -346,7 +343,6 @@ const CrowdCanvas = ({ src = "/images/peeps/all-peeps.webp", rows = 15, cols = 7
           WebkitBackfaceVisibility: "hidden",
         }}
       />
-      {/* Transparency mask is handled programmatically inside the 2D canvas context for optimal performance and grid visibility */}
     </div>
   );
 };

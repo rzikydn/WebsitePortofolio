@@ -90,7 +90,11 @@ function App({ onLanyardReady }) {
 
   useEffect(() => {
     const handleDrop = () => {
-      setShowLanyard(true);
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => setShowLanyard(true), { timeout: 1200 });
+      } else {
+        setTimeout(() => setShowLanyard(true), 150);
+      }
     };
 
     window.addEventListener('lanyard-drop', handleDrop);

@@ -50,13 +50,13 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 1.5]}
-        gl={{ alpha: transparent, antialias: true, powerPreference: "high-performance" }}
+        dpr={typeof window !== 'undefined' ? (isMobile ? 1 : [1, Math.min(window.devicePixelRatio, 2)]) : 1}
+        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
         {physicsReady && (
-          <Physics gravity={activeGravity} timeStep={1 / 60} interpolate>
+          <Physics gravity={activeGravity} timeStep={isMobile ? 1 / 45 : 1 / 60} interpolate>
             <Band isMobile={isMobile} ready={ready} onLoaded={handleLoaded} />
           </Physics>
         )}
