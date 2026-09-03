@@ -73,10 +73,10 @@ export function initSpatialHero() {
     const isMobileDevice = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
     // Movement & tilt constants calibrated for viewport size
-    const MAX_TRAVEL_X = isMobileDevice ? 20 : 85;   // Subtle on mobile (20px) vs expressive on desktop (85px)
-    const MAX_TRAVEL_Y = isMobileDevice ? 12 : 55;   // Prevents vertical overlap / clashing with navbar on mobile
-    const MAX_TILT_DEG = isMobileDevice ? 1.0 : 3.8;  // Minimal tilt on mobile to preserve clean layout
-    const LERP_FACTOR = 0.095; // Butter-smooth damping
+    const MAX_TRAVEL_X = isMobileDevice ? 28 : 125;   // Expressive travel on desktop (125px) vs subtle on mobile (28px)
+    const MAX_TRAVEL_Y = isMobileDevice ? 18 : 80;    // Noticeable vertical responsiveness
+    const MAX_TILT_DEG = isMobileDevice ? 2.5 : 7.2;  // Pronounced, tactile 3D perspective tilt
+    const LERP_FACTOR = 0.085; // Butter-smooth damping
 
     let targetNormalizedX = 0;
     let targetNormalizedY = 0;

@@ -7,7 +7,7 @@
   pointer-events: none;
   overflow: visible;
   background: transparent;
-  z-index: 35; /* Render above title banner (z-index: 28), but below interactive elements (z-index: 40) */
+  z-index: 30; /* Render above title banner (z-index: 28), but below bento cards (z-index: 40) */
 
   /* Hardware acceleration & Layer isolation without CPU re-rasterization */
   contain: paint layout;

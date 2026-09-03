@@ -221,7 +221,7 @@ body {
 .spatial-scene {
     position: relative;
     overflow: hidden;
-    perspective: 1200px;
+    perspective: 950px;
     transform-style: preserve-3d;
 }
 
@@ -879,7 +879,7 @@ body.dark-mode .btn-copy:hover {
     position: sticky !important;
     top: 0 !important;
     overflow: hidden;
-    perspective: 1200px;
+    perspective: 950px;
     transform-style: preserve-3d;
 }
 
