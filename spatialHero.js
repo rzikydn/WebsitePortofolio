@@ -27,7 +27,10 @@ export function initSpatialHero() {
         const layerData = Array.from(layers).map(layer => {
             const depth = parseFloat(layer.getAttribute('data-depth')) || 0.2;
             let zPlane = 0;
-            if (depth < 0) {
+            const customZ = layer.getAttribute('data-z-plane');
+            if (customZ !== null && !isNaN(parseFloat(customZ))) {
+                zPlane = parseFloat(customZ);
+            } else if (depth < 0) {
                 zPlane = -45; // Background recedes into screen
             } else if (depth > 0.75) {
                 zPlane = 40;  // Foreground floats forward
@@ -35,10 +38,13 @@ export function initSpatialHero() {
                 zPlane = 14;  // Midground sits in the middle
             }
 
+            const tiltFactor = parseFloat(layer.getAttribute('data-tilt')) || 1.0;
+
             return {
                 element: layer,
                 depth: depth,
                 zPlane: zPlane,
+                tiltFactor: tiltFactor,
                 currentX: 0,
                 currentY: 0,
                 currentRotX: 0,
@@ -50,10 +56,14 @@ export function initSpatialHero() {
             };
         });
 
+        const wrapper = sceneEl.closest('.about-wrapper') || sceneEl;
+        const rect = wrapper.getBoundingClientRect();
+        const initiallyInView = (rect.bottom > 0 && rect.top < window.innerHeight);
+
         sceneDataList.push({
             sceneElement: sceneEl,
             layerData: layerData,
-            isInViewport: false,
+            isInViewport: initiallyInView,
         });
     });
 
@@ -105,8 +115,8 @@ export function initSpatialHero() {
                         item.targetRotX = 0;
                         item.targetRotY = targetNormalizedX * MAX_TILT_DEG * 0.5;
                     } else {
-                        item.targetRotX = -targetNormalizedY * MAX_TILT_DEG * item.depth;
-                        item.targetRotY = targetNormalizedX * MAX_TILT_DEG * item.depth;
+                        item.targetRotX = -targetNormalizedY * MAX_TILT_DEG * item.depth * item.tiltFactor;
+                        item.targetRotY = targetNormalizedX * MAX_TILT_DEG * item.depth * item.tiltFactor;
                     }
                 } else {
                     item.targetRotX = 0;
@@ -250,4 +260,8 @@ export function initSpatialHero() {
         const wrapper = scene.sceneElement.closest('.about-wrapper');
         observer.observe(wrapper || scene.sceneElement);
     });
+
+    if (hasVisibleScenes()) {
+        startLoop();
+    }
 }

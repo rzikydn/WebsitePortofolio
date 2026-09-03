@@ -919,6 +919,149 @@ body.dark-mode .btn-copy:hover {
     margin: 0;
 }
 
+/* ===================================================
+   About Section - 3D Spatial Scenes & Parallax Assets
+   =================================================== */
+
+.about-spatial-stage {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 82%;
+    max-width: 68rem;
+    height: clamp(340px, 45vh, 480px);
+    pointer-events: none;
+    z-index: 22;
+    transform-style: preserve-3d;
+}
+
+.about-spatial-layer {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+
+/* Individual Asset Layer Anchors (Desktop min-width: 1180px) */
+.about-spatial-layer--dragon {
+    top: clamp(-130px, -14vh, -90px);
+    left: clamp(-155px, -11vw, -100px);
+    width: clamp(200px, 21vw, 290px);
+}
+
+.about-spatial-layer--caset {
+    top: clamp(-120px, -13vh, -85px);
+    right: clamp(-145px, -10vw, -95px);
+    width: clamp(180px, 19vw, 250px);
+}
+
+.about-spatial-layer--tv {
+    bottom: clamp(-130px, -14vh, -95px);
+    left: clamp(-135px, -9vw, -90px);
+    width: clamp(130px, 14vw, 185px);
+}
+
+.about-spatial-layer--sakura {
+    bottom: clamp(-125px, -13vh, -90px);
+    right: clamp(-135px, -9vw, -90px);
+    width: clamp(145px, 15vw, 210px);
+}
+
+/* Float & Hover Wrapper (Handles ambient levitation & base slant) */
+.about-asset-float {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform-origin: center center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+    pointer-events: auto;
+    cursor: default;
+}
+
+.about-asset-float--dragon {
+    --asset-base-rot: -26deg;
+    animation: spatialFloatA 6.0s ease-in-out infinite;
+}
+
+.about-asset-float--caset {
+    --asset-base-rot: -14deg;
+    animation: spatialFloatB 6.8s ease-in-out infinite 0.8s;
+}
+
+.about-asset-float--tv {
+    --asset-base-rot: 0deg;
+    animation: spatialFloatA 6.4s ease-in-out infinite 1.6s;
+}
+
+.about-asset-float--sakura {
+    --asset-base-rot: 6deg;
+    animation: spatialFloatB 7.2s ease-in-out infinite 2.4s;
+}
+
+/* Subtle Interactive Hover Enhancement */
+.about-asset-float:hover {
+    transform: scale(1.06) rotate(var(--asset-base-rot, 0deg));
+}
+
+.about-asset-float:hover .about-asset-img {
+    filter: drop-shadow(0 0 22px rgba(0, 0, 0, 0.28)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.22)) brightness(1.03);
+}
+
+/* Asset Image Render Settings (Smooth black shadow surrounding assets) */
+.about-asset-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.20)) drop-shadow(0 8px 22px rgba(0, 0, 0, 0.16));
+    transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+/* Ambient Floating Keyframes */
+@keyframes spatialFloatA {
+    0%, 100% {
+        transform: translateY(0px) rotate(var(--asset-base-rot, 0deg));
+    }
+    50% {
+        transform: translateY(-8px) rotate(calc(var(--asset-base-rot, 0deg) + 1.2deg));
+    }
+}
+
+@keyframes spatialFloatB {
+    0%, 100% {
+        transform: translateY(0px) rotate(var(--asset-base-rot, 0deg));
+    }
+    50% {
+        transform: translateY(-9px) rotate(calc(var(--asset-base-rot, 0deg) - 1.5deg));
+    }
+}
+
+/* Tablet & Medium Screens (769px - 1179px) */
+@media (max-width: 1179px) and (min-width: 769px) {
+    .about-spatial-layer--dragon {
+        top: -85px;
+        left: -65px;
+        width: clamp(160px, 18vw, 225px);
+    }
+    .about-spatial-layer--caset {
+        top: -75px;
+        right: -55px;
+        width: clamp(145px, 16vw, 195px);
+    }
+    .about-spatial-layer--tv {
+        bottom: -85px;
+        left: -55px;
+        width: clamp(110px, 12vw, 155px);
+    }
+    .about-spatial-layer--sakura {
+        bottom: -80px;
+        right: -55px;
+        width: clamp(120px, 13vw, 165px);
+    }
+}
+
 @media (max-width: 768px) {
     .about-wrapper {
         height: 500vh;
@@ -943,6 +1086,48 @@ body.dark-mode .btn-copy:hover {
         padding: 0 8px;
         transform: none;
     }
+
+    /* Mobile 3D Spatial Stage & Assets */
+    .about-spatial-stage {
+        width: 100%;
+        max-width: 325px;
+        height: clamp(340px, 48vh, 430px);
+    }
+
+    .about-spatial-layer--dragon {
+        top: -65px;
+        left: -20px;
+        width: 100px;
+    }
+
+    .about-spatial-layer--caset {
+        top: -55px;
+        right: -20px;
+        width: 88px;
+    }
+
+    .about-spatial-layer--tv {
+        bottom: -60px;
+        left: -16px;
+        width: 72px;
+    }
+
+    .about-spatial-layer--sakura {
+        bottom: -55px;
+        right: -16px;
+        width: 80px;
+    }
+
+    .about-asset-float {
+        opacity: 0.94;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-asset-float {
+        animation: none !important;
+        transform: rotate(var(--asset-base-rot, 0deg)) !important;
+    }
 }
 
 /* Dark Mode About Section */
@@ -956,6 +1141,31 @@ body.dark-mode .about-section {
 
 body.dark-mode .about-text {
     color: #475569;
+}
+
+/* Dark Mode Spatial Assets Shadows */
+body.dark-mode .about-asset-img {
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85));
+}
+
+body.dark-mode .about-asset-float:hover .about-asset-img {
+    filter: drop-shadow(0 0 24px rgba(0, 0, 0, 0.9)) drop-shadow(0 14px 32px rgba(0, 0, 0, 0.95)) brightness(1.06);
+}
+
+body.dark-mode .about-spatial-layer--dragon .about-asset-img {
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.22)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+}
+
+body.dark-mode .about-spatial-layer--caset .about-asset-img {
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 16px rgba(239, 68, 68, 0.16)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+}
+
+body.dark-mode .about-spatial-layer--tv .about-asset-img {
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(129, 140, 248, 0.20)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+}
+
+body.dark-mode .about-spatial-layer--sakura .about-asset-img {
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(244, 114, 182, 0.22)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
 }
 
 /* Black Section (Next Section) */
