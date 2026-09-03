@@ -92,6 +92,7 @@
         width: 26px;
         height: 26px;
     }
+
     .expandable-screen-close svg {
         width: 12px !important;
         height: 12px !important;
@@ -237,12 +238,12 @@
         width: 100%;
     }
 
-    .expandable-screen-form-row > div:first-child {
+    .expandable-screen-form-row>div:first-child {
         flex: 1;
         min-width: 0;
     }
 
-    .expandable-screen-form-row > div:last-child {
+    .expandable-screen-form-row>div:last-child {
         width: 105px;
         flex-shrink: 0;
     }
@@ -413,10 +414,12 @@
     .expandable-screen-form-row {
         flex-direction: row;
     }
-    .expandable-screen-form-row > div:first-child {
+
+    .expandable-screen-form-row>div:first-child {
         flex: 1;
     }
-    .expandable-screen-form-row > div:last-child {
+
+    .expandable-screen-form-row>div:last-child {
         width: 130px;
     }
 }

@@ -1,6 +1,7 @@
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initSpatialHero } from './spatialHero.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -203,6 +204,9 @@ function init() {
             themeIcon.classList.add('ph-moon-stars');
         }
     });
+
+    // Initialize 3D Spatial Scenes Parallax on Hero Section
+    initSpatialHero();
 }
 
 // Module scripts are deferred — DOM may already be loaded

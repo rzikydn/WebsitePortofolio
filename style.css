@@ -208,7 +208,7 @@ body {
     }
 }
 
-/* Main Content */
+/* Main Content & 3D Spatial Scene Container */
 .main-content {
     position: relative;
     width: 100%;
@@ -216,6 +216,72 @@ body {
     background-color: #ffffff;
     color: #1f2937;
     transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.spatial-scene {
+    position: relative;
+    overflow: hidden;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+.spatial-layer {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    transform-style: preserve-3d;
+}
+
+/* 1. Background Spatial Layer */
+.spatial-layer--bg {
+    position: absolute;
+    top: -65px;
+    left: -65px;
+    right: -65px;
+    bottom: -65px;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.spatial-layer--bg .bg-zigzag {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* 2. Midground Spatial Layer (Hero Content) */
+.spatial-layer--mid {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    min-height: 100vh;
+    pointer-events: none;
+}
+
+.spatial-layer--mid .content-wrapper {
+    pointer-events: none;
+}
+
+.spatial-layer--mid .hero-content,
+.spatial-layer--mid .hero-buttons,
+.spatial-layer--mid .btn-hire,
+.spatial-layer--mid .btn-copy {
+    pointer-events: auto;
+}
+
+/* 3. Foreground Spatial Layer (3D Lanyard Component) */
+.spatial-layer--fg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 25;
+    pointer-events: none;
 }
 
 #lanyard-root {
@@ -579,6 +645,15 @@ body {
 
 /* Navbar Mobile Optimization */
 @media (max-width: 768px) {
+    .spatial-layer--fg {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+    }
+
     #lanyard-root {
         width: 100%;
         height: 100vh;
@@ -778,6 +853,7 @@ body.dark-mode .btn-copy:hover {
     background-color: #334155;
 }
 
+
 /* About Section Wrapper */
 .about-wrapper {
     position: relative;
@@ -787,7 +863,6 @@ body.dark-mode .btn-copy:hover {
     background-color: #ffffff;
 }
 
-/* About Section */
 .about-section {
     width: 100%;
     height: 100vh;
@@ -798,6 +873,29 @@ body.dark-mode .btn-copy:hover {
     padding: 20px;
     position: sticky;
     top: 0;
+}
+
+.about-section.spatial-scene {
+    position: sticky !important;
+    top: 0 !important;
+    overflow: hidden;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+.about-section .spatial-layer--mid {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.about-section .about-container {
+    pointer-events: auto;
 }
 
 .about-container {

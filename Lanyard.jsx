@@ -89,7 +89,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
 
   const [curve] = useState(
     () =>
-      new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+        new THREE.Vector3()
+      ])
   );
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
@@ -150,7 +156,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      const points = curve.getPoints(isMobile ? 8 : 12);
+      curve.points[4].copy(fixed.current.translation()).add(new THREE.Vector3(0, 10, 0));
+      const points = curve.getPoints(isMobile ? 12 : 16);
       band.current.geometry.setPoints(points);
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
@@ -209,7 +216,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
           useMap
           map={texture}
           repeat={[-4, 1]}
-          lineWidth={isMobile ? 0.5 : 1}
+          lineWidth={isMobile ? 0.45 : 0.6}
         />
       </mesh>
     </>

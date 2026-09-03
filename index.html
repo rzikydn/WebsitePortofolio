@@ -398,47 +398,59 @@
 
     <!-- Main Content -->
     <main id="main-content">
-        <section class="main-content desktop-framed" id="home">
-            <!-- Background Elements -->
-            <div class="bg-zigzag"></div>
+        <section class="main-content desktop-framed spatial-scene" id="home">
+            <!-- 1. Background Spatial Layer (Layer Belakang - Gerak Paling Pelan / Opposite Depth) -->
+            <div class="spatial-layer spatial-layer--bg" data-depth="-0.28">
+                <div class="bg-zigzag"></div>
+            </div>
 
-            <!-- Konten Website (di atas background) -->
-            <div class="content-wrapper">
-                <div class="hero-card">
-                    <div class="hero-main">
-                        <div class="hero-content">
-                            <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
-                            <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating
-                                insight</p>
+            <!-- 2. Midground Spatial Layer (Layer Tengah - Gerak Sedang) -->
+            <div class="spatial-layer spatial-layer--mid" data-depth="0.45">
+                <!-- Konten Website (di atas background) -->
+                <div class="content-wrapper">
+                    <div class="hero-card">
+                        <div class="hero-main">
+                            <div class="hero-content">
+                                <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
+                                <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating
+                                    insight</p>
 
-                            <div class="hero-buttons">
-                                <a href="https://drive.google.com/file/d/1UO_KEt-c_tq19pJkAR8iInDoGntuah9q/view?usp=sharing"
-                                    target="_blank" rel="noopener noreferrer" class="btn-hire">
-                                    <i class="ph ph-file-pdf"></i>
-                                    View CV
-                                </a>
-                                <a href="#works" class="btn-copy">
-                                    <i class="ph ph-code"></i>
-                                    View Project
-                                </a>
+                                <div class="hero-buttons">
+                                    <a href="https://drive.google.com/file/d/1UO_KEt-c_tq19pJkAR8iInDoGntuah9q/view?usp=sharing"
+                                        target="_blank" rel="noopener noreferrer" class="btn-hire">
+                                        <i class="ph ph-file-pdf"></i>
+                                        View CV
+                                    </a>
+                                    <a href="#works" class="btn-copy">
+                                        <i class="ph ph-code"></i>
+                                        View Project
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- 3. Foreground Spatial Layer: Lanyard 3D (Layer Depan - Gerak Paling Jauh) -->
+            <div class="spatial-layer spatial-layer--fg" data-depth="1.0">
+                <div id="lanyard-root"></div>
+            </div>
+
             <!-- Tempat render untuk Progressive Blur -->
             <div id="progressive-blur-root"
                 style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2;">
             </div>
-
-            <!-- Lanyard 3D Component -->
-            <div id="lanyard-root"></div>
         </section>
 
         <!-- About Section Wrapper for sticky effect -->
         <section class="about-wrapper" id="about">
-            <div class="about-section desktop-framed">
+            <div class="about-section desktop-framed spatial-scene">
+                <!-- 1. Background Spatial Layer -->
+                <div class="spatial-layer spatial-layer--bg" data-depth="-0.28">
+                    <div class="bg-zigzag"></div>
+                </div>
+
                 <!-- Progressive Blur Top -->
                 <div id="progressive-blur-top-root"
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; pointer-events: none; z-index: 1;">
@@ -446,9 +458,12 @@
 
                 <div id="svg-follow-scroll-root"></div>
 
-                <div class="about-container">
-                    <h2 class="sr-only">About Me</h2>
-                    <div id="scroll-reveal-root"></div>
+                <!-- 2. Midground Spatial Layer (About Content) -->
+                <div class="spatial-layer spatial-layer--mid" data-depth="0.55">
+                    <div class="about-container">
+                        <h2 class="sr-only">About Me</h2>
+                        <div id="scroll-reveal-root"></div>
+                    </div>
                 </div>
             </div>
         </section>

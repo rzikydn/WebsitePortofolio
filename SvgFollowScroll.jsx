@@ -11,55 +11,37 @@ const SvgFollowScroll = () => {
 
   useEffect(() => {
     const path = pathRef.current;
-    const container = containerRef.current;
-    if (!path || !container) return;
+    if (!path) return;
 
     const pathLength = path.getTotalLength();
     path.style.strokeDasharray = `${pathLength}`;
     path.style.strokeDashoffset = `${pathLength}`;
 
-    const st = ScrollTrigger.create({
-      start: 0,
-      end: () => window.innerHeight * 3.1,
-      scrub: true,
-      onUpdate: (self) => {
-        const y = self.scroll();
-        const vh = window.innerHeight;
-        const startReveal = vh;
-        const endReveal = vh * 3.1;
-
-        if (y <= 30) {
-          container.style.opacity = "0";
-          container.style.visibility = "hidden";
-          path.style.strokeDashoffset = `${pathLength}`;
-          return;
-        }
-
-        container.style.visibility = "visible";
-        container.style.opacity = "1";
-
-        let progress = 0;
-        if (y < startReveal) {
-          progress = (y / startReveal) * 0.56;
-        } else if (y < endReveal) {
-          const pct = (y - startReveal) / (endReveal - startReveal);
-          progress = 0.56 + pct * 0.44;
-        } else {
-          progress = 1;
-        }
-
-        path.style.strokeDashoffset = `${pathLength * (1 - Math.min(1, Math.max(0, progress)))}`;
-      },
-      onLeaveBack: () => {
-        container.style.opacity = "0";
-        container.style.visibility = "hidden";
+    // Native GSAP fromTo tween with 1:1 scrub and dynamic trigger calculation
+    const tween = gsap.fromTo(
+      path,
+      { strokeDashoffset: pathLength },
+      {
+        strokeDashoffset: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".about-wrapper",
+          start: "top bottom",
+          end: () => {
+            const wrapper = document.querySelector(".about-wrapper");
+            return `+=${wrapper ? wrapper.offsetHeight * 0.75 : window.innerHeight * 3.5}`;
+          },
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
       }
-    });
+    );
 
     ScrollTrigger.refresh();
 
     return () => {
-      st.kill();
+      if (tween.scrollTrigger) tween.scrollTrigger.kill();
+      tween.kill();
     };
   }, []);
 
@@ -67,11 +49,6 @@ const SvgFollowScroll = () => {
     <div
       ref={containerRef}
       className="svg-scroll-background"
-      style={{
-        opacity: 0,
-        visibility: "hidden",
-        transition: "opacity 0.3s ease",
-      }}
       aria-hidden="true"
     >
       <svg
