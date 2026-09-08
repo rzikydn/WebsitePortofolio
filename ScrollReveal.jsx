@@ -92,10 +92,17 @@ const ScrollReveal = ({
       };
     }
 
+    // Helper to compute travel distance so slide fully exits beyond the screen edge (pinggir layar)
+    const getTravelDistance = (slideEl) => {
+      const screenW = typeof window !== 'undefined' ? window.innerWidth : 1200;
+      const slideW = (slideEl && slideEl.offsetWidth) ? slideEl.offsetWidth : 800;
+      return Math.round((screenW + slideW) / 2 + 100);
+    };
+
     // MULTI-SLIDE CONTINUOUS HORIZONTAL TRANSITION & DUAL SCROLL REVEAL
-    // Initial states: slide 1 centered; slide 2 parked off-screen to the right
-    gsap.set(s1, { x: '0vw', opacity: 1, force3D: true });
-    gsap.set(s2, { x: '120vw', opacity: 0, force3D: true });
+    // Initial states: slide 1 centered (x: 0); slide 2 parked off-screen to the right
+    gsap.set(s1, { x: 0, opacity: 1, force3D: true });
+    gsap.set(s2, { x: () => getTravelDistance(s2), opacity: 0, force3D: true });
     gsap.set(words1, { opacity: baseOpacity, force3D: true });
     gsap.set(words2, { opacity: baseOpacity, force3D: true });
 
@@ -106,8 +113,6 @@ const ScrollReveal = ({
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        fastScrollEnd: true,
-        invalidateOnRefresh: true,
       },
     });
 
@@ -132,11 +137,12 @@ const ScrollReveal = ({
     // Slide 1 stays centered and fully visible for ~11% of scroll
 
     // Phase 3: Continuous Horizontal Slide (3.2 -> 4.6)
-    // Slide 1 slides OUT to the left; Slide 2 slides IN from the right simultaneously
+    // Slide 1 slides OUT from center all the way past the left screen edge (pinggir layar)
+    // Slide 2 slides IN from beyond the right screen edge (pinggir layar) to center
     tl.to(
       s1,
       {
-        x: '-120vw',
+        x: () => -getTravelDistance(s1),
         opacity: 0,
         ease: 'power2.inOut',
         duration: 1.4,
@@ -146,9 +152,9 @@ const ScrollReveal = ({
 
     tl.fromTo(
       s2,
-      { x: '120vw', opacity: 0 },
+      { x: () => getTravelDistance(s2), opacity: 0 },
       {
-        x: '0vw',
+        x: 0,
         opacity: 1,
         ease: 'power2.inOut',
         duration: 1.4,

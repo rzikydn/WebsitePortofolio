@@ -5,6 +5,10 @@ import { initSpatialHero } from './spatialHero.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
+ScrollTrigger.config({
+    ignoreMobileResize: true,
+});
+
 const lenis = new Lenis({
     smoothWheel: true,
     syncTouch: false,

@@ -4,26 +4,35 @@
 }
 
 .scroll-reveal-slider {
-  position: relative;
+  position: relative !important;
+  z-index: 20 !important;
+  isolation: isolate;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   align-items: center;
   justify-items: center;
-  overflow: visible;
+  overflow: visible !important;
   margin: 0 auto;
+  padding: 10px 0;
 }
 
 .scroll-reveal-slide {
+  position: relative !important;
+  z-index: 20 !important;
   grid-area: 1 / 1;
   width: 100%;
   will-change: transform, opacity;
   backface-visibility: hidden;
   transform: translateZ(0);
+  touch-action: pan-y;
+  overflow: visible !important;
 }
 
 .scroll-reveal-text {
+  position: relative !important;
+  z-index: 20 !important;
   font-family: "Elms Sans", sans-serif;
   font-size: clamp(1.9rem, 3.2vw, 3.4rem);
   line-height: 1.4;
@@ -35,6 +44,8 @@
 }
 
 .word {
+  position: relative !important;
+  z-index: 20 !important;
   display: inline-block;
   font-family: "Elms Sans", sans-serif;
   will-change: opacity;
@@ -47,11 +58,6 @@
 }
 
 @media (max-width: 768px) {
-  .rough-annotation-svg {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-  }
 
   .scroll-reveal-text {
     font-size: clamp(1.45rem, 5.5vw, 1.9rem);

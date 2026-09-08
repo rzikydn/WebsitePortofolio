@@ -12,7 +12,6 @@ import LogoLoop from './LogoLoop'
 import ExperienceAccordion from './ExperienceAccordion'
 import MotionCarousel from './MotionCarousel'
 import ConfettiSideCannons from './ConfettiSideCannons'
-import SvgFollowScroll from './SvgFollowScroll'
 import SvgWorksScroll from './SvgWorksScroll'
 import ExpandableScreenDemo from './ExpandableScreenDemo'
 
@@ -257,11 +256,6 @@ if (!window.__MAIN_JSX_MOUNTED__) {
       const expRoot = document.getElementById('experience-root');
       if (expRoot) {
         ReactDOM.createRoot(expRoot).render(<ExperienceAccordion />);
-      }
-
-      const svgFollowRoot = document.getElementById('svg-follow-scroll-root');
-      if (svgFollowRoot) {
-        ReactDOM.createRoot(svgFollowRoot).render(<SvgFollowScroll />);
       }
     }, 2400);
 

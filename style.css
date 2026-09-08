@@ -930,7 +930,9 @@ body.dark-mode .btn-copy:hover {
     justify-content: center;
     align-items: center;
     pointer-events: none;
-    z-index: 10;
+    position: relative !important;
+    z-index: 10 !important;
+    isolation: isolate !important;
 }
 
 .about-section .about-container {
@@ -946,6 +948,7 @@ body.dark-mode .btn-copy:hover {
     position: relative;
     z-index: 20;
     padding: 0 2rem;
+    overflow: visible !important;
 }
 
 .about-text {
@@ -1115,14 +1118,15 @@ body.dark-mode .btn-copy:hover {
 
     .about-section {
         min-height: 100vh;
-        min-height: 100dvh;
+        min-height: 100svh;
         height: 100vh;
-        height: 100dvh;
+        height: 100svh;
         margin-top: 0;
         padding: 16px;
         display: flex;
         justify-content: center;
         align-items: center;
+        overflow: hidden;
     }
 
     .about-container {
@@ -1130,7 +1134,11 @@ body.dark-mode .btn-copy:hover {
         max-width: 310px;
         margin: 35px auto 0 auto;
         padding: 0 8px;
-        transform: none;
+        position: relative !important;
+        z-index: 20 !important;
+        isolation: isolate !important;
+        transform: translateZ(0) !important;
+        overflow: visible !important;
     }
 
     /* Mobile 3D Spatial Stage & Assets */
@@ -1174,7 +1182,10 @@ body.dark-mode .btn-copy:hover {
     }
 
     .about-section .spatial-layer--mid {
-        transform: none !important;
+        position: relative !important;
+        z-index: 10 !important;
+        isolation: isolate !important;
+        transform: translateZ(0) !important;
     }
 
     .about-spatial-stage {

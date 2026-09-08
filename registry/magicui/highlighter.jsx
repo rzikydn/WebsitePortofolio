@@ -19,11 +19,6 @@ export function Highlighter({
     const element = elementRef.current;
     if (!element) return;
 
-    // Disable highlights/annotations completely on mobile screens
-    if (window.matchMedia('(max-width: 768px)').matches) {
-      return;
-    }
-
     let annotation = null;
     let resizeObserver = null;
     let isShown = false;
@@ -96,10 +91,18 @@ export function Highlighter({
 
     window.addEventListener('scroll', scheduleCheck, { passive: true });
 
-    resizeObserver = new ResizeObserver(() => {
-      if (isShown) {
-        annotation.hide();
-        annotation.show();
+    let lastWidth = 0;
+    resizeObserver = new ResizeObserver((entries) => {
+      if (!isShown) return;
+      for (const entry of entries) {
+        const w = Math.round(entry.contentRect.width);
+        if (lastWidth !== 0 && Math.abs(w - lastWidth) > 3) {
+          lastWidth = w;
+          annotation.hide();
+          annotation.show();
+        } else if (lastWidth === 0) {
+          lastWidth = w;
+        }
       }
     });
     resizeObserver.observe(element);
