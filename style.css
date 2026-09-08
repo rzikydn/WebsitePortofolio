@@ -1168,6 +1168,49 @@ body.dark-mode .about-spatial-layer--sakura .about-asset-img {
     filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(244, 114, 182, 0.22)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
 }
 
+/* iOS Gyroscope Permission Floating Pill */
+.spatial-gyro-pill {
+    position: fixed;
+    bottom: 84px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(13, 21, 39, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(194, 248, 79, 0.45);
+    border-radius: 9999px;
+    color: #c2f84f;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 16px rgba(194, 248, 79, 0.25);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    animation: gyroPillPulse 2.5s infinite ease-in-out;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.spatial-gyro-pill--hide {
+    opacity: 0 !important;
+    transform: translateX(-50%) translateY(16px) !important;
+    pointer-events: none !important;
+}
+
+@keyframes gyroPillPulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 10px rgba(194, 248, 79, 0.2);
+    }
+    50% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 22px rgba(194, 248, 79, 0.45);
+    }
+}
+
 /* Black Section (Next Section) */
 .black-section {
     position: relative;
