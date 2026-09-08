@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import legacy from '@vitejs/plugin-legacy'
 import path from 'path'
 
 export default defineConfig({
@@ -14,7 +13,8 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.glb'],
   build: {
-    target: 'es2015',
+    target: 'es2020',
+    cssCodeSplit: true,
     modulePreload: false,
     rollupOptions: {
       input: {

@@ -20,16 +20,9 @@ import ExpandableScreenDemo from './ExpandableScreenDemo'
 // Comprehensive Preloader Asset Pipeline ("The Gate")
 // Preloads all critical images, 3D Lanyard, and mounts components
 // ============================================
+// Critical Hero images required for initial view
 const CRITICAL_IMAGES = [
-  '/images/logox.webp',
-  '/images/mockup1.webp',
-  '/images/mockup2.webp',
-  '/images/mockup3.webp',
-  '/images/mockup4.webp',
-  '/images/dragon2.webp',
-  '/images/caset.webp',
-  '/images/tv.webp',
-  '/images/sakura.webp'
+  '/images/logox.webp'
 ];
 
 let imagesLoaded = false;
@@ -46,14 +39,14 @@ function checkAllAssetsReady() {
   }
 }
 
-// Fallback safety: Release gate after max 3.2s even on slow connections
+// Fallback safety: Release gate after max 1.5s even on slow connections
 setTimeout(() => {
   imagesLoaded = true;
   lanyardLoaded = true;
   checkAllAssetsReady();
-}, 3200);
+}, 1500);
 
-// Preload and decode images asynchronously off the main thread
+// Preload critical hero images asynchronously
 let loadedCount = 0;
 CRITICAL_IMAGES.forEach((url) => {
   const img = new Image();
@@ -125,8 +118,8 @@ function App({ onLanyardReady }) {
 }
 
 // ============================================
-// Staggered Component Mounts under Preloader Curtain
-// Mounts all components across micro-ticks so main thread never drops frames
+// Staggered Idle Component Mounts
+// Mounts below-the-fold components during idle cycles to eliminate main-thread blocking
 // ============================================
 if (!window.__MAIN_JSX_MOUNTED__) {
   window.__MAIN_JSX_MOUNTED__ = true;
@@ -136,7 +129,7 @@ if (!window.__MAIN_JSX_MOUNTED__) {
     checkAllAssetsReady();
   };
 
-  // 1. Immediate: Hero Lanyard (warmed up with zero gravity under preloader) & Blurs
+  // 1. Immediate: Hero Lanyard & Blurs
   const root = document.getElementById('lanyard-root');
   if (root) {
     ReactDOM.createRoot(root).render(<App onLanyardReady={markLanyardReady} />);
@@ -152,114 +145,133 @@ if (!window.__MAIN_JSX_MOUNTED__) {
     ReactDOM.createRoot(blurTopRoot).render(<ProgressiveBlur height="250px" position="top" />);
   }
 
-  // 2. Tick 1 (+50ms): About Section (ScrollReveal)
-  setTimeout(() => {
-    const scrollRevealRoot = document.getElementById('scroll-reveal-root');
-    if (scrollRevealRoot) {
-      ReactDOM.createRoot(scrollRevealRoot).render(
-        <ScrollReveal
-          baseOpacity={0.1}
-          enableBlur={false}
-          baseRotation={0}
-          blurStrength={0}
-        >
-          Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
-          <Highlighter action="underline" color="#FF9800">
-            analyzing data
-          </Highlighter>{' '}
-          and{' '}
-          <Highlighter action="highlight" color="#87CEFA">
-            creating insights.
-          </Highlighter>{' '}
-          I love exploring datasets and visualizing compelling data stories.
-        </ScrollReveal>
-      );
+  // Helper: Run tasks when browser main thread is idle
+  const runWhenIdle = (fn, timeout = 2500) => {
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(fn, { timeout });
+    } else {
+      setTimeout(fn, 150);
     }
-  }, 50);
+  };
 
-  // 3. Tick 2 (+100ms): Works Section (Bento Grid & Works SVG)
-  setTimeout(() => {
-    const bentoRoot = document.getElementById('flowing-menu-root');
-    if (bentoRoot) {
-      ReactDOM.createRoot(bentoRoot).render(<BentoGrid />);
-    }
+  let deferredMounted = false;
+  const mountDeferredSections = () => {
+    if (deferredMounted) return;
+    deferredMounted = true;
 
-    const worksSvgRoot = document.getElementById('works-svg-root');
-    if (worksSvgRoot) {
-      ReactDOM.createRoot(worksSvgRoot).render(<SvgWorksScroll />);
-    }
-  }, 100);
-
-  // 4. Tick 3 (+150ms): Skills & Experience Sections
-  setTimeout(() => {
-    const logoLoopRoot = document.getElementById('logo-loop-root');
-    if (logoLoopRoot) {
-      const imageLogos = [
-        { src: "/images/React.webp", alt: "React", width: 156, height: 80 },
-        { src: "/images/Vue.webp", alt: "Vue", width: 142, height: 80 },
-        { src: "/images/Node.js.webp", alt: "Node.js", width: 142, height: 80 },
-        { src: "/images/Python.webp", alt: "Python", width: 142, height: 80 },
-        { src: "/images/TypeScript.webp", alt: "TypeScript", width: 142, height: 80 },
-        { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS", width: 157, height: 80 },
-        { src: "/images/Vite.webp", alt: "Vite", width: 142, height: 80 },
-        { src: "/images/HTML.webp", alt: "HTML", width: 142, height: 80 },
-        { src: "/images/GitLab.webp", alt: "GitLab", width: 142, height: 80 },
-      ];
-
-      const LogoLoopWrapper = () => {
-        const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-        useEffect(() => {
-          const handleResize = () => setIsMobile(window.innerWidth <= 768);
-          window.addEventListener('resize', handleResize);
-          return () => window.removeEventListener('resize', handleResize);
-        }, []);
-
-        return (
-          <LogoLoop
-            logos={imageLogos}
-            speed={120}
-            direction="left"
-            logoHeight={isMobile ? 80 : "8.75rem"}
-            gap={isMobile ? 50 : "8.75rem"}
-            hoverSpeed={0}
-            scaleOnHover
-            fadeOut
-            fadeOutColor="transparent"
-            ariaLabel="Technology skills"
-          />
+    // 2. About Section
+    runWhenIdle(() => {
+      const scrollRevealRoot = document.getElementById('scroll-reveal-root');
+      if (scrollRevealRoot) {
+        ReactDOM.createRoot(scrollRevealRoot).render(
+          <ScrollReveal
+            baseOpacity={0.1}
+            enableBlur={false}
+            baseRotation={0}
+            blurStrength={0}
+          >
+            Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
+            <Highlighter action="underline" color="#FF9800">
+              analyzing data
+            </Highlighter>{' '}
+            and{' '}
+            <Highlighter action="highlight" color="#87CEFA">
+              creating insights.
+            </Highlighter>{' '}
+            I love exploring datasets and visualizing compelling data stories.
+          </ScrollReveal>
         );
-      };
+      }
+    }, 1000);
 
-      ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
-    }
+    // 3. Works Section (Bento Grid & Works SVG)
+    runWhenIdle(() => {
+      const bentoRoot = document.getElementById('flowing-menu-root');
+      if (bentoRoot) {
+        ReactDOM.createRoot(bentoRoot).render(<BentoGrid />);
+      }
 
-    const expRoot = document.getElementById('experience-root');
-    if (expRoot) {
-      ReactDOM.createRoot(expRoot).render(<ExperienceAccordion />);
-    }
+      const worksSvgRoot = document.getElementById('works-svg-root');
+      if (worksSvgRoot) {
+        ReactDOM.createRoot(worksSvgRoot).render(<SvgWorksScroll />);
+      }
+    }, 1800);
 
-    const svgFollowRoot = document.getElementById('svg-follow-scroll-root');
-    if (svgFollowRoot) {
-      ReactDOM.createRoot(svgFollowRoot).render(<SvgFollowScroll />);
-    }
-  }, 150);
+    // 4. Skills & Experience Sections
+    runWhenIdle(() => {
+      const logoLoopRoot = document.getElementById('logo-loop-root');
+      if (logoLoopRoot) {
+        const imageLogos = [
+          { src: "/images/React.webp", alt: "React", width: 156, height: 80 },
+          { src: "/images/Vue.webp", alt: "Vue", width: 142, height: 80 },
+          { src: "/images/Node.js.webp", alt: "Node.js", width: 142, height: 80 },
+          { src: "/images/Python.webp", alt: "Python", width: 142, height: 80 },
+          { src: "/images/TypeScript.webp", alt: "TypeScript", width: 142, height: 80 },
+          { src: "/images/Tailwindcss6.webp", alt: "Tailwind CSS", width: 157, height: 80 },
+          { src: "/images/Vite.webp", alt: "Vite", width: 142, height: 80 },
+          { src: "/images/HTML.webp", alt: "HTML", width: 142, height: 80 },
+          { src: "/images/GitLab.webp", alt: "GitLab", width: 142, height: 80 },
+        ];
 
-  // 5. Tick 4 (+200ms): Certificates & Contact Sections
-  setTimeout(() => {
-    const certRoot = document.getElementById('certificates-root');
-    if (certRoot) {
-      ReactDOM.createRoot(certRoot).render(<MotionCarousel />);
-    }
+        const LogoLoopWrapper = () => {
+          const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-    const confettiRoot = document.getElementById('confetti-root');
-    if (confettiRoot) {
-      ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
-    }
+          useEffect(() => {
+            const handleResize = () => setIsMobile(window.innerWidth <= 768);
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+          }, []);
 
-    const contactBtnRoot = document.getElementById('contact-btn-root');
-    if (contactBtnRoot) {
-      ReactDOM.createRoot(contactBtnRoot).render(<ExpandableScreenDemo />);
-    }
-  }, 200);
+          return (
+            <LogoLoop
+              logos={imageLogos}
+              speed={120}
+              direction="left"
+              logoHeight={isMobile ? 80 : "8.75rem"}
+              gap={isMobile ? 50 : "8.75rem"}
+              hoverSpeed={0}
+              scaleOnHover
+              fadeOut
+              fadeOutColor="transparent"
+              ariaLabel="Technology skills"
+            />
+          );
+        };
+
+        ReactDOM.createRoot(logoLoopRoot).render(<LogoLoopWrapper />);
+      }
+
+      const expRoot = document.getElementById('experience-root');
+      if (expRoot) {
+        ReactDOM.createRoot(expRoot).render(<ExperienceAccordion />);
+      }
+
+      const svgFollowRoot = document.getElementById('svg-follow-scroll-root');
+      if (svgFollowRoot) {
+        ReactDOM.createRoot(svgFollowRoot).render(<SvgFollowScroll />);
+      }
+    }, 2400);
+
+    // 5. Certificates & Contact Sections
+    runWhenIdle(() => {
+      const certRoot = document.getElementById('certificates-root');
+      if (certRoot) {
+        ReactDOM.createRoot(certRoot).render(<MotionCarousel />);
+      }
+
+      const confettiRoot = document.getElementById('confetti-root');
+      if (confettiRoot) {
+        ReactDOM.createRoot(confettiRoot).render(<ConfettiSideCannons />);
+      }
+
+      const contactBtnRoot = document.getElementById('contact-btn-root');
+      if (contactBtnRoot) {
+        ReactDOM.createRoot(contactBtnRoot).render(<ExpandableScreenDemo />);
+      }
+    }, 3000);
+  };
+
+  // Trigger mounting when curtain drops or after early initial idle window
+  window.addEventListener('lanyard-drop', mountDeferredSections, { once: true });
+  setTimeout(mountDeferredSections, 600);
 }

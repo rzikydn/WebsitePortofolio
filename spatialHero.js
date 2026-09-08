@@ -1,12 +1,12 @@
 /**
  * spatialHero.js
- * Multi-scene 3D Spatial Scenes / Spatial Wallpaper parallax engine.
- * Supports:
- * - Both Hero section (#home) and About section (#about) with independent scene observation.
- * - Multi-axis translation (X, Y, Z) with stereoscopic depth separation.
- * - Subtle 3D perspective tilt (rotateX, rotateY) following cursor/device tilt.
- * - Desktop mousemove tracking + Mobile Gyroscope (DeviceOrientation) support.
- * - Hardware-accelerated CSS 3D transforms with buttery-smooth LERP damping and auto-sleep.
+ * 3D Spatial Scenes / Spatial Wallpaper parallax engine.
+ * 
+ * Behavior:
+ * - Desktop: Full 3D Spatial Wallpaper parallax following mouse cursor (Hero & About sections).
+ *   Stereoscopic Z-depth translation and subtle perspective tilt with smooth LERP damping.
+ * - Mobile: Pure scroll only. Spatial 3D parallax, gyroscope sensors, and layer shifts are completely
+ *   disabled to ensure native, seamless, lightweight scrolling without layout shifts.
  */
 
 export function initSpatialHero() {
@@ -16,6 +16,17 @@ export function initSpatialHero() {
 
     const scenes = document.querySelectorAll('.spatial-scene');
     if (!scenes.length) return;
+
+    // Remove any leftover gyroscope permission pill if previously present
+    const leftoverPill = document.getElementById('spatial-gyro-pill');
+    if (leftoverPill) leftoverPill.remove();
+
+    // Helper: Determine if device/viewport is desktop with mouse cursor
+    function isDesktopViewport() {
+        const isSmallScreen = window.innerWidth <= 768;
+        const isTouchOnly = window.matchMedia('(pointer: coarse) and (hover: none)').matches;
+        return !isSmallScreen && !isTouchOnly;
+    }
 
     // Build scene models
     const sceneDataList = [];
@@ -69,32 +80,47 @@ export function initSpatialHero() {
 
     if (!sceneDataList.length) return;
 
-    // Detect mobile / touch screens with high reliability
-    const isMobileDevice = 
-        window.innerWidth <= 768 || 
-        ('ontouchstart' in window) || 
-        (navigator.maxTouchPoints > 0) || 
-        window.matchMedia('(pointer: coarse)').matches;
+    // Reset all layer transforms to ensure clean, static CSS layout (used on mobile / resize)
+    function resetAllLayers() {
+        sceneDataList.forEach(scene => {
+            scene.layerData.forEach(item => {
+                item.currentX = 0;
+                item.currentY = 0;
+                item.currentRotX = 0;
+                item.currentRotY = 0;
+                item.targetX = 0;
+                item.targetY = 0;
+                item.targetRotX = 0;
+                item.targetRotY = 0;
+                item.element.style.transform = '';
+            });
+        });
+    }
 
-    // Movement & tilt constants calibrated for viewport size
-    // Desktop has wide cursor travel; mobile has responsive gyroscope tilt travel
-    const MAX_TRAVEL_X = isMobileDevice ? 45 : 125;   // Noticeable, tangible travel on mobile phone tilt
-    const MAX_TRAVEL_Y = isMobileDevice ? 32 : 80;    // Fluid vertical responsiveness on tilt
-    const MAX_TILT_DEG = isMobileDevice ? 6.2 : 7.2;  // Pronounced, tactile 3D perspective tilt
-    const LERP_FACTOR = 0.085; // Butter-smooth damping
+    // Movement & tilt constants calibrated for desktop mouse tracking
+    const MAX_TRAVEL_X = 125;   // Max horizontal travel (px)
+    const MAX_TRAVEL_Y = 80;    // Max vertical travel (px)
+    const MAX_TILT_DEG = 7.2;   // Subtle 3D perspective tilt (deg)
+    const LERP_FACTOR = 0.085;  // Butter-smooth damping
 
     let targetNormalizedX = 0;
     let targetNormalizedY = 0;
     let isRunning = false;
     let rafId = null;
-    let gyroscopeActive = false;
 
     function hasVisibleScenes() {
         return sceneDataList.some(s => s.isInViewport);
     }
 
-    // Smooth render loop with auto-sleep when movement settles
+    // Smooth render loop for desktop
     function updateFrame() {
+        if (!isDesktopViewport()) {
+            resetAllLayers();
+            isRunning = false;
+            rafId = null;
+            return;
+        }
+
         let isMoving = false;
 
         for (let s = 0; s < sceneDataList.length; s++) {
@@ -104,26 +130,13 @@ export function initSpatialHero() {
             const layerData = scene.layerData;
             for (let i = 0; i < layerData.length; i++) {
                 const item = layerData[i];
-                const isLanyardLayer = item.element.classList.contains('spatial-layer--fg');
 
                 item.targetX = targetNormalizedX * MAX_TRAVEL_X * item.depth;
+                item.targetY = targetNormalizedY * MAX_TRAVEL_Y * item.depth;
 
-                // On mobile, lock lanyard Y translation so the strap anchor stays pinned off-screen top
-                if (isMobileDevice && isLanyardLayer) {
-                    item.targetY = 0;
-                } else {
-                    item.targetY = targetNormalizedY * MAX_TRAVEL_Y * item.depth;
-                }
-
-                // Perspective tilt: on mobile, do not rotate lanyard on X axis (which tilts strap down)
                 if (item.depth > 0) {
-                    if (isMobileDevice && isLanyardLayer) {
-                        item.targetRotX = 0;
-                        item.targetRotY = targetNormalizedX * MAX_TILT_DEG * 0.5;
-                    } else {
-                        item.targetRotX = -targetNormalizedY * MAX_TILT_DEG * item.depth * item.tiltFactor;
-                        item.targetRotY = targetNormalizedX * MAX_TILT_DEG * item.depth * item.tiltFactor;
-                    }
+                    item.targetRotX = -targetNormalizedY * MAX_TILT_DEG * item.depth * item.tiltFactor;
+                    item.targetRotY = targetNormalizedX * MAX_TILT_DEG * item.depth * item.tiltFactor;
                 } else {
                     item.targetRotX = 0;
                     item.targetRotY = 0;
@@ -166,6 +179,7 @@ export function initSpatialHero() {
     }
 
     function startLoop() {
+        if (!isDesktopViewport()) return;
         if (!isRunning && hasVisibleScenes()) {
             isRunning = true;
             rafId = requestAnimationFrame(updateFrame);
@@ -174,14 +188,9 @@ export function initSpatialHero() {
 
     // --- Desktop: Mouse movement handler ---
     function onMouseMove(e) {
-        // If gyroscope is actively sending sensor updates, lock out mouse events
-        if (gyroscopeActive) return;
-        // On mobile devices, ignore mouse events completely so finger/scroll touch gestures do not hijack parallax
-        if (isMobileDevice) return;
-        // Extra safety against simulated mouse events generated from touch
-        if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
-        if (e.pointerType === 'touch') return;
-
+        if (!isDesktopViewport()) return;
+        // Ignore touch-emulated pointer events
+        if (e.pointerType === 'touch' || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents)) return;
         if (!hasVisibleScenes()) return;
 
         const width = window.innerWidth;
@@ -194,143 +203,38 @@ export function initSpatialHero() {
     }
 
     function onMouseLeave() {
-        if (gyroscopeActive || isMobileDevice) return;
+        if (!isDesktopViewport()) return;
         targetNormalizedX = 0;
         targetNormalizedY = 0;
         startLoop();
     }
 
-    // --- Mobile: DeviceOrientation (Gyroscope) handler ---
-    let calibratedBeta = null;
-    let calibratedGamma = null;
-    const SENSITIVITY_RANGE_GAMMA = 22; // Degrees of tilt from center for max X parallax
-    const SENSITIVITY_RANGE_BETA = 22;  // Degrees of tilt from center for max Y parallax
-
-    function onDeviceOrientation(e) {
-        if (e.gamma === null || e.beta === null) return;
-
-        // Flag gyroscope as actively delivering sensor hardware data
-        gyroscopeActive = true;
-
-        if (!hasVisibleScenes()) return;
-
-        // Account for screen rotation (portrait vs landscape)
-        const orientationAngle = (window.screen?.orientation?.angle) ?? window.orientation ?? 0;
-        let rawGamma = e.gamma;
-        let rawBeta = e.beta;
-
-        if (orientationAngle === 90) {
-            rawGamma = e.beta;
-            rawBeta = -e.gamma;
-        } else if (orientationAngle === -90 || orientationAngle === 270) {
-            rawGamma = -e.beta;
-            rawBeta = e.gamma;
-        } else if (orientationAngle === 180) {
-            rawGamma = -e.gamma;
-            rawBeta = -e.beta;
-        }
-
-        // Dynamic auto-calibration for natural hand-holding angle:
-        // Establish natural holding angle on first read, and gently adapt over time
-        if (calibratedBeta === null) {
-            calibratedBeta = Math.max(20, Math.min(70, rawBeta));
-            calibratedGamma = Math.max(-20, Math.min(20, rawGamma));
-        } else {
-            // Continuous smooth recentering (0.25% per event) prevents getting stuck if user changes posture
-            calibratedBeta += (Math.max(15, Math.min(75, rawBeta)) - calibratedBeta) * 0.0025;
-            calibratedGamma += (Math.max(-25, Math.min(25, rawGamma)) - calibratedGamma) * 0.0025;
-        }
-
-        const deltaGamma = rawGamma - calibratedGamma;
-        const deltaBeta = rawBeta - calibratedBeta;
-
-        targetNormalizedX = Math.max(-1, Math.min(1, deltaGamma / SENSITIVITY_RANGE_GAMMA));
-        targetNormalizedY = Math.max(-1, Math.min(1, deltaBeta / SENSITIVITY_RANGE_BETA));
-
-        startLoop();
+    // --- Handle window resize between Desktop and Mobile ---
+    let resizeTimer = null;
+    function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (!isDesktopViewport()) {
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+                isRunning = false;
+                targetNormalizedX = 0;
+                targetNormalizedY = 0;
+                resetAllLayers();
+            } else {
+                if (hasVisibleScenes()) {
+                    startLoop();
+                }
+            }
+        }, 150);
     }
 
-    function bindOrientationEvents() {
-        window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true });
-        window.addEventListener('deviceorientationabsolute', onDeviceOrientation, { passive: true });
-    }
-
-    function showIOSPermissionPill(onRequest) {
-        if (sessionStorage.getItem('spatial_gyro_granted') === 'true') {
-            return;
-        }
-
-        if (document.getElementById('spatial-gyro-pill')) return;
-
-        const pill = document.createElement('button');
-        pill.id = 'spatial-gyro-pill';
-        pill.className = 'spatial-gyro-pill';
-        pill.setAttribute('aria-label', 'Aktifkan Efek 3D Gyroscope');
-        pill.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"></path>
-            </svg>
-            <span>Aktifkan 3D Gyroscope</span>
-        `;
-
-        pill.addEventListener('click', (e) => {
-            e.stopPropagation();
-            onRequest();
-        });
-
-        document.body.appendChild(pill);
-    }
-
-    function cleanupPermissionUI() {
-        sessionStorage.setItem('spatial_gyro_granted', 'true');
-        const pill = document.getElementById('spatial-gyro-pill');
-        if (pill) {
-            pill.classList.add('spatial-gyro-pill--hide');
-            setTimeout(() => pill.remove(), 400);
-        }
-    }
-
-    function initGyroscope() {
-        if (typeof window === 'undefined') return;
-
-        // iOS 13+ requires explicit user gesture permission
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            const checkAndRequest = () => {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            bindOrientationEvents();
-                            cleanupPermissionUI();
-                        }
-                    })
-                    .catch(err => {
-                        console.warn('Gyroscope permission request:', err);
-                    });
-            };
-
-            // Attempt on first direct user gesture (touchend or click)
-            const onUserGesture = () => {
-                checkAndRequest();
-            };
-
-            window.addEventListener('touchend', onUserGesture, { passive: true });
-            window.addEventListener('click', onUserGesture, { passive: true });
-
-            // Display floating badge on iOS to guarantee user can activate with a single tap
-            showIOSPermissionPill(checkAndRequest);
-        } else {
-            // Android & all modern standards-compliant mobile browsers (HTTPS)
-            bindOrientationEvents();
-        }
-    }
-
-    // Always register desktop mouse tracking (safely ignored on mobile and when gyro is active)
+    // Desktop events
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     document.addEventListener('mouseleave', onMouseLeave, { passive: true });
-
-    // Always initialize mobile gyroscope support
-    initGyroscope();
+    window.addEventListener('resize', onResize, { passive: true });
 
     // IntersectionObserver to observe each scene container or its sticky wrapper
     const observer = new IntersectionObserver((entries) => {
@@ -342,7 +246,7 @@ export function initSpatialHero() {
 
             if (match) {
                 match.isInViewport = entry.isIntersecting;
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && isDesktopViewport()) {
                     startLoop();
                 }
             }
@@ -354,7 +258,10 @@ export function initSpatialHero() {
         observer.observe(wrapper || scene.sceneElement);
     });
 
-    if (hasVisibleScenes()) {
+    // Initial activation check
+    if (!isDesktopViewport()) {
+        resetAllLayers();
+    } else if (hasVisibleScenes()) {
         startLoop();
     }
 }

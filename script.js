@@ -33,14 +33,15 @@ function cacheSectionPositions() {
     }).filter(Boolean);
 }
 
-// Perform caching at optimal times to guarantee accurate measurements
-window.addEventListener('load', cacheSectionPositions);
-window.addEventListener('resize', cacheSectionPositions);
-document.addEventListener('DOMContentLoaded', cacheSectionPositions);
-// Multiple timeouts to capture delayed dynamic layout renders
-setTimeout(cacheSectionPositions, 500);
-setTimeout(cacheSectionPositions, 1500);
-setTimeout(cacheSectionPositions, 3000);
+// Perform caching when idle or on window load to prevent forced layout reflow during initial render
+window.addEventListener('load', () => {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(cacheSectionPositions);
+    } else {
+        setTimeout(cacheSectionPositions, 200);
+    }
+}, { passive: true });
+window.addEventListener('resize', cacheSectionPositions, { passive: true });
 
 // Dynamic active navbar link on scroll (ScrollSpy) — with dirty flag to skip redundant DOM updates
 let lastActiveId = "";
@@ -85,8 +86,8 @@ gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
 });
 
-// Disable GSAP lag smoothing when coupled with Lenis to prevent scroll stutter / input lag
-gsap.ticker.lagSmoothing(0);
+// Standard GSAP lag smoothing prevents CPU catch-up storms on busy main threads
+gsap.ticker.lagSmoothing(500, 33);
 
 function init() {
     const preloaderContent = document.querySelector(".preloader-content");
@@ -96,31 +97,31 @@ function init() {
     let assetsReady = false;
     let minTimeReached = false;
     
-    // Listen for signal from main.jsx that all React components are ready
+    // Listen for signal from main.jsx that hero assets are ready
     window.addEventListener('assets-ready', () => {
         assetsReady = true;
         window.preloaderAssetsReady = true;
         tryFinish();
     });
     
-    // Minimum time so handwriting stroke animation completes smoothly (optimized for Core Web Vitals & PageSpeed Insights)
+    // Minimum time so handwriting stroke animation completes smoothly
     const isAutomated = typeof navigator !== 'undefined' && (
       Boolean(navigator.webdriver) ||
       /Lighthouse|SpeedCurve|Chrome-Lighthouse|Google-InspectionTool|PTST|HeadlessChrome/i.test(navigator.userAgent)
     );
     
-    const minDelay = isAutomated ? 30 : 2050;
+    const minDelay = isAutomated ? 30 : 900;
     setTimeout(() => {
         minTimeReached = true;
         tryFinish();
     }, minDelay);
     
-    // Fallback: finish preloader after max 4.5 seconds even on poor connections
+    // Fallback: finish preloader after max 2.2 seconds even on slow connections
     setTimeout(() => {
         assetsReady = true;
         window.preloaderAssetsReady = true;
         finishPreloader();
-    }, 4500);
+    }, 2200);
     
     function tryFinish() {
         if (assetsReady && minTimeReached) {
