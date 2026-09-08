@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, useTexture, Lightformer } from '@react-three/drei';
+import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { useGLTF, useTexture } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
@@ -53,7 +53,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
         dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, isMobile ? 1.35 : 1.6)] : [1, 1.5]}
-        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance" }}
+        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance", stencil: false }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
@@ -177,7 +177,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
 
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      const isMotionActive = Math.abs(ang.x) > 0.002 || Math.abs(ang.y) > 0.002 || Math.abs(ang.z) > 0.002 || Math.abs(rot.y) > 0.003;
+      if (isMotionActive || dragged) {
+        card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      }
     }
   });
 
@@ -202,12 +205,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
           <group
             scale={isMobile ? 2.25 : 2.55}
             position={[0, isMobile ? -1.2 : -1.36, -0.05]}
-            onPointerOver={() => hover(true)}
+            onPointerOver={() => { hover(true); card.current?.wakeUp(); }}
             onPointerOut={() => hover(false)}
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
             onPointerDown={e => (
               e.target.setPointerCapture(e.pointerId),
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
+              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))),
+              [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp())
             )}
           >
             <mesh geometry={nodes.card.geometry}>
@@ -238,6 +242,3 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
     </>
   );
 }
-
-useGLTF.preload(cardGLB);
-useTexture.preload(lanyard);
