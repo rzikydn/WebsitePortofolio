@@ -36,60 +36,170 @@ const processChildren = (children, keyPrefix = 'sr') => {
 
 const ScrollReveal = ({
   children,
-  enableBlur = true,
+  slide1,
+  slide2,
   baseOpacity = 0.1,
-  blurStrength = 4,
   containerClassName = '',
   textClassName = '',
-  pinContainer = '.about-section',
 }) => {
   const containerRef = useRef(null);
+  const slide1Ref = useRef(null);
+  const slide2Ref = useRef(null);
 
-  const splitText = useMemo(() => {
-    return processChildren(children);
-  }, [children]);
+  const content1 = slide1 || children;
+  const content2 = slide2;
+
+  const splitText1 = useMemo(() => {
+    return content1 ? processChildren(content1, 'sr-s1') : null;
+  }, [content1]);
+
+  const splitText2 = useMemo(() => {
+    return content2 ? processChildren(content2, 'sr-s2') : null;
+  }, [content2]);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const container = containerRef.current;
+    const s1 = slide1Ref.current;
+    const s2 = slide2Ref.current;
+    if (!container || !s1) return;
 
-    const pinEl = pinContainer ? document.querySelector(pinContainer) : null;
-    const wordElements = el.querySelectorAll('.word');
+    const words1 = s1.querySelectorAll('.word');
+    const words2 = s2 ? s2.querySelectorAll('.word') : [];
 
-    const st = gsap.fromTo(
-      wordElements,
-      { opacity: baseOpacity },
-      {
-        ease: 'none',
-        opacity: 1,
-        stagger: 0.05,
-        force3D: true,
-        scrollTrigger: {
-          trigger: '.about-wrapper',
-          start: 'top top',
-          end: () => {
-            const wrapper = document.querySelector('.about-wrapper');
-            // End animation at 60% of wrapper scroll distance
-            return `+=${wrapper ? wrapper.offsetHeight * 0.6 : 1500}`;
+    // Fallback if only single slide is provided
+    if (!s2 || words2.length === 0) {
+      const st = gsap.fromTo(
+        words1,
+        { opacity: baseOpacity },
+        {
+          ease: 'none',
+          opacity: 1,
+          stagger: 0.05,
+          force3D: true,
+          scrollTrigger: {
+            trigger: '.about-wrapper',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            fastScrollEnd: true,
+            invalidateOnRefresh: true,
           },
-          scrub: true,
-          fastScrollEnd: true,
         }
-      }
+      );
+      return () => {
+        if (st.scrollTrigger) st.scrollTrigger.kill();
+        st.kill();
+      };
+    }
+
+    // MULTI-SLIDE CONTINUOUS HORIZONTAL TRANSITION & DUAL SCROLL REVEAL
+    // Initial states: slide 1 centered; slide 2 parked off-screen to the right
+    gsap.set(s1, { x: '0vw', opacity: 1, force3D: true });
+    gsap.set(s2, { x: '120vw', opacity: 0, force3D: true });
+    gsap.set(words1, { opacity: baseOpacity, force3D: true });
+    gsap.set(words2, { opacity: baseOpacity, force3D: true });
+
+    // Single synchronized scrubbed timeline connected to .about-wrapper scroll
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.about-wrapper',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+        fastScrollEnd: true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // Timeline normalized scale (Total duration: 10.0 units)
+    // -----------------------------------------------------------------
+    // Phase 1: Slide 1 Scroll Reveal (0.0 -> 2.1)
+    // Finishes all words quickly and cleanly
+    tl.to(
+      words1,
+      {
+        opacity: 1,
+        stagger: {
+          amount: 1.8,
+        },
+        ease: 'none',
+        duration: 0.3,
+      },
+      0
     );
 
+    // Phase 2: Settle / Reading buffer for Slide 1 (2.1 -> 3.2)
+    // Slide 1 stays centered and fully visible for ~11% of scroll
+
+    // Phase 3: Continuous Horizontal Slide (3.2 -> 4.6)
+    // Slide 1 slides OUT to the left; Slide 2 slides IN from the right simultaneously
+    tl.to(
+      s1,
+      {
+        x: '-120vw',
+        opacity: 0,
+        ease: 'power2.inOut',
+        duration: 1.4,
+      },
+      3.2
+    );
+
+    tl.fromTo(
+      s2,
+      { x: '120vw', opacity: 0 },
+      {
+        x: '0vw',
+        opacity: 1,
+        ease: 'power2.inOut',
+        duration: 1.4,
+      },
+      3.2
+    );
+
+    // Phase 4: Slide 2 Scroll Reveal (4.6 -> 6.7)
+    // Finishes all 27 words by t = 6.7 (67% of total scroll)
+    tl.to(
+      words2,
+      {
+        opacity: 1,
+        stagger: {
+          amount: 1.8,
+        },
+        ease: 'none',
+        duration: 0.3,
+      },
+      4.6
+    );
+
+    // Phase 5: Generous Settle / Reading buffer for Slide 2 (6.7 -> 10.0)
+    // Slide 2 is 100% revealed, highlighted, and rock-solid in the center
+    // for a full 33% of the scroll runway before My Works begins to scroll up!
+    tl.set({}, {}, 10.0);
+
     return () => {
-      if (st && st.scrollTrigger) {
-        st.scrollTrigger.kill();
-      }
-      st.kill();
+      if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      tl.kill();
     };
-  }, [enableBlur, baseOpacity, blurStrength, pinContainer]);
+  }, [baseOpacity, splitText1, splitText2]);
 
   return (
-    <h2 ref={containerRef} className={`scroll-reveal ${containerClassName}`}>
-      <p className={`scroll-reveal-text ${textClassName}`}>{splitText}</p>
-    </h2>
+    <div ref={containerRef} className={`scroll-reveal-slider ${containerClassName}`}>
+      {/* Slide 1 */}
+      <div ref={slide1Ref} className="scroll-reveal-slide scroll-reveal-slide-1">
+        <h2 className="scroll-reveal">
+          <p className={`scroll-reveal-text ${textClassName}`}>{splitText1}</p>
+        </h2>
+      </div>
+
+      {/* Slide 2 (if provided) */}
+      {content2 ? (
+        <div ref={slide2Ref} className="scroll-reveal-slide scroll-reveal-slide-2">
+          <h2 className="scroll-reveal">
+            <p className={`scroll-reveal-text ${textClassName}`}>{splitText2}</p>
+          </h2>
+        </div>
+      ) : null}
+    </div>
   );
 };
 

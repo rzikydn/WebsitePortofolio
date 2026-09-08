@@ -895,7 +895,7 @@ body.dark-mode .btn-copy:hover {
 .about-wrapper {
     position: relative;
     width: 100%;
-    height: 350vh;
+    height: 650vh;
     z-index: 5;
     background-color: #ffffff;
     contain: layout style;
@@ -1110,7 +1110,7 @@ body.dark-mode .btn-copy:hover {
 
 @media (max-width: 768px) {
     .about-wrapper {
-        height: 500vh;
+        height: 800vh;
     }
 
     .about-section {

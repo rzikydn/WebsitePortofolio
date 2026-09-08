@@ -10,9 +10,9 @@
  */
 
 export function initSpatialHero() {
-    // Respect reduced motion accessibility preference
+    // Check reduced motion preference (soft scale instead of hard bailout to ensure Windows compatibility)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    const motionScale = prefersReducedMotion ? 0.4 : 1.0;
 
     const scenes = document.querySelectorAll('.spatial-scene');
     if (!scenes.length) return;
@@ -21,11 +21,9 @@ export function initSpatialHero() {
     const leftoverPill = document.getElementById('spatial-gyro-pill');
     if (leftoverPill) leftoverPill.remove();
 
-    // Helper: Determine if device/viewport is desktop with mouse cursor
+    // Helper: Determine if device/viewport is desktop (> 768px width)
     function isDesktopViewport() {
-        const isSmallScreen = window.innerWidth <= 768;
-        const isTouchOnly = window.matchMedia('(pointer: coarse) and (hover: none)').matches;
-        return !isSmallScreen && !isTouchOnly;
+        return window.innerWidth > 768;
     }
 
     // Build scene models
@@ -98,18 +96,26 @@ export function initSpatialHero() {
     }
 
     // Movement & tilt constants calibrated for desktop mouse tracking
-    const MAX_TRAVEL_X = 125;   // Max horizontal travel (px)
-    const MAX_TRAVEL_Y = 80;    // Max vertical travel (px)
-    const MAX_TILT_DEG = 7.2;   // Subtle 3D perspective tilt (deg)
-    const LERP_FACTOR = 0.085;  // Butter-smooth damping
+    const MAX_TRAVEL_X = 125 * motionScale;   // Max horizontal travel (px)
+    const MAX_TRAVEL_Y = 80 * motionScale;    // Max vertical travel (px)
+    const MAX_TILT_DEG = 7.2 * motionScale;   // Subtle 3D perspective tilt (deg)
+    const LERP_FACTOR = 0.085;                // Butter-smooth damping
 
     let targetNormalizedX = 0;
     let targetNormalizedY = 0;
     let isRunning = false;
     let rafId = null;
 
+    function isSceneInViewport(scene) {
+        if (scene.isInViewport) return true;
+        const targetEl = scene.sceneElement.closest('.about-wrapper') || scene.sceneElement;
+        if (!targetEl) return false;
+        const r = targetEl.getBoundingClientRect();
+        return r.bottom > 0 && r.top < window.innerHeight;
+    }
+
     function hasVisibleScenes() {
-        return sceneDataList.some(s => s.isInViewport);
+        return sceneDataList.some(isSceneInViewport);
     }
 
     // Smooth render loop for desktop
@@ -125,7 +131,7 @@ export function initSpatialHero() {
 
         for (let s = 0; s < sceneDataList.length; s++) {
             const scene = sceneDataList[s];
-            if (!scene.isInViewport) continue;
+            if (!isSceneInViewport(scene)) continue;
 
             const layerData = scene.layerData;
             for (let i = 0; i < layerData.length; i++) {
@@ -186,11 +192,11 @@ export function initSpatialHero() {
         }
     }
 
-    // --- Desktop: Mouse movement handler ---
-    function onMouseMove(e) {
+    // --- Desktop: Mouse & pointer movement handler ---
+    function onPointerMove(e) {
         if (!isDesktopViewport()) return;
-        // Ignore touch-emulated pointer events
-        if (e.pointerType === 'touch' || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents)) return;
+        // Only ignore direct touch contact (e.pointerType === 'touch')
+        if (e.pointerType === 'touch') return;
         if (!hasVisibleScenes()) return;
 
         const width = window.innerWidth;
@@ -231,8 +237,9 @@ export function initSpatialHero() {
         }, 150);
     }
 
-    // Desktop events
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    // Desktop events - bind both pointermove and mousemove for complete cross-platform support
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('mousemove', onPointerMove, { passive: true });
     document.addEventListener('mouseleave', onMouseLeave, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
 

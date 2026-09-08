@@ -1,5 +1,26 @@
 .scroll-reveal {
   margin: 0;
+  width: 100%;
+}
+
+.scroll-reveal-slider {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-items: center;
+  overflow: visible;
+  margin: 0 auto;
+}
+
+.scroll-reveal-slide {
+  grid-area: 1 / 1;
+  width: 100%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .scroll-reveal-text {
