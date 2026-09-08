@@ -16,6 +16,8 @@
 .word {
   display: inline-block;
   font-family: "Elms Sans", sans-serif;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .rough-annotation-svg {

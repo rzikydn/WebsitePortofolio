@@ -874,6 +874,7 @@ body.dark-mode .btn-copy:hover {
     height: 350vh;
     z-index: 5;
     background-color: #ffffff;
+    contain: layout style;
 }
 
 .about-section {
@@ -886,6 +887,7 @@ body.dark-mode .btn-copy:hover {
     padding: 20px;
     position: sticky;
     top: 0;
+    contain: layout style;
 }
 
 .about-section.spatial-scene {
@@ -946,6 +948,7 @@ body.dark-mode .btn-copy:hover {
     pointer-events: none;
     z-index: 22;
     transform-style: preserve-3d;
+    contain: layout style;
 }
 
 .about-spatial-layer {
@@ -989,6 +992,9 @@ body.dark-mode .btn-copy:hover {
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
     pointer-events: auto;
     cursor: default;
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .about-asset-float--dragon {
@@ -1017,10 +1023,10 @@ body.dark-mode .btn-copy:hover {
 }
 
 .about-asset-float:hover .about-asset-img {
-    filter: drop-shadow(0 0 22px rgba(0, 0, 0, 0.28)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.22)) brightness(1.03);
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.30)) brightness(1.03);
 }
 
-/* Asset Image Render Settings (Smooth black shadow surrounding assets) */
+/* Asset Image Render Settings (Smooth hardware-composited black shadow surrounding assets) */
 .about-asset-img {
     display: block;
     width: 100%;
@@ -1028,26 +1034,29 @@ body.dark-mode .btn-copy:hover {
     object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.20)) drop-shadow(0 8px 22px rgba(0, 0, 0, 0.16));
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.22));
     transition: filter 0.35s ease, transform 0.35s ease;
 }
 
-/* Ambient Floating Keyframes */
+/* Ambient Floating Keyframes with hardware-composited translate3d */
 @keyframes spatialFloatA {
     0%, 100% {
-        transform: translateY(0px) rotate(var(--asset-base-rot, 0deg));
+        transform: translate3d(0, 0px, 0) rotate(var(--asset-base-rot, 0deg));
     }
     50% {
-        transform: translateY(-8px) rotate(calc(var(--asset-base-rot, 0deg) + 1.2deg));
+        transform: translate3d(0, -8px, 0) rotate(calc(var(--asset-base-rot, 0deg) + 1.2deg));
     }
 }
 
 @keyframes spatialFloatB {
     0%, 100% {
-        transform: translateY(0px) rotate(var(--asset-base-rot, 0deg));
+        transform: translate3d(0, 0px, 0) rotate(var(--asset-base-rot, 0deg));
     }
     50% {
-        transform: translateY(-9px) rotate(calc(var(--asset-base-rot, 0deg) - 1.5deg));
+        transform: translate3d(0, -9px, 0) rotate(calc(var(--asset-base-rot, 0deg) - 1.5deg));
     }
 }
 
@@ -1156,29 +1165,29 @@ body.dark-mode .about-text {
     color: #475569;
 }
 
-/* Dark Mode Spatial Assets Shadows */
+/* Dark Mode Spatial Assets Shadows (Consolidated GPU-friendly 2-pass elevation + neon glow) */
 body.dark-mode .about-asset-img {
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85));
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.85));
 }
 
 body.dark-mode .about-asset-float:hover .about-asset-img {
-    filter: drop-shadow(0 0 24px rgba(0, 0, 0, 0.9)) drop-shadow(0 14px 32px rgba(0, 0, 0, 0.95)) brightness(1.06);
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.95)) brightness(1.06);
 }
 
 body.dark-mode .about-spatial-layer--dragon .about-asset-img {
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.22)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(56, 189, 248, 0.30));
 }
 
 body.dark-mode .about-spatial-layer--caset .about-asset-img {
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 16px rgba(239, 68, 68, 0.16)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(239, 68, 68, 0.25));
 }
 
 body.dark-mode .about-spatial-layer--tv .about-asset-img {
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(129, 140, 248, 0.20)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(129, 140, 248, 0.28));
 }
 
 body.dark-mode .about-spatial-layer--sakura .about-asset-img {
-    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 18px rgba(244, 114, 182, 0.22)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(244, 114, 182, 0.30));
 }
 
 /* iOS Gyroscope Permission Floating Pill */

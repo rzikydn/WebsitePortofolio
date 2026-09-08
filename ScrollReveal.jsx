@@ -63,15 +63,17 @@ const ScrollReveal = ({
         ease: 'none',
         opacity: 1,
         stagger: 0.05,
+        force3D: true,
         scrollTrigger: {
           trigger: '.about-wrapper',
           start: 'top top',
           end: () => {
             const wrapper = document.querySelector('.about-wrapper');
-            // End animation at 80% of wrapper scroll distance
+            // End animation at 60% of wrapper scroll distance
             return `+=${wrapper ? wrapper.offsetHeight * 0.6 : 1500}`;
           },
           scrub: true,
+          fastScrollEnd: true,
         }
       }
     );

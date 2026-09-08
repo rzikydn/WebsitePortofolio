@@ -22,6 +22,10 @@
   transform: translateZ(0);
 }
 
+.svg-scroll-line path {
+  will-change: stroke-dashoffset;
+}
+
 /* Ensure the main mount root is styled properly inside the sticky about-section */
 #svg-follow-scroll-root {
   position: absolute;

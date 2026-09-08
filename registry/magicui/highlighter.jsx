@@ -40,9 +40,13 @@ export function Highlighter({
 
     annotation = annotate(element, annotationConfig);
 
+    let checkRaf = null;
+
     const checkVisibility = () => {
       const wordEl = element.querySelector('.word') || element;
-      const computedOpacity = parseFloat(window.getComputedStyle(wordEl).opacity);
+      // Read opacity directly from inline style set by GSAP to avoid expensive window.getComputedStyle() layout thrashing
+      const inlineOpacity = wordEl.style ? wordEl.style.opacity : "";
+      const computedOpacity = inlineOpacity !== "" ? parseFloat(inlineOpacity) : 1;
 
       if (computedOpacity >= 0.6) {
         if (!isShown) {
@@ -66,11 +70,19 @@ export function Highlighter({
       }
     };
 
+    const scheduleCheck = () => {
+      if (checkRaf) return;
+      checkRaf = requestAnimationFrame(() => {
+        checkVisibility();
+        checkRaf = null;
+      });
+    };
+
     // Initially check and hide if unrevealed
     checkVisibility();
 
     const mutationObserver = new MutationObserver(() => {
-      checkVisibility();
+      scheduleCheck();
     });
 
     const words = element.querySelectorAll('.word');
@@ -82,7 +94,7 @@ export function Highlighter({
       mutationObserver.observe(element, { attributes: true, attributeFilter: ['style', 'class'] });
     }
 
-    window.addEventListener('scroll', checkVisibility, { passive: true });
+    window.addEventListener('scroll', scheduleCheck, { passive: true });
 
     resizeObserver = new ResizeObserver(() => {
       if (isShown) {
@@ -93,8 +105,9 @@ export function Highlighter({
     resizeObserver.observe(element);
 
     return () => {
+      if (checkRaf) cancelAnimationFrame(checkRaf);
       mutationObserver.disconnect();
-      window.removeEventListener('scroll', checkVisibility);
+      window.removeEventListener('scroll', scheduleCheck);
       if (resizeObserver) resizeObserver.disconnect();
       annotation?.remove();
     };
