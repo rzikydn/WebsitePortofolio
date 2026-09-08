@@ -90,12 +90,7 @@ export function initSpatialHero() {
     let gyroscopeActive = false;
 
     function hasVisibleScenes() {
-        return sceneDataList.some(s => {
-            if (s.isInViewport) return true;
-            const wrapper = s.sceneElement.closest('.about-wrapper') || s.sceneElement;
-            const rect = wrapper.getBoundingClientRect();
-            return (rect.bottom > -100 && rect.top < window.innerHeight + 100);
-        });
+        return sceneDataList.some(s => s.isInViewport);
     }
 
     // Smooth render loop with auto-sleep when movement settles
@@ -104,10 +99,7 @@ export function initSpatialHero() {
 
         for (let s = 0; s < sceneDataList.length; s++) {
             const scene = sceneDataList[s];
-            const wrapper = scene.sceneElement.closest('.about-wrapper') || scene.sceneElement;
-            const rect = wrapper.getBoundingClientRect();
-            const inView = scene.isInViewport || (rect.bottom > -100 && rect.top < window.innerHeight + 100);
-            if (!inView) continue;
+            if (!scene.isInViewport) continue;
 
             const layerData = scene.layerData;
             for (let i = 0; i < layerData.length; i++) {

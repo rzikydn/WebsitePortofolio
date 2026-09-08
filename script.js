@@ -109,18 +109,18 @@ function init() {
       /Lighthouse|SpeedCurve|Chrome-Lighthouse|Google-InspectionTool|PTST|HeadlessChrome/i.test(navigator.userAgent)
     );
     
-    const minDelay = isAutomated ? 30 : 2200;
+    const minDelay = isAutomated ? 30 : 2050;
     setTimeout(() => {
         minTimeReached = true;
         tryFinish();
     }, minDelay);
     
-    // Fallback: finish preloader after max 5 seconds even on poor connections
+    // Fallback: finish preloader after max 4.5 seconds even on poor connections
     setTimeout(() => {
         assetsReady = true;
         window.preloaderAssetsReady = true;
         finishPreloader();
-    }, 5000);
+    }, 4500);
     
     function tryFinish() {
         if (assetsReady && minTimeReached) {
@@ -139,27 +139,27 @@ function init() {
             window.completePreloaderProgress();
         }
         
-        // 2. Fade out the text & progress bar
+        // 2. Fade out the text with smooth Apple ease
         if (preloaderContent) {
             preloaderContent.classList.add("fade-out");
         }
         
-        // 3. Drop the lanyard immediately as preloader completes loading to 100%
+        // 3. Drop the lanyard into active physics as the curtain begins to open
         window.dispatchEvent(new CustomEvent('lanyard-drop'));
         
-        // 4. Slide up the background after text fades out
+        // 4. Slide up the background curtain smoothly after text fade
         setTimeout(() => {
             preloaderWrap.classList.add("slide-up");
             
             // Allow scrolling on the main body
             document.body.style.overflow = "auto";
             
-            // 5. Remove preloader from DOM after transition completes (1.4s)
+            // 5. Remove preloader from DOM after transition completes (1.2s)
             setTimeout(() => {
                 preloaderWrap.style.display = "none";
-            }, 1400);
+            }, 1200);
             
-        }, 400); // Wait 400ms for text fade-out
+        }, 320); // Smooth 320ms wait for text fade-out
     }
 
     // --- Floating Navbar Show/Hide on Scroll ---

@@ -329,7 +329,7 @@
 
                 var pathElements = [];
                 var totalPaths = item.paths.length;
-                var baseDuration = 1.9;
+                var baseDuration = 1.85;
                 var pathTimeStep = totalPaths > 1 ? (baseDuration / totalPaths) : baseDuration;
 
                 for (var i = 0; i < totalPaths; i++) {
@@ -354,20 +354,23 @@
 
                 if (svgContainer) svgContainer.style.opacity = '1';
 
-                void svgContainer.getBoundingClientRect();
+                // Use double requestAnimationFrame to ensure styles commit without forced layout reflow
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        for (var j = 0; j < pathElements.length; j++) {
+                            (function (index) {
+                                var delay = index * (pathTimeStep * 0.65);
+                                var dur = Math.max(0.50, pathTimeStep * 1.35);
 
-                for (var j = 0; j < pathElements.length; j++) {
-                    (function (index) {
-                        var delay = index * (pathTimeStep * 0.65);
-                        var dur = Math.max(0.45, pathTimeStep * 1.35);
+                                var pObj = pathElements[index];
+                                pObj.el.style.transition = 'stroke-dashoffset ' + dur.toFixed(2) + 's cubic-bezier(0.16, 1, 0.3, 1) ' + delay.toFixed(2) + 's';
+                                pObj.el.style.strokeDashoffset = '0';
+                            })(j);
+                        }
+                    });
+                });
 
-                        var pObj = pathElements[index];
-                        pObj.el.style.transition = 'stroke-dashoffset ' + dur.toFixed(2) + 's cubic-bezier(0.45, 0, 0.15, 1) ' + delay.toFixed(2) + 's';
-                        pObj.el.style.strokeDashoffset = '0';
-                    })(j);
-                }
-
-                var totalAnimMs = (baseDuration + 0.6) * 1000;
+                var totalAnimMs = (baseDuration + 0.35) * 1000;
                 setTimeout(function () {
                     var isTest = window.isTestingPreloader || window.location.search.indexOf('testPreloader') !== -1;
 
@@ -386,8 +389,8 @@
                             setTimeout(function () {
                                 currentIndex = (currentIndex + 1) % greetingsData.length;
                                 animateGreeting(currentIndex);
-                            }, 450);
-                        }, 450);
+                            }, 320);
+                        }, 280);
                     }
                 }, totalAnimMs);
             }

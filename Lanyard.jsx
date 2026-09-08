@@ -19,6 +19,8 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 useGLTF.preload(cardGLB);
 useTexture.preload(lanyard);
 
+const TOP_ANCHOR_OFFSET = new THREE.Vector3(0, 10, 0);
+
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true, ready = true, inViewport = true, onLoaded }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [physicsReady] = useState(true);
@@ -50,8 +52,8 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <Canvas
         frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
         camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 1.5]}
-        gl={{ alpha: transparent, antialias: true, powerPreference: "high-performance" }}
+        dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, isMobile ? 1.35 : 1.6)] : [1, 1.5]}
+        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance" }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
@@ -99,6 +101,15 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   );
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
+
+  const divisions = isMobile ? 12 : 16;
+  const [cachedPoints] = useState(() => {
+    const pts = [];
+    for (let i = 0; i <= (isMobile ? 12 : 16); i++) {
+      pts.push(new THREE.Vector3());
+    }
+    return pts;
+  });
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
@@ -156,9 +167,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      curve.points[4].copy(fixed.current.translation()).add(new THREE.Vector3(0, 10, 0));
-      const points = curve.getPoints(isMobile ? 12 : 16);
-      band.current.geometry.setPoints(points);
+      curve.points[4].copy(fixed.current.translation()).add(TOP_ANCHOR_OFFSET);
+      
+      // Zero-allocation curve point updates: directly write into pre-allocated vectors
+      for (let i = 0; i <= divisions; i++) {
+        curve.getPoint(i / divisions, cachedPoints[i]);
+      }
+      band.current.geometry.setPoints(cachedPoints);
+
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
