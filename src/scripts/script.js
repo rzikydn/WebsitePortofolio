@@ -150,6 +150,7 @@ function init() {
         }
         
         // 3. Drop the lanyard into active physics as the curtain begins to open
+        window.__LANYARD_DROPPED__ = true;
         window.dispatchEvent(new CustomEvent('lanyard-drop'));
         
         // 4. Slide up the background curtain smoothly after text fade

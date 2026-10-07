@@ -15,9 +15,12 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+const cardGLBUrl = cardGLB?.src || (typeof cardGLB === 'string' ? cardGLB : '/card.glb');
+const lanyardUrl = lanyard?.src || (typeof lanyard === 'string' ? lanyard : '/lanyard.webp');
+
 // Preload 3D assets immediately so they are cached before preloader finishes
-useGLTF.preload(cardGLB);
-useTexture.preload(lanyard);
+useGLTF.preload(cardGLBUrl);
+useTexture.preload(lanyardUrl);
 
 const TOP_ANCHOR_OFFSET = new THREE.Vector3(0, 10, 0);
 
@@ -30,6 +33,14 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     setIsLoaded(true);
     if (onLoaded) onLoaded();
   };
+
+  useEffect(() => {
+    // Safety fallback: ensure lanyard becomes visible even if texture takes time
+    const t = setTimeout(() => {
+      setIsLoaded(true);
+    }, 800);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -80,8 +91,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
     rot = new THREE.Vector3(),
     dir = new THREE.Vector3();
   const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
-  const { nodes, materials } = useGLTF(cardGLB);
-  const texture = useTexture(lanyard);
+  const { nodes, materials } = useGLTF(cardGLBUrl);
+  const texture = useTexture(lanyardUrl);
 
   useEffect(() => {
     if (onLoaded && nodes && texture) {

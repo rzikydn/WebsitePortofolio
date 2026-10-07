@@ -2,7 +2,9 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Lanyard from './Lanyard';
 
 export default function LanyardHero() {
-  const [isDropped, setIsDropped] = useState(false);
+  const [isDropped, setIsDropped] = useState(() => {
+    return typeof window !== 'undefined' ? Boolean(window.__LANYARD_DROPPED__) : false;
+  });
   const [inViewport, setInViewport] = useState(true);
 
   const handleLanyardLoaded = () => {
@@ -17,10 +19,16 @@ export default function LanyardHero() {
 
   useEffect(() => {
     const handleDrop = () => {
+      if (typeof window !== 'undefined') window.__LANYARD_DROPPED__ = true;
       setIsDropped(true);
     };
 
     window.addEventListener('lanyard-drop', handleDrop);
+
+    // If preloader is already done or lanyard already dropped
+    if (typeof window !== 'undefined' && window.__LANYARD_DROPPED__) {
+      setIsDropped(true);
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -32,10 +40,11 @@ export default function LanyardHero() {
     const rootEl = document.getElementById('home');
     if (rootEl) observer.observe(rootEl);
 
-    // Safety fallback: if event not yet fired after 1.5s, signal ready
+    // Safety fallback: ensure lanyard drops even if event was missed
     const timer = setTimeout(() => {
       handleLanyardLoaded();
-    }, 1500);
+      setIsDropped(true);
+    }, 1200);
 
     return () => {
       clearTimeout(timer);
