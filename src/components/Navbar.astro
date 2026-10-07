@@ -1,0 +1,49 @@
+---
+// src/components/Navbar.astro
+---
+<nav class="floating-navbar" aria-label="Main Navigation">
+    <div class="nav-group">
+        <a href="#home" class="nav-item active" data-tooltip="Home" aria-label="Home">
+            <i class="ph ph-house"></i>
+        </a>
+        <a href="#about" class="nav-item" data-tooltip="About Me" aria-label="About Me">
+            <i class="ph ph-user"></i>
+        </a>
+        <a href="#works" class="nav-item" data-tooltip="My Works" aria-label="My Works">
+            <i class="ph ph-code"></i>
+        </a>
+        <a href="#skills" class="nav-item" data-tooltip="Technical Skill" aria-label="Technical Skill">
+            <i class="ph ph-cpu"></i>
+        </a>
+        <a href="#experience" class="nav-item" data-tooltip="My Experience" aria-label="My Experience">
+            <i class="ph ph-briefcase"></i>
+        </a>
+        <a href="#certificates" class="nav-item" data-tooltip="My Certificates" aria-label="My Certificates">
+            <i class="ph ph-medal"></i>
+        </a>
+        <a href="#contact" class="nav-item" data-tooltip="Contact Me" aria-label="Contact Me">
+            <i class="ph ph-envelope"></i>
+        </a>
+    </div>
+    <div class="nav-divider nav-divider--socials"></div>
+    <div class="nav-group nav-group--socials">
+        <a href="https://www.instagram.com/rzikydn/" target="_blank" rel="noopener noreferrer" class="nav-item"
+            data-tooltip="Instagram" aria-label="Instagram">
+            <i class="ph ph-instagram-logo"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/rzikydn" target="_blank" rel="noopener noreferrer" class="nav-item"
+            data-tooltip="LinkedIn" aria-label="LinkedIn">
+            <i class="ph ph-linkedin-logo"></i>
+        </a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+        <button class="theme-toggle" data-tooltip="Toggle Theme" aria-label="Toggle Theme">
+            <i class="ph ph-sun"></i>
+        </button>
+        <a href="#contact" class="btn-hire" data-tooltip="Contact Me" aria-label="Contact Me">
+            <i class="ph ph-envelope"></i>
+            Contact Me
+        </a>
+    </div>
+</nav>

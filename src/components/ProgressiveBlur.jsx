@@ -44,3 +44,5 @@ export function ProgressiveBlur({
     </div>
   );
 }
+
+export default ProgressiveBlur;

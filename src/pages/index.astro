@@ -1,0 +1,207 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import LanyardHero from '../components/LanyardHero.jsx';
+import ProgressiveBlur from '../components/ProgressiveBlur.jsx';
+import AboutReveal from '../components/AboutReveal.jsx';
+import SvgWorksScroll from '../components/SvgWorksScroll.jsx';
+import BentoGrid from '../components/BentoGrid.jsx';
+import SkillsLoop from '../components/SkillsLoop.jsx';
+import ExperienceAccordion from '../components/ExperienceAccordion.jsx';
+import MotionCarousel from '../components/MotionCarousel.jsx';
+import ExpandableScreenDemo from '../components/ExpandableScreenDemo.jsx';
+import ConfettiSideCannons from '../components/ConfettiSideCannons.jsx';
+---
+
+<Layout
+    title="Wildan Rizky Wijaya - Portfolio"
+    description="Portfolio of Wildan Rizky Wijaya (also known as Rizky Wijaya / Rizky Wildan) — Data Analyst Enthusiast from Jakarta, Indonesia. Skilled in data analysis, visualization, Python, SQL, and creating actionable insights."
+    canonical="https://rzikydn.my.id/"
+    showNavbar={true}
+    showPreloader={true}
+    showFooter={true}
+>
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="main-content desktop-framed spatial-scene" id="home">
+            <!-- 1. Background Spatial Layer -->
+            <div class="spatial-layer spatial-layer--bg" data-depth="-0.28">
+                <div class="bg-zigzag"></div>
+            </div>
+
+            <!-- 2. Midground Spatial Layer -->
+            <div class="spatial-layer spatial-layer--mid" data-depth="0.45">
+                <div class="content-wrapper">
+                    <div class="hero-card">
+                        <div class="hero-main">
+                            <div class="hero-content">
+                                <h1 class="hero-title">I'M WILDAN<br>RIZKY WIJAYA</h1>
+                                <p class="hero-desc">Data Analyst from Jakarta, ID. Currently analyzing data and creating insight</p>
+
+                                <div class="hero-buttons">
+                                    <a href="https://drive.google.com/file/d/1UO_KEt-c_tq19pJkAR8iInDoGntuah9q/view?usp=sharing"
+                                        target="_blank" rel="noopener noreferrer" class="btn-hire">
+                                        <i class="ph ph-file-pdf"></i>
+                                        View CV
+                                    </a>
+                                    <a href="#works" class="btn-copy">
+                                        <i class="ph ph-code"></i>
+                                        View Project
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Foreground Spatial Layer: Lanyard 3D -->
+            <div class="spatial-layer spatial-layer--fg" data-depth="1.0">
+                <div id="lanyard-root">
+                    <LanyardHero client:only="react" />
+                </div>
+            </div>
+
+            <!-- Progressive Blur Bottom -->
+            <div id="progressive-blur-root"
+                style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; pointer-events: none; z-index: 2;">
+                <ProgressiveBlur height="120px" position="bottom" client:idle />
+            </div>
+        </section>
+
+        <!-- About Section Wrapper -->
+        <section class="about-wrapper" id="about">
+            <div class="about-section desktop-framed spatial-scene">
+                <!-- 1. Background Spatial Layer -->
+                <div class="spatial-layer spatial-layer--bg" data-depth="-0.28">
+                    <div class="bg-zigzag"></div>
+                </div>
+
+                <!-- Progressive Blur Top -->
+                <div id="progressive-blur-top-root"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 250px; pointer-events: none; z-index: 1;">
+                    <ProgressiveBlur height="250px" position="top" client:idle />
+                </div>
+
+                <!-- 2. Midground Spatial Layer (About Content) -->
+                <div class="spatial-layer spatial-layer--mid" data-depth="0.18">
+                    <div class="about-container">
+                        <h2 class="sr-only">About Me</h2>
+                        <div id="scroll-reveal-root">
+                            <AboutReveal client:visible />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Foreground Spatial Layers (Parallax Assets) -->
+                <div class="about-spatial-stage" aria-hidden="true">
+                    <!-- Top-Left: Dragon -->
+                    <div class="spatial-layer about-spatial-layer about-spatial-layer--dragon" data-depth="1.30" data-z-plane="75" data-tilt="1.5">
+                        <div class="about-asset-float about-asset-float--dragon">
+                            <img src="/images/dragon2.webp" alt="Dragon" class="about-asset-img" width="480" height="302" loading="lazy" decoding="async" />
+                        </div>
+                    </div>
+
+                    <!-- Top-Right: Cassette Tape -->
+                    <div class="spatial-layer about-spatial-layer about-spatial-layer--caset" data-depth="1.75" data-z-plane="105" data-tilt="1.7">
+                        <div class="about-asset-float about-asset-float--caset">
+                            <img src="/images/caset.webp" alt="Cassette Tape" class="about-asset-img" width="350" height="350" loading="lazy" decoding="async" />
+                        </div>
+                    </div>
+
+                    <!-- Bottom-Left: Retro CRT TV -->
+                    <div class="spatial-layer about-spatial-layer about-spatial-layer--tv" data-depth="1.45" data-z-plane="85" data-tilt="1.5">
+                        <div class="about-asset-float about-asset-float--tv">
+                            <img src="/images/tv.webp" alt="Retro TV" class="about-asset-img" width="300" height="300" loading="lazy" decoding="async" />
+                        </div>
+                    </div>
+
+                    <!-- Bottom-Right: Sakura Blossoms -->
+                    <div class="spatial-layer about-spatial-layer about-spatial-layer--sakura" data-depth="1.10" data-z-plane="60" data-tilt="1.3">
+                        <div class="about-asset-float about-asset-float--sakura">
+                            <img src="/images/sakura.webp" alt="Sakura Blossoms" class="about-asset-img" width="380" height="426" loading="lazy" decoding="async" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Works Section -->
+        <section class="black-section desktop-framed" id="works">
+            <h2 class="sr-only">My Works</h2>
+            <div class="section-title-banner" aria-hidden="true">
+                <span class="bg-text">MY WORKS</span>
+            </div>
+            <div id="works-svg-root">
+                <SvgWorksScroll client:visible />
+            </div>
+            <div id="flowing-menu-root" style="width: 100%; position: relative; z-index: 40;">
+                <BentoGrid client:visible />
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills-section desktop-framed" id="skills">
+            <h2 class="sr-only">Technical Skill</h2>
+            <div class="section-title-banner" aria-hidden="true">
+                <span class="bg-text">TECHNICAL SKILL</span>
+            </div>
+            <div id="logo-loop-root">
+                <SkillsLoop client:visible />
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="experience-section" id="experience">
+            <h2 class="sr-only">My Experience</h2>
+            <div class="section-title-banner" aria-hidden="true">
+                <span class="bg-text">MY EXPERIENCE</span>
+            </div>
+            <div id="experience-root">
+                <ExperienceAccordion client:visible />
+            </div>
+        </section>
+
+        <!-- Certificates Section -->
+        <section class="certificates-section desktop-framed" id="certificates">
+            <h2 class="sr-only">My Certificates</h2>
+            <div class="section-title-banner" aria-hidden="true">
+                <span class="bg-text">MY CERTIFICATES</span>
+            </div>
+            <div id="certificates-root">
+                <MotionCarousel client:visible />
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section desktop-framed" id="contact">
+            <h2 class="sr-only">Contact Me</h2>
+            <div class="section-title-banner" aria-hidden="true">
+                <span class="bg-text">CONTACT ME</span>
+            </div>
+            <div class="contact-row">
+                <div class="contact-cta-content">
+                    <div class="contact-title-group">
+                        <h3 class="contact-subtitle">LET'S BUILD SOMETHING.</h3>
+                        <h3 class="contact-subtitle">GREAT TOGETHER.</h3>
+                    </div>
+                    <p class="contact-desc">Whether you need a scalable web solution, an automated system, or just want to technical-proof your next big idea, my inbox is always open.</p>
+                    <div id="contact-btn-root">
+                        <ExpandableScreenDemo client:visible />
+                    </div>
+                </div>
+                <div class="contact-image">
+                    <img src="/images/pp2new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                        class="contact-img contact-img--dark" width="400" height="400" loading="lazy" decoding="async" />
+                    <img src="/images/pp1new.webp" alt="Wildan Rizky Wijaya (Rizky Wijaya) - Data Analyst Profile"
+                        class="contact-img contact-img--light" width="400" height="400" loading="lazy" decoding="async" />
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="confetti-root">
+        <ConfettiSideCannons client:visible />
+    </div>
+</Layout>
