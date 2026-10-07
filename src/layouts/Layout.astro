@@ -1,0 +1,183 @@
+---
+// src/layouts/Layout.astro
+import '../styles/style.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Preloader from '../components/Preloader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  bodyClass?: string;
+  showNavbar?: boolean;
+  showPreloader?: boolean;
+  showFooter?: boolean;
+}
+
+const {
+  title = "Wildan Rizky Wijaya - Portfolio",
+  description = "Portfolio of Wildan Rizky Wijaya (also known as Rizky Wijaya / Rizky Wildan) — Data Analyst Enthusiast from Jakarta, Indonesia. Skilled in data analysis, visualization, Python, SQL, and creating actionable insights.",
+  canonical = "https://rzikydn.my.id/",
+  bodyClass = "",
+  showNavbar = true,
+  showPreloader = true,
+  showFooter = true,
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content={description}>
+    <meta name="keywords" content="Wildan, Wildan Rizky, Wildan Rizky Wijaya, Rizky Wildan, Rizky Wijaya, Wijaya, Wijaya Rizky, Wijaya Rizky Wildan, Data Analyst, Portfolio, Data Visualization, Python, SQL, Jakarta, Indonesia">
+    <meta name="author" content="Wildan Rizky Wijaya">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="canonical" href={canonical}>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content={canonical}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta property="og:image:secure_url" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:image:alt" content="Wildan Rizky Wijaya - Data Analyst Portfolio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content="https://rzikydn.my.id/images/lanyard-thumbnail.png">
+    <meta name="twitter:image:alt" content="Wildan Rizky Wijaya - Data Analyst Portfolio">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/images/logox.webp" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/logox.webp" sizes="192x192">
+    <link rel="apple-touch-icon" href="/images/logox.webp">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" is:inline>
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://rzikydn.my.id/#website",
+                "url": "https://rzikydn.my.id/",
+                "name": "Wildan Rizky Wijaya Portfolio",
+                "description": "Portfolio of Wildan Rizky Wijaya - Data Analyst Enthusiast from Jakarta, Indonesia.",
+                "publisher": {
+                    "@id": "https://rzikydn.my.id/#person"
+                },
+                "inLanguage": "en-US"
+            },
+            {
+                "@type": "Person",
+                "@id": "https://rzikydn.my.id/#person",
+                "name": "Wildan Rizky Wijaya",
+                "alternateName": [
+                    "Wildan",
+                    "Wildan Rizky",
+                    "Rizky Wildan",
+                    "Rizky Wijaya",
+                    "Wijaya",
+                    "Wijaya Rizky",
+                    "Wijaya Rizky Wildan"
+                ],
+                "url": "https://rzikydn.my.id/",
+                "image": "https://rzikydn.my.id/images/lanyard-thumbnail.png",
+                "jobTitle": "Data Analyst",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Jakarta",
+                    "addressCountry": "ID"
+                },
+                "email": "rzikydn@gmail.com",
+                "sameAs": [
+                    "https://www.linkedin.com/in/rzikydn",
+                    "https://github.com/rzikydn",
+                    "https://www.instagram.com/rzikydn/"
+                ]
+            },
+            {
+                "@type": "ItemList",
+                "@id": "https://rzikydn.my.id/#sitenavigation",
+                "name": "Site Navigation",
+                "description": "Key sections and pages of Wildan Rizky Wijaya's Portfolio",
+                "itemListElement": [
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 1,
+                        "name": "Projects & Works",
+                        "description": "Interactive data analytics projects, dashboards, and visualizations.",
+                        "url": "https://rzikydn.my.id/projects.html"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 2,
+                        "name": "About Wildan",
+                        "description": "Profile, story, and data philosophy of Wildan Rizky Wijaya.",
+                        "url": "https://rzikydn.my.id/#about"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 3,
+                        "name": "Work Experience",
+                        "description": "Professional experience in risk management and database administration.",
+                        "url": "https://rzikydn.my.id/#experience"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 4,
+                        "name": "Certifications",
+                        "description": "Data Scientist and Data Analysis certified credentials.",
+                        "url": "https://rzikydn.my.id/#certificates"
+                    },
+                    {
+                        "@type": "SiteNavigationElement",
+                        "position": 5,
+                        "name": "Contact Me",
+                        "description": "Direct communication channel for collaborations and hiring inquiries.",
+                        "url": "https://rzikydn.my.id/#contact"
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
+
+    <!-- Preconnect hints for critical CDNs & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+    <!-- Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+
+    <!-- Phosphor Icons (Regular weight) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+</head>
+
+<body class={bodyClass}>
+    {showNavbar && <Navbar />}
+    {showPreloader && <Preloader />}
+
+    <slot />
+
+    {showFooter && <Footer />}
+
+    <script src="../scripts/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+---
+// src/pages/projects.astro
+import Layout from '../layouts/Layout.astro';
+import MorphingTabsPreview from '../components/motion/morphing-tabs-demo';
+---
+
+<Layout
+    title="Projects & Works — Wildan Rizky Wijaya"
+    description="Explore data analytics projects, interactive dashboards, and full-stack solutions by Wildan Rizky Wijaya."
+    canonical="https://rzikydn.my.id/projects.html"
+    bodyClass="projects-page"
+    showNavbar={false}
+    showPreloader={false}
+    showFooter={true}
+>
+    <!-- Breadcrumbs Structured Data -->
+    <script type="application/ld+json" is:inline slot="head">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://rzikydn.my.id/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Projects",
+                "item": "https://rzikydn.my.id/projects.html"
+            }
+        ]
+    }
+    </script>
+
+    <style is:global>
+        body.projects-page {
+            min-height: 100vh;
+            background-color: #292929;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .projects-hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background-color: #292929;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            z-index: 20;
+        }
+
+        .morphing-tabs-section-inner {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+
+    <!-- Part 1: Morphing Tabs Full Section -->
+    <section class="projects-hero-section">
+        <div id="morphing-tabs-root" class="morphing-tabs-section-inner">
+            <MorphingTabsPreview client:only="react" />
+        </div>
+    </section>
+</Layout>
