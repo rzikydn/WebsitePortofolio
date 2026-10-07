@@ -5,3 +5,4 @@ dist/
 .env
 *.zip
 activity-tracker/
+telemetry-metrics/
