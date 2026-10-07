@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       # Langkah 3: Install seluruh dependencies dan jalankan build produksi (Vite akan menghasilkan folder 'dist')
