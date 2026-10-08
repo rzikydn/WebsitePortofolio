@@ -2,10 +2,15 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Lanyard from './Lanyard';
 
 export default function LanyardHero() {
+  const [mounted, setMounted] = useState(false);
   const [isDropped, setIsDropped] = useState(() => {
     return typeof window !== 'undefined' ? Boolean(window.__LANYARD_DROPPED__) : false;
   });
   const [inViewport, setInViewport] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLanyardLoaded = () => {
     if (typeof window !== 'undefined') {
@@ -18,6 +23,8 @@ export default function LanyardHero() {
   };
 
   useEffect(() => {
+    if (!mounted) return;
+
     const handleDrop = () => {
       if (typeof window !== 'undefined') window.__LANYARD_DROPPED__ = true;
       setIsDropped(true);
@@ -51,10 +58,28 @@ export default function LanyardHero() {
       window.removeEventListener('lanyard-drop', handleDrop);
       if (rootEl) observer.unobserve(rootEl);
     };
-  }, []);
+  }, [mounted]);
+
+  // Placeholder with exact dimensions to prevent Layout Shift (CLS = 0)
+  const placeholder = (
+    <div 
+      className="lanyard-placeholder" 
+      style={{ 
+        width: '100%', 
+        height: '100vh', 
+        minHeight: '100vh', 
+        pointerEvents: 'none' 
+      }} 
+      aria-hidden="true" 
+    />
+  );
+
+  if (!mounted) {
+    return placeholder;
+  }
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={placeholder}>
       <Lanyard 
         position={[0, 0, 20]} 
         gravity={[0, -40, 0]} 

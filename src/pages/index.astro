@@ -59,7 +59,7 @@ import ConfettiSideCannons from '../components/ConfettiSideCannons.jsx';
             <!-- 3. Foreground Spatial Layer: Lanyard 3D -->
             <div class="spatial-layer spatial-layer--fg" data-depth="1.0">
                 <div id="lanyard-root">
-                    <LanyardHero client:only="react" />
+                    <LanyardHero client:idle />
                 </div>
             </div>
 
@@ -99,28 +99,68 @@ import ConfettiSideCannons from '../components/ConfettiSideCannons.jsx';
                     <!-- Top-Left: Dragon -->
                     <div class="spatial-layer about-spatial-layer about-spatial-layer--dragon" data-depth="1.30" data-z-plane="75" data-tilt="1.5">
                         <div class="about-asset-float about-asset-float--dragon">
-                            <img src="/images/dragon2.webp" alt="Dragon" class="about-asset-img" width="480" height="302" loading="lazy" decoding="async" />
+                            <img 
+                                src="/images/dragon2.webp" 
+                                srcset="/images/dragon2-mobile.webp 220w, /images/dragon2.webp 580w"
+                                sizes="(max-width: 768px) 100px, 290px"
+                                alt="Dragon" 
+                                class="about-asset-img" 
+                                width="290" 
+                                height="182" 
+                                loading="lazy" 
+                                decoding="async" 
+                            />
                         </div>
                     </div>
 
                     <!-- Top-Right: Cassette Tape -->
                     <div class="spatial-layer about-spatial-layer about-spatial-layer--caset" data-depth="1.75" data-z-plane="105" data-tilt="1.7">
                         <div class="about-asset-float about-asset-float--caset">
-                            <img src="/images/caset.webp" alt="Cassette Tape" class="about-asset-img" width="350" height="350" loading="lazy" decoding="async" />
+                            <img 
+                                src="/images/caset.webp" 
+                                srcset="/images/caset-mobile.webp 180w, /images/caset.webp 500w"
+                                sizes="(max-width: 768px) 88px, 250px"
+                                alt="Cassette Tape" 
+                                class="about-asset-img" 
+                                width="250" 
+                                height="250" 
+                                loading="lazy" 
+                                decoding="async" 
+                            />
                         </div>
                     </div>
 
                     <!-- Bottom-Left: Retro CRT TV -->
                     <div class="spatial-layer about-spatial-layer about-spatial-layer--tv" data-depth="1.45" data-z-plane="85" data-tilt="1.5">
                         <div class="about-asset-float about-asset-float--tv">
-                            <img src="/images/tv.webp" alt="Retro TV" class="about-asset-img" width="300" height="300" loading="lazy" decoding="async" />
+                            <img 
+                                src="/images/tv.webp" 
+                                srcset="/images/tv-mobile.webp 150w, /images/tv.webp 370w"
+                                sizes="(max-width: 768px) 72px, 185px"
+                                alt="Retro TV" 
+                                class="about-asset-img" 
+                                width="185" 
+                                height="185" 
+                                loading="lazy" 
+                                decoding="async" 
+                            />
                         </div>
                     </div>
 
                     <!-- Bottom-Right: Sakura Blossoms -->
                     <div class="spatial-layer about-spatial-layer about-spatial-layer--sakura" data-depth="1.10" data-z-plane="60" data-tilt="1.3">
                         <div class="about-asset-float about-asset-float--sakura">
-                            <img src="/images/sakura.webp" alt="Sakura Blossoms" class="about-asset-img" width="380" height="426" loading="lazy" decoding="async" />
+                            <img 
+                                src="/images/sakura.webp" 
+                                srcset="/images/sakura-mobile.webp 170w, /images/sakura.webp 420w"
+                                sizes="(max-width: 768px) 80px, 210px"
+                                alt="Sakura Blossoms" 
+                                class="about-asset-img" 
+                                width="210" 
+                                height="235" 
+                                loading="lazy" 
+                                decoding="async" 
+                            />
                         </div>
                     </div>
                 </div>
@@ -170,7 +210,7 @@ import ConfettiSideCannons from '../components/ConfettiSideCannons.jsx';
                 <span class="bg-text">MY CERTIFICATES</span>
             </div>
             <div id="certificates-root">
-                <MotionCarousel client:visible />
+                <MotionCarousel client:idle />
             </div>
         </section>
 

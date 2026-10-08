@@ -65,9 +65,8 @@ export function initSpatialHero() {
             };
         });
 
-        const wrapper = sceneEl.closest('.about-wrapper') || sceneEl;
-        const rect = wrapper.getBoundingClientRect();
-        const initiallyInView = (rect.bottom > 0 && rect.top < window.innerHeight);
+        const isHero = sceneEl.id === 'home' || sceneEl.classList.contains('main-content');
+        const initiallyInView = isHero;
 
         sceneDataList.push({
             sceneElement: sceneEl,
@@ -107,15 +106,11 @@ export function initSpatialHero() {
     let rafId = null;
 
     function isSceneInViewport(scene) {
-        if (scene.isInViewport) return true;
-        const targetEl = scene.sceneElement.closest('.about-wrapper') || scene.sceneElement;
-        if (!targetEl) return false;
-        const r = targetEl.getBoundingClientRect();
-        return r.bottom > 0 && r.top < window.innerHeight;
+        return Boolean(scene.isInViewport);
     }
 
     function hasVisibleScenes() {
-        return sceneDataList.some(isSceneInViewport);
+        return sceneDataList.some(s => s.isInViewport);
     }
 
     // Smooth render loop for desktop
@@ -268,7 +263,5 @@ export function initSpatialHero() {
     // Initial activation check
     if (!isDesktopViewport()) {
         resetAllLayers();
-    } else if (hasVisibleScenes()) {
-        startLoop();
     }
 }

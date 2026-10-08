@@ -20,11 +20,23 @@ export default defineConfig({
       },
     },
     assetsInclude: ['**/*.glb'],
+    optimizeDeps: {
+      include: ['embla-carousel-react'],
+    },
     build: {
       target: 'es2020',
       cssCodeSplit: true,
       rollupOptions: {
         output: {
+          assetFileNames(assetInfo) {
+            if (assetInfo.names && assetInfo.names.some(n => n.endsWith('.glb'))) {
+              return '_astro/card.glb';
+            }
+            if (assetInfo.name && assetInfo.name.endsWith('.glb')) {
+              return '_astro/card.glb';
+            }
+            return '_astro/[name].[hash][extname]';
+          },
           manualChunks(id) {
             if (id.includes('node_modules')) {
               if (id.includes('three') || id.includes('@react-three')) {

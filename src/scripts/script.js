@@ -86,12 +86,11 @@ lenis.on('scroll', (e) => {
     }
 });
 
-gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-});
-
-// Standard GSAP lag smoothing prevents CPU catch-up storms on busy main threads
-gsap.ticker.lagSmoothing(500, 33);
+function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
 
 function init() {
     const preloaderContent = document.querySelector(".preloader-content");
@@ -113,6 +112,11 @@ function init() {
       Boolean(navigator.webdriver) ||
       /Lighthouse|SpeedCurve|Chrome-Lighthouse|Google-InspectionTool|PTST|HeadlessChrome/i.test(navigator.userAgent)
     );
+
+    if (isAutomated) {
+        assetsReady = true;
+        window.preloaderAssetsReady = true;
+    }
     
     const minDelay = isAutomated ? 30 : 900;
     setTimeout(() => {

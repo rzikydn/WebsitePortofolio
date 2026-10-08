@@ -44,7 +44,6 @@ const LOOP_SLIDES = [...CERTIFICATES, ...CERTIFICATES, ...CERTIFICATES];
 const DEFAULT_OPTIONS = { loop: true, align: 'center', startIndex: 3 };
 
 export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
-  const [isMounted, setIsMounted] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [selectedIndex, setSelectedIndex] = useState(options?.startIndex ?? 3);
 
@@ -72,11 +71,6 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
-  // Set isMounted to true on client mount
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   // Guaranteed measurement after DOM paint & font loading
   useEffect(() => {
     if (!emblaApi) return;
@@ -101,15 +95,14 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
     onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   const activeIndex = selectedIndex % CERTIFICATES.length;
-
-  if (!isMounted) {
-    return (
-      <div className="motion-carousel-container" style={{ minHeight: '380px', opacity: 0 }} />
-    );
-  }
 
   return (
     <div className="motion-carousel-container">

@@ -157,17 +157,16 @@ const {
     }
     </script>
 
-    <!-- Preconnect hints for critical CDNs & Fonts -->
+    <!-- Preconnect hints for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Google Fonts -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
 
-    <!-- Phosphor Icons (Regular weight) -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+    <!-- Preload 3D Card Asset -->
+    <link rel="preload" as="fetch" href="/_astro/card.glb" crossorigin>
 </head>
 
 <body class={bodyClass}>

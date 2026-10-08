@@ -92,17 +92,22 @@ const ScrollReveal = ({
       };
     }
 
-    // Helper to compute travel distance so slide fully exits beyond the screen edge (pinggir layar)
-    const getTravelDistance = (slideEl) => {
+    // Compute travel distance once to avoid forced layout thrashing (offsetWidth reads) inside scrub/render loops
+    let dist1 = 1200;
+    let dist2 = 1200;
+    const calcDistances = () => {
       const screenW = typeof window !== 'undefined' ? window.innerWidth : 1200;
-      const slideW = (slideEl && slideEl.offsetWidth) ? slideEl.offsetWidth : 800;
-      return Math.round((screenW + slideW) / 2 + 100);
+      const slideW1 = (s1 && s1.offsetWidth) ? s1.offsetWidth : 800;
+      const slideW2 = (s2 && s2.offsetWidth) ? s2.offsetWidth : 800;
+      dist1 = Math.round((screenW + slideW1) / 2 + 100);
+      dist2 = Math.round((screenW + slideW2) / 2 + 100);
     };
+    calcDistances();
 
     // MULTI-SLIDE CONTINUOUS HORIZONTAL TRANSITION & DUAL SCROLL REVEAL
     // Initial states: slide 1 centered (x: 0); slide 2 parked off-screen to the right
     gsap.set(s1, { x: 0, opacity: 1, force3D: true });
-    gsap.set(s2, { x: () => getTravelDistance(s2), opacity: 0, force3D: true });
+    gsap.set(s2, { x: dist2, opacity: 0, force3D: true });
     gsap.set(words1, { opacity: baseOpacity, force3D: true });
     gsap.set(words2, { opacity: baseOpacity, force3D: true });
 
@@ -142,7 +147,7 @@ const ScrollReveal = ({
     tl.to(
       s1,
       {
-        x: () => -getTravelDistance(s1),
+        x: -dist1,
         opacity: 0,
         ease: 'power2.inOut',
         duration: 1.4,
@@ -152,7 +157,7 @@ const ScrollReveal = ({
 
     tl.fromTo(
       s2,
-      { x: () => getTravelDistance(s2), opacity: 0 },
+      { x: dist2, opacity: 0 },
       {
         x: 0,
         opacity: 1,

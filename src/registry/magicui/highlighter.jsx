@@ -80,16 +80,8 @@ export function Highlighter({
       scheduleCheck();
     });
 
-    const words = element.querySelectorAll('.word');
-    if (words.length > 0) {
-      words.forEach((w) => {
-        mutationObserver.observe(w, { attributes: true, attributeFilter: ['style', 'class'] });
-      });
-    } else {
-      mutationObserver.observe(element, { attributes: true, attributeFilter: ['style', 'class'] });
-    }
-
-    window.addEventListener('scroll', scheduleCheck, { passive: true });
+    const targetEl = element.querySelector('.word') || element;
+    mutationObserver.observe(targetEl, { attributes: true, attributeFilter: ['style'] });
 
     let lastWidth = 0;
     resizeObserver = new ResizeObserver((entries) => {
@@ -110,7 +102,6 @@ export function Highlighter({
     return () => {
       if (checkRaf) cancelAnimationFrame(checkRaf);
       mutationObserver.disconnect();
-      window.removeEventListener('scroll', scheduleCheck);
       if (resizeObserver) resizeObserver.disconnect();
       annotation?.remove();
     };
