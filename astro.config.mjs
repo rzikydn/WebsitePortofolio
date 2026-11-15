@@ -21,7 +21,13 @@ export default defineConfig({
     },
     assetsInclude: ['**/*.glb'],
     optimizeDeps: {
-      include: ['embla-carousel-react'],
+      include: [
+        'embla-carousel-react',
+        'rough-notation',
+        'gsap',
+        'gsap/ScrollTrigger',
+        'canvas-confetti',
+      ],
     },
     build: {
       target: 'es2020',

@@ -25,10 +25,10 @@ export default function SkillsLoop() {
   return (
     <LogoLoop
       logos={imageLogos}
-      speed={120}
+      speed={80}
       direction="left"
-      logoHeight={isMobile ? 80 : "8.75rem"}
-      gap={isMobile ? 50 : "8.75rem"}
+      logoHeight={isMobile ? 44 : 64}
+      gap={isMobile ? 28 : 52}
       hoverSpeed={0}
       scaleOnHover
       fadeOut

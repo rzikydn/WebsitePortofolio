@@ -62,9 +62,9 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     >
       <Canvas
         frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
-        camera={{ position: isMobile ? [0, 0, 30] : position, fov: fov }}
-        dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, isMobile ? 1.35 : 1.6)] : [1, 1.5]}
-        gl={{ alpha: transparent, antialias: !isMobile, powerPreference: "high-performance", stencil: false }}
+        camera={{ position: isMobile ? [0, 0, 27] : position, fov: fov }}
+        dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 2]}
+        gl={{ alpha: transparent, antialias: true, powerPreference: "high-performance", stencil: false }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
@@ -95,10 +95,25 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   const texture = useTexture(lanyardUrl);
 
   useEffect(() => {
+    if (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.generateMipmaps = true;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.anisotropy = 16;
+      texture.needsUpdate = true;
+    }
+    if (materials?.base?.map) {
+      materials.base.map.generateMipmaps = true;
+      materials.base.map.minFilter = THREE.LinearMipmapLinearFilter;
+      materials.base.map.magFilter = THREE.LinearFilter;
+      materials.base.map.anisotropy = 16;
+      materials.base.map.needsUpdate = true;
+    }
     if (onLoaded && nodes && texture) {
       onLoaded();
     }
-  }, [nodes, texture, onLoaded]);
+  }, [nodes, texture, materials, onLoaded]);
 
   const [curve] = useState(
     () =>
@@ -113,10 +128,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  const divisions = isMobile ? 12 : 16;
+  const divisions = 20;
   const [cachedPoints] = useState(() => {
     const pts = [];
-    for (let i = 0; i <= (isMobile ? 12 : 16); i++) {
+    for (let i = 0; i <= 20; i++) {
       pts.push(new THREE.Vector3());
     }
     return pts;
@@ -214,8 +229,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
         <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
           <CuboidCollider args={[isMobile ? 0.8 : 0.92, isMobile ? 1.125 : 1.28, 0.01]} mass={1} sensor />
           <group
-            scale={isMobile ? 2.25 : 2.55}
-            position={[0, isMobile ? -1.2 : -1.36, -0.05]}
+            scale={isMobile ? 2.45 : 2.55}
+            position={[0, isMobile ? -1.3 : -1.36, -0.05]}
             onPointerOver={() => { hover(true); card.current?.wakeUp(); }}
             onPointerOut={() => hover(false)}
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
@@ -243,11 +258,11 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
         <meshLineMaterial
           color="white"
           depthTest={false}
-          resolution={isMobile ? [500, 1000] : [1000, 1000]}
+          resolution={[1000, 1000]}
           useMap
           map={texture}
           repeat={[-4, 1]}
-          lineWidth={isMobile ? 0.45 : 0.6}
+          lineWidth={isMobile ? 0.55 : 0.6}
         />
       </mesh>
     </>
