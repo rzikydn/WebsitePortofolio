@@ -173,7 +173,7 @@
   );
 }
 
-@media (max-width: 1179px) {
+@media (max-width: 768px) {
   .logoloop--fade::before,
   .logoloop--fade::after {
     display: none !important;

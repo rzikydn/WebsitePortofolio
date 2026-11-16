@@ -7,32 +7,14 @@ html {
     font-size: 16px;
 }
 
-/* ===== Unified Display & Scaling Normalization =====
-   Normalizes display presentation across Windows, Linux (Fedora KDE/GNOME), and macOS:
-   - Windows 11 default 125% scaling on 1080p laptops produces a 1536px viewport with ~1.25dppx.
-   - Standard 1080p laptops and mid-size desktop screens (1025px - 1600px) receive balanced scaling.
-   - High-DPI screens (Yoga Pro 7, Retina, etc.) are scaled proportionally to prevent zoomed-in layouts. */
-@media (min-width: 1025px) and (max-width: 1600px) {
+/* ===== Universal Display & Scaling Normalization =====
+   Locks 100vw === 105.5rem across ALL laptop and desktop devices (>= 769px),
+   eliminating layout differences caused by varying screen resolutions (1280px, 1366px,
+   1440px, 1536px, 1920px, 2560px+) and OS DPI scaling (100%, 125%, 150%, 175%, 200%)
+   at 100% browser zoom. */
+@media (min-width: 769px) {
     html {
-        font-size: 14.5px;
-    }
-}
-
-@media (min-width: 1025px) and (min-resolution: 1.2dppx) and (max-width: 1600px) {
-    html {
-        font-size: 13.8px;
-    }
-}
-
-@media (min-width: 1025px) and (min-resolution: 1.5dppx) {
-    html {
-        font-size: 13.5px;
-    }
-}
-
-@media (min-width: 1025px) and (min-resolution: 2dppx) {
-    html {
-        font-size: 13px;
+        font-size: calc(100vw / 105.5);
     }
 }
 
@@ -289,7 +271,7 @@ body {
     top: 0;
     right: clamp(-8%, -5vw, -4%);
     width: 50%;
-    height: 100vh;
+    height: 51.5rem;
     z-index: 25;
     pointer-events: none;
     overflow: visible;
@@ -534,7 +516,7 @@ body {
     width: 100%;
     max-width: 85rem;
     padding: 1.875rem 0;
-    padding-top: clamp(19vh, 23vh, 27vh);
+    padding-top: 11.85rem;
 }
 
 .hero-top {
@@ -586,7 +568,7 @@ body {
     font-size: clamp(1.4rem, 2.15vw, 2.3rem);
     color: #475569; /* Increased contrast from #64748b */
     line-height: 1.58;
-    margin-bottom: clamp(2.2rem, 4vh, 3.6rem);
+    margin-bottom: 2.2rem;
     max-width: 62rem;
     font-weight: 300;
     letter-spacing: -0.015em;
@@ -958,7 +940,7 @@ body.dark-mode .btn-copy:hover {
     margin: auto;
     width: 82%;
     max-width: 68rem;
-    height: clamp(340px, 45vh, 480px);
+    height: 25.2rem;
     pointer-events: none;
     z-index: 22;
     transform-style: preserve-3d;
@@ -972,29 +954,29 @@ body.dark-mode .btn-copy:hover {
     transform-style: preserve-3d;
 }
 
-/* Individual Asset Layer Anchors (Desktop min-width: 1180px) */
+/* Individual Asset Layer Anchors (Universal Desktop Proportional Rem Units) */
 .about-spatial-layer--dragon {
-    top: clamp(-130px, -14vh, -90px);
-    left: clamp(-155px, -11vw, -100px);
-    width: clamp(200px, 21vw, 290px);
+    top: -7.2rem;
+    left: -11.5rem;
+    width: 21.5rem;
 }
 
 .about-spatial-layer--caset {
-    top: clamp(-120px, -13vh, -85px);
-    right: clamp(-145px, -10vw, -95px);
-    width: clamp(180px, 19vw, 250px);
+    top: -6.6rem;
+    right: -10.5rem;
+    width: 18.5rem;
 }
 
 .about-spatial-layer--tv {
-    bottom: clamp(-130px, -14vh, -95px);
-    left: clamp(-135px, -9vw, -90px);
-    width: clamp(130px, 14vw, 185px);
+    bottom: -7.2rem;
+    left: -9.5rem;
+    width: 13.7rem;
 }
 
 .about-spatial-layer--sakura {
-    bottom: clamp(-125px, -13vh, -90px);
-    right: clamp(-135px, -9vw, -90px);
-    width: clamp(145px, 15vw, 210px);
+    bottom: -6.8rem;
+    right: -9.5rem;
+    width: 15.5rem;
 }
 
 /* Float & Hover Wrapper (Handles ambient levitation & base slant) */
@@ -1071,30 +1053,6 @@ body.dark-mode .btn-copy:hover {
     }
     50% {
         transform: translate3d(0, -9px, 0) rotate(calc(var(--asset-base-rot, 0deg) - 1.5deg));
-    }
-}
-
-/* Tablet & Medium Screens (769px - 1179px) */
-@media (max-width: 1179px) and (min-width: 769px) {
-    .about-spatial-layer--dragon {
-        top: -85px;
-        left: -65px;
-        width: clamp(160px, 18vw, 225px);
-    }
-    .about-spatial-layer--caset {
-        top: -75px;
-        right: -55px;
-        width: clamp(145px, 16vw, 195px);
-    }
-    .about-spatial-layer--tv {
-        bottom: -85px;
-        left: -55px;
-        width: clamp(110px, 12vw, 155px);
-    }
-    .about-spatial-layer--sakura {
-        bottom: -80px;
-        right: -55px;
-        width: clamp(120px, 13vw, 165px);
     }
 }
 
@@ -1955,8 +1913,8 @@ body.dark-mode {
     z-index: 50;
     padding: 5rem 5vw 0;
     overflow: hidden;
-    border-radius: 30px 30px 0 0;
-    margin-top: -30px;
+    border-radius: 2.2rem 2.2rem 0 0;
+    margin-top: -2.2rem;
 }
 
 .footer-top {
@@ -2004,7 +1962,7 @@ body.dark-mode {
     font-weight: 900;
     color: #0f172a;
     line-height: 0.85;
-    letter-spacing: -5px;
+    letter-spacing: -0.37rem;
     user-select: none;
     margin-left: -0.038em;
 }
@@ -2128,7 +2086,7 @@ body.dark-mode {
     --framed-dark-stripe: rgba(15, 23, 42, 0.09);
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 769px) {
     .desktop-framed:not(.about-section) {
         position: relative;
     }
@@ -2273,7 +2231,7 @@ body.dark-mode {
     }
 
     .contact-cta-content {
-        max-width: 760px;
+        max-width: 56.5rem;
         gap: 1.6rem;
     }
 
@@ -2293,7 +2251,7 @@ body.dark-mode {
     .contact-desc {
         font-size: clamp(1.1rem, 1.35vw, 1.28rem);
         line-height: 1.68;
-        max-width: 660px;
+        max-width: 49rem;
     }
 
     .contact-btn {

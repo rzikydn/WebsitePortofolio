@@ -3,7 +3,7 @@
     width: 100%;
     max-width: 100%;
     /* Spans full screen width to prevent crop lines */
-    margin: 40px auto 0 auto;
+    margin: 2.95rem auto 0 auto;
     position: relative;
     z-index: 20;
     overflow: hidden;
@@ -57,10 +57,10 @@
     opacity: 0.45;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .motion-carousel-slide {
         flex: 0 0 100%;
-        padding: 0.5rem 1rem;
+        padding: 0 16px;
         box-sizing: border-box;
     }
 
@@ -71,13 +71,6 @@
 
     .carousel-slide-animator.slide-active {
         transform: scale(1);
-    }
-}
-
-@media (max-width: 768px) {
-    .motion-carousel-slide {
-        flex: 0 0 100%;
-        padding: 0 16px;
     }
 }
 

@@ -185,18 +185,6 @@
 }
 
 /* Responsive Breakpoints */
-@media (max-width: 1024px) {
-    .bento-grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        padding: 0 20px;
-    }
-    
-    .bento-card.span-2 {
-        grid-column: span 2;
-    }
-}
-
 @media (max-width: 768px) {
     .bento-grid-container {
         grid-template-columns: 1fr;

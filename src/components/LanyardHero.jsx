@@ -66,8 +66,8 @@ export default function LanyardHero() {
       className="lanyard-placeholder" 
       style={{ 
         width: '100%', 
-        height: '100vh', 
-        minHeight: '100vh', 
+        height: '100%', 
+        minHeight: '100%', 
         pointerEvents: 'none' 
       }} 
       aria-hidden="true" 
