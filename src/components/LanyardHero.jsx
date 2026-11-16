@@ -1,5 +1,6 @@
-import React, { useState, useEffect, Suspense } from 'react';
-import Lanyard from './Lanyard';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+
+const Lanyard = lazy(() => import('./Lanyard'));
 
 export default function LanyardHero() {
   const [mounted, setMounted] = useState(false);

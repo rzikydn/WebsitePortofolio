@@ -27,7 +27,7 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
-} from "motion/react";
+} from "framer-motion";
 import {
   useCallback,
   useEffect,

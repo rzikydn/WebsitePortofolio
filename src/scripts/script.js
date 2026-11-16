@@ -47,23 +47,41 @@ window.addEventListener('load', () => {
 }, { passive: true });
 window.addEventListener('resize', cacheSectionPositions, { passive: true });
 
-// Dynamic active navbar link on scroll (ScrollSpy) — with dirty flag to skip redundant DOM updates
+// Dynamic active navbar link and visibility on scroll (ScrollSpy) — synchronized with Lenis
 let lastActiveId = "";
+let lastScrollY = 0;
 
 lenis.on('scroll', (e) => {
     ScrollTrigger.update();
     
+    const scrollPos = e?.scroll ?? window.scrollY;
+
+    // Floating Navbar Show/Hide on Scroll — driven smoothly via Lenis RAF
+    const navbar = document.querySelector('.floating-navbar');
+    if (navbar) {
+        if (scrollPos > 100) {
+            if (scrollPos > lastScrollY) {
+                navbar.classList.add('navbar--hidden');
+            } else {
+                navbar.classList.remove('navbar--hidden');
+            }
+        } else {
+            navbar.classList.remove('navbar--hidden');
+        }
+    }
+    lastScrollY = scrollPos;
+
     if (cachedSections.length === 0) {
         cacheSectionPositions();
         if (cachedSections.length === 0) return;
     }
     
     let currentActive = "";
-    const scrollPos = (e?.scroll ?? window.scrollY) + window.innerHeight / 3;
+    const spyPos = scrollPos + window.innerHeight / 3;
     
     for (let i = 0; i < cachedSections.length; i++) {
         const section = cachedSections[i];
-        if (scrollPos >= section.top && scrollPos < section.top + section.height) {
+        if (spyPos >= section.top && spyPos < section.top + section.height) {
             currentActive = section.id;
         }
     }
@@ -86,11 +104,11 @@ lenis.on('scroll', (e) => {
     }
 });
 
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
+// Synchronize Lenis with GSAP's ticker: eliminates frame desync and micro-stutter
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(0);
 
 function init() {
     const preloaderContent = document.querySelector(".preloader-content");
@@ -170,32 +188,6 @@ function init() {
             }, 1200);
             
         }, 320); // Smooth 320ms wait for text fade-out
-    }
-
-    // --- Floating Navbar Show/Hide on Scroll ---
-    const navbar = document.querySelector('.floating-navbar');
-    if (navbar) {
-        let lastScrollY = window.scrollY;
-        
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            
-            // Only hide the navbar if we have scrolled past 100px (warm-up zone)
-            if (currentScrollY > 100) {
-                if (currentScrollY > lastScrollY) {
-                    // Scrolling down - hide navbar
-                    navbar.classList.add('navbar--hidden');
-                } else {
-                    // Scrolling up - show navbar
-                    navbar.classList.remove('navbar--hidden');
-                }
-            } else {
-                // Near the top - always show
-                navbar.classList.remove('navbar--hidden');
-            }
-            
-            lastScrollY = currentScrollY;
-        }, { passive: true });
     }
 
     // --- Dark Mode Toggle Logic ---

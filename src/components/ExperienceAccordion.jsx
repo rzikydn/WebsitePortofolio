@@ -46,6 +46,32 @@ const EXPERIENCES = [
       'Provided advanced troubleshooting for internal technical incidents, ensuring all company IT infrastructure operates optimally on a daily basis.',
     ],
   },
+  {
+    yearStart: '2026',
+    yearEnd: 'Present',
+    company: 'FUOMO',
+    role: 'Quality Assurance',
+    period: 'Sep 2026 - Present',
+    cutoffIndex: 3,
+    bullets: [
+      'Built UI and E2E automated testing infrastructure utilizing Page Object Model, Git hooks, and component dependency architecture mapping.',
+      'Designed comprehensive test cases (positive, negative, boundary) covering web application modules.',
+      'Ensured consistent staging release quality through close collaboration and requirement validation with Product Managers and development teams.',
+    ],
+  },
+  {
+    yearStart: '2026',
+    yearEnd: 'Present',
+    company: 'PT. Ilmuprogram Teknologi Informasi',
+    role: 'Technical Lead',
+    period: 'Sep 2026 - Present',
+    cutoffIndex: 3,
+    bullets: [
+      'Architected and configured internal server access environments, incorporating Windows jump host (RDP/SSH) isolation and verifying inter VM routing across Linux subnets.',
+      'Installed, configured, and verified multi server Kubernetes cluster (MicroK8s), ensuring Ready node status and core system stability across Calico CNI, CoreDNS, and API Server.',
+      'Managed cluster authentication and access control by configuring non root user permission within OS groups and standardizing local Kubeconfig files for containerized workload deployments.',
+    ],
+  },
 ];
 
 function AccordionItem({ item }) {

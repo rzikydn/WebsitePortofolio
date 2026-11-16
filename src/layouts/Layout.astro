@@ -13,6 +13,7 @@ interface Props {
   showNavbar?: boolean;
   showPreloader?: boolean;
   showFooter?: boolean;
+  preloadLanyard?: boolean;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   showNavbar = true,
   showPreloader = true,
   showFooter = true,
+  preloadLanyard = false,
 } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -105,7 +107,7 @@ const {
                 },
                 "email": "rzikydn@gmail.com",
                 "sameAs": [
-                    "https://www.linkedin.com/in/rzikydn",
+                    "https://www.linkedin.com/in/wildan-rizky-wijaya",
                     "https://github.com/rzikydn",
                     "https://www.instagram.com/rzikydn/"
                 ]
@@ -166,7 +168,7 @@ const {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap">
 
     <!-- Preload 3D Card Asset -->
-    <link rel="preload" as="fetch" href="/_astro/card.glb" crossorigin>
+    {preloadLanyard && <link rel="preload" as="fetch" href="/card.glb" crossorigin />}
 </head>
 
 <body class={bodyClass}>

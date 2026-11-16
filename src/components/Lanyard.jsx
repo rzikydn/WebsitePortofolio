@@ -5,18 +5,14 @@ import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
-
-// replace with your own imports, see the usage snippet for details
-import cardGLB from './card.glb';
-import lanyard from './lanyard.webp';
-
 import * as THREE from 'three';
 import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-const cardGLBUrl = cardGLB?.src || (typeof cardGLB === 'string' ? cardGLB : '/card.glb');
-const lanyardUrl = lanyard?.src || (typeof lanyard === 'string' ? lanyard : '/lanyard.webp');
+// Direct public asset paths: avoids redundant bundling in dist/_astro and matches browser preload
+const cardGLBUrl = '/card.glb';
+const lanyardUrl = '/lanyard.webp';
 
 // Preload 3D assets immediately so they are cached before preloader finishes
 useGLTF.preload(cardGLBUrl);
@@ -28,6 +24,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   const [physicsReady] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSleeping, setIsSleeping] = useState(false);
 
   const handleLoaded = () => {
     setIsLoaded(true);
@@ -51,6 +48,9 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
   // Use zero gravity during preloader (warm-up), switch to real gravity when ready
   const activeGravity = ready ? gravity : [0, 0, 0];
 
+  // Pause WebGL rendering entirely when off-screen, render on-demand when idle/sleeping
+  const frameloop = !inViewport ? "never" : isSleeping ? "demand" : "always";
+
   return (
     <div 
       className="lanyard-wrapper" 
@@ -61,7 +61,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       }}
     >
       <Canvas
-        frameloop={inViewport ? "always" : "never"} // Pause WebGL rendering entirely when off-screen
+        frameloop={frameloop}
         camera={{ position: isMobile ? [0, 0, 27] : position, fov: fov }}
         dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio, 2)] : [1, 2]}
         gl={{ alpha: transparent, antialias: true, powerPreference: "high-performance", stencil: false }}
@@ -70,7 +70,12 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         <ambientLight intensity={Math.PI} />
         {physicsReady && (
           <Physics gravity={activeGravity} timeStep={1 / 60} interpolate>
-            <Band isMobile={isMobile} ready={ready} onLoaded={handleLoaded} />
+            <Band 
+              isMobile={isMobile} 
+              ready={ready} 
+              onLoaded={handleLoaded} 
+              onSleepChange={setIsSleeping}
+            />
           </Physics>
         )}
         {/* Lightweight directional light replaces heavy Environment HDR cubemap */}
@@ -79,7 +84,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
     </div>
   );
 }
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, onLoaded }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, onLoaded, onSleepChange }) {
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -145,14 +150,22 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
     [0, isMobile ? 1.5 : 1.7, 0]
   ]);
 
+  const sleepFrames = useRef(0);
+
+  const wakeUpAll = () => {
+    if (onSleepChange) onSleepChange(false);
+    sleepFrames.current = 0;
+    [fixed, j1, j2, j3, card].forEach(ref => {
+      if (ref.current) {
+        ref.current.wakeUp();
+      }
+    });
+  };
+
   // Wake up all rigid bodies when ready (gravity activates)
   useEffect(() => {
     if (ready) {
-      [fixed, j1, j2, j3, card].forEach(ref => {
-        if (ref.current) {
-          ref.current.wakeUp();
-        }
-      });
+      wakeUpAll();
     }
   }, [ready]);
 
@@ -166,10 +179,19 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   useFrame((state, delta) => {
     if (!fixed.current || !card.current) return;
 
-    // Optimize: Exit early if the card has gone to sleep and is not being dragged
+    // Optimize: Pause continuous WebGL redraws when card has gone to sleep and is not dragged
     const isSleeping = typeof card.current.isSleeping === 'function' ? card.current.isSleeping() : false;
     if (isSleeping && !dragged) {
+      sleepFrames.current += 1;
+      if (sleepFrames.current === 10) {
+        if (onSleepChange) onSleepChange(true);
+      }
       return;
+    } else {
+      if (sleepFrames.current >= 10) {
+        if (onSleepChange) onSleepChange(false);
+      }
+      sleepFrames.current = 0;
     }
 
     const clampedDelta = Math.min(delta, 1 / 30);
@@ -177,7 +199,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
-      [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
+      wakeUpAll();
       card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
     }
     if (fixed.current) {
@@ -231,13 +253,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
           <group
             scale={isMobile ? 2.45 : 2.55}
             position={[0, isMobile ? -1.3 : -1.36, -0.05]}
-            onPointerOver={() => { hover(true); card.current?.wakeUp(); }}
+            onPointerOver={() => { hover(true); wakeUpAll(); }}
             onPointerOut={() => hover(false)}
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
             onPointerDown={e => (
               e.target.setPointerCapture(e.pointerId),
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))),
-              [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp())
+              wakeUpAll()
             )}
           >
             <mesh geometry={nodes.card.geometry}>

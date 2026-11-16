@@ -32,35 +32,6 @@ export default defineConfig({
     build: {
       target: 'es2020',
       cssCodeSplit: true,
-      rollupOptions: {
-        output: {
-          assetFileNames(assetInfo) {
-            if (assetInfo.names && assetInfo.names.some(n => n.endsWith('.glb'))) {
-              return '_astro/card.glb';
-            }
-            if (assetInfo.name && assetInfo.name.endsWith('.glb')) {
-              return '_astro/card.glb';
-            }
-            return '_astro/[name].[hash][extname]';
-          },
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('three') || id.includes('@react-three')) {
-                return 'three';
-              }
-              if (id.includes('rapier')) {
-                return 'physics';
-              }
-              if (id.includes('gsap')) {
-                return 'gsap';
-              }
-              if (id.includes('framer-motion')) {
-                return 'framer';
-              }
-            }
-          },
-        },
-      },
     },
   },
 });
