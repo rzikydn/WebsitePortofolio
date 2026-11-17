@@ -11,7 +11,7 @@ import './Lanyard.css';
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 // Direct public asset paths: avoids redundant bundling in dist/_astro and matches browser preload
-const cardGLBUrl = '/card.glb';
+const cardGLBUrl = '/card.glb?v=2';
 const lanyardUrl = '/lanyard.webp';
 
 // Preload 3D assets immediately so they are cached before preloader finishes
@@ -40,7 +40,10 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsSleeping(false);
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -71,6 +74,7 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
         {physicsReady && (
           <Physics gravity={activeGravity} timeStep={1 / 60} interpolate>
             <Band 
+              key={isMobile ? 'mobile' : 'desktop'}
               isMobile={isMobile} 
               ready={ready} 
               onLoaded={handleLoaded} 
@@ -94,7 +98,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   const vec = new THREE.Vector3(),
     ang = new THREE.Vector3(),
     rot = new THREE.Vector3(),
-    dir = new THREE.Vector3();
+    dir = new THREE.Vector3(),
+    hookVec = new THREE.Vector3(),
+    quat = new THREE.Quaternion();
   const segmentProps = { type: 'dynamic', canSleep: true, colliders: false, angularDamping: 4, linearDamping: 4 };
   const { nodes, materials } = useGLTF(cardGLBUrl);
   const texture = useTexture(lanyardUrl);
@@ -147,7 +153,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, isMobile ? 1.5 : 1.7, 0]
+    [0, isMobile ? 1.7 : 1.765, 0]
   ]);
 
   const sleepFrames = useRef(0);
@@ -179,16 +185,17 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
   useFrame((state, delta) => {
     if (!fixed.current || !card.current) return;
 
-    // Optimize: Pause continuous WebGL redraws when card has gone to sleep and is not dragged
     const isSleeping = typeof card.current.isSleeping === 'function' ? card.current.isSleeping() : false;
-    if (isSleeping && !dragged) {
+    if (ready && isSleeping && !dragged) {
       sleepFrames.current += 1;
-      if (sleepFrames.current === 10) {
-        if (onSleepChange) onSleepChange(true);
+      if (sleepFrames.current > 15) {
+        if (sleepFrames.current === 16 && onSleepChange) {
+          onSleepChange(true);
+        }
+        return;
       }
-      return;
     } else {
-      if (sleepFrames.current >= 10) {
+      if (sleepFrames.current >= 16) {
         if (onSleepChange) onSleepChange(false);
       }
       sleepFrames.current = 0;
@@ -205,13 +212,24 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
     if (fixed.current) {
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
-        ref.current.lerped.lerp(
-          ref.current.translation(),
-          clampedDelta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
+        if (isSleeping && !dragged) {
+          ref.current.lerped.copy(ref.current.translation());
+        } else {
+          const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
+          ref.current.lerped.lerp(
+            ref.current.translation(),
+            clampedDelta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
+          );
+        }
       });
-      curve.points[0].copy(j3.current.translation());
+
+      // Lock strap bottom endpoint directly to the top horizontal bar of the card's D-ring handle
+      const cardTrans = card.current.translation();
+      const cardRot = card.current.rotation();
+      quat.set(cardRot.x, cardRot.y, cardRot.z, cardRot.w);
+      hookVec.set(0, isMobile ? 1.695 : 1.755, 0).applyQuaternion(quat).add(cardTrans);
+
+      curve.points[0].copy(hookVec);
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
@@ -237,7 +255,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, ready = false, on
 
   return (
     <>
-      <group position={[0, isMobile ? 6 : 4, 0]}>
+      <group position={[0, isMobile ? 6.2 : 4.065, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} linearDamping={2} angularDamping={1}>
           <BallCollider args={[0.1]} mass={1} sensor />

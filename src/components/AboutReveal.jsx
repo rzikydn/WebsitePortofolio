@@ -8,15 +8,15 @@ export default function AboutReveal() {
       baseOpacity={0.1}
       slide1={
         <>
-          Hi, I'm Wildan Rizky Wijaya. A Data Analyst Enthusiast from Jakarta. Mainly focused on{' '}
+          Hi, I'm Wildan Rizky Wijaya. A DevOps Enthusiast from Jakarta. Mainly focused on{' '}
           <Highlighter action="underline" color="#FF9800">
-            analyzing data
+            cloud infrastructure
           </Highlighter>{' '}
           and{' '}
           <Highlighter action="highlight" color="#87CEFA">
-            creating insights.
+            CI/CD automation.
           </Highlighter>{' '}
-          I love exploring datasets and visualizing compelling data stories.
+          I love orchestrating containers and building reliable, scalable systems.
         </>
       }
       slide2={
@@ -29,7 +29,7 @@ export default function AboutReveal() {
           <Highlighter action="highlight" color="#87CEFA">
             Cakrawala University
           </Highlighter>
-          . Passionate about statistical modeling, machine learning, and turning complex data into meaningful real-world impact.
+          . Passionate about Kubernetes orchestration, Linux server architecture, and automating resilient production environments.
         </>
       }
     />

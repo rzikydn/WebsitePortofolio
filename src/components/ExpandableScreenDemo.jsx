@@ -41,7 +41,7 @@ export function ExpandableScreenDemo() {
           type="button"
           className="contact-btn contact-btn--primary cursor-pointer"
         >
-          Get In Touch &rarr;
+          Get In Touch
         </button>
       </ExpandableScreenTrigger>
 
