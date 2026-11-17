@@ -1268,14 +1268,11 @@ body.dark-mode .about-spatial-layer--sakura .about-asset-img {
     position: relative;
     font-size: clamp(4rem, 18vw, 25rem);
     font-weight: 900;
-    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
-    opacity: 0.5;
     margin: 0;
     line-height: 1;
-    margin-bottom: 2vh;
 }
 
 /* Skills Section */
@@ -1310,7 +1307,6 @@ body.dark-mode .about-spatial-layer--sakura .about-asset-img {
     font-size: clamp(3rem, 15vw, 20rem);
     /* Matches MY WORKS size */
     font-weight: 900;
-    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
@@ -1336,13 +1332,9 @@ body.dark-mode .about-spatial-layer--sakura .about-asset-img {
 
 .experience-section .bg-text {
     align-self: center;
-}
-
-.experience-section .bg-text {
     position: relative;
     font-size: clamp(3rem, 14vw, 18rem);
     font-weight: 900;
-    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
@@ -1379,7 +1371,6 @@ body.dark-mode .about-spatial-layer--sakura .about-asset-img {
     position: relative;
     font-size: clamp(3rem, 14vw, 18rem);
     font-weight: 900;
-    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
@@ -1705,7 +1696,6 @@ body.dark-mode .exp-desc {
     position: relative;
     font-size: clamp(3.75rem, 16vw, 19rem);
     font-weight: 900;
-    color: var(--black-section-text, #1e293b);
     letter-spacing: -2px;
     white-space: nowrap;
     user-select: none;
@@ -1908,6 +1898,8 @@ body.dark-mode .contact-btn--primary:hover {
 :root {
     --black-section-bg: #0f172a;
     --black-section-text: #1e293b;
+    --bg-text-filled: #ffffff;
+    --bg-text-unfilled: #1e293b;
     --menu-text: #ffffff;
     --menu-border: rgba(255, 255, 255, 0.2);
 }
@@ -1915,6 +1907,8 @@ body.dark-mode .contact-btn--primary:hover {
 body.dark-mode {
     --black-section-bg: #f8fafc;
     --black-section-text: #e2e8f0;
+    --bg-text-filled: #0f172a;
+    --bg-text-unfilled: #e2e8f0;
     --menu-text: #0f172a;
     --menu-border: rgba(15, 23, 42, 0.2);
 }
@@ -2001,25 +1995,41 @@ body.dark-mode .site-footer {
 @media (max-width: 768px) {
     .contact-row {
         flex-direction: column;
+        align-items: center;
         padding: 0 4vw;
-        gap: 2rem;
+        gap: 1.75rem;
     }
 
     .contact-cta-content {
-        align-items: center;
+        display: contents;
+    }
+
+    .contact-title-group {
+        order: 1;
         text-align: center;
     }
 
     .contact-desc {
+        order: 2;
         max-width: 100%;
+        text-align: center;
     }
 
     .contact-image {
+        order: 3;
         position: static;
         transform: none;
         width: clamp(200px, 60vw, 300px);
         height: clamp(200px, 60vw, 300px);
         align-self: center;
+    }
+
+    #contact-btn-root {
+        order: 4;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 0.5rem;
     }
 
     .footer-top {
@@ -2305,4 +2315,24 @@ body.dark-mode {
 
 body.dark-mode .section-title-banner {
     background-color: var(--black-section-bg, #f8fafc);
-}
+}
+
+.section-title-banner .bg-text {
+    display: inline-block;
+    background-image: linear-gradient(
+        180deg,
+        var(--bg-text-filled, #ffffff) 0%,
+        var(--bg-text-filled, #ffffff) 33.333%,
+        var(--bg-text-unfilled, #1e293b) 66.667%,
+        var(--bg-text-unfilled, #1e293b) 100%
+    );
+    background-size: 100% 300%;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    will-change: background-position;
+}
+

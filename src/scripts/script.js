@@ -181,13 +181,41 @@ function init() {
             
             // Allow scrolling on the main body
             document.body.style.overflow = "auto";
+            ScrollTrigger.refresh();
             
             // 5. Remove preloader from DOM after transition completes (1.2s)
             setTimeout(() => {
                 preloaderWrap.style.display = "none";
+                ScrollTrigger.refresh();
             }, 1200);
             
         }, 320); // Smooth 320ms wait for text fade-out
+    }
+
+    // Progressive liquid text fill on scroll for section title banners
+    function initScrollFillTitles() {
+        const banners = document.querySelectorAll('.section-title-banner');
+        if (!banners.length) return;
+
+        banners.forEach((banner) => {
+            const bgText = banner.querySelector('.bg-text');
+            if (!bgText) return;
+
+            gsap.fromTo(bgText, 
+                { backgroundPosition: '50% 100%' },
+                {
+                    backgroundPosition: '50% 0%',
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: banner,
+                        start: 'top 85%',
+                        end: 'top 25%',
+                        scrub: 0.8,
+                        invalidateOnRefresh: true,
+                    }
+                }
+            );
+        });
     }
 
     // --- Dark Mode Toggle Logic ---
@@ -206,6 +234,9 @@ function init() {
             themeIcon.classList.add('ph-moon-stars');
         }
     });
+
+    // Initialize progressive text fill on section titles
+    initScrollFillTitles();
 
     // Initialize 3D Spatial Scenes Parallax on Hero Section
     initSpatialHero();
