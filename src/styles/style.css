@@ -648,6 +648,19 @@ body {
 
     .spatial-layer--mid {
         transform: none !important;
+        z-index: 30 !important;
+    }
+
+    .spatial-layer--mid .hero-content {
+        pointer-events: none !important;
+    }
+
+    .spatial-layer--mid .hero-buttons,
+    .spatial-layer--mid .btn-hire,
+    .spatial-layer--mid .btn-copy {
+        pointer-events: auto !important;
+        position: relative;
+        z-index: 35;
     }
 
     .spatial-layer--fg {
@@ -1088,6 +1101,7 @@ body.dark-mode .btn-copy:hover {
 
     /* Mobile 3D Spatial Stage & Assets */
     .about-spatial-stage {
+        display: block !important;
         width: 100%;
         max-width: 325px;
         height: clamp(340px, 48vh, 430px);

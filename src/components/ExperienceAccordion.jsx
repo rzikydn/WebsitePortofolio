@@ -8,6 +8,7 @@ const EXPERIENCES = [
     company: 'Badan Sertifikasi Manajemen Risiko',
     role: 'Administrative',
     period: 'Sep 2024 - Dec 2024 · 4 mos',
+    cutoffIndex: 2,
     bullets: [
       'Managed the registration process for competency test participants from initial submission through assessment scheduling.',
       'Prepared registration reports and assessment schedules for management evaluation.',
@@ -21,7 +22,7 @@ const EXPERIENCES = [
     company: 'Badan Sertifikasi Manajemen Risiko',
     role: 'Database Administrator',
     period: 'Jan 2025 - Sep 2025 · 9 mos',
-    cutoffIndex: 3,
+    cutoffIndex: 2,
     bullets: [
       'Provided technical support and assisted in resolving IT issues faced by employees.',
       'Performed data input and updates to the BSNP system while maintaining consistency and accuracy.',
@@ -36,7 +37,7 @@ const EXPERIENCES = [
     company: 'CakrawalaEduCentre',
     role: 'Information Technology Web Developer',
     period: 'May 2026 - Jul 2026 · 3 mos',
-    cutoffIndex: 3,
+    cutoffIndex: 2,
     bullets: [
       'Designed system architecture and drafted comprehensive technical documentation as the foundation for the Learning Management System (LMS) platform development.',
       'Built and developed the LMS website end to end, spanning both frontend and backend architectures, to support institutional operations.',
@@ -52,7 +53,7 @@ const EXPERIENCES = [
     company: 'FUOMO',
     role: 'Quality Assurance',
     period: 'Sep 2026 - Present',
-    cutoffIndex: 3,
+    cutoffIndex: 2,
     bullets: [
       'Built UI and E2E automated testing infrastructure utilizing Page Object Model, Git hooks, and component dependency architecture mapping.',
       'Designed comprehensive test cases (positive, negative, boundary) covering web application modules.',
@@ -65,7 +66,7 @@ const EXPERIENCES = [
     company: 'PT. Ilmuprogram Teknologi Informasi',
     role: 'Technical Lead',
     period: 'Sep 2026 - Present',
-    cutoffIndex: 3,
+    cutoffIndex: 2,
     bullets: [
       'Architected and configured internal server access environments, incorporating Windows jump host (RDP/SSH) isolation and verifying inter VM routing across Linux subnets.',
       'Installed, configured, and verified multi server Kubernetes cluster (MicroK8s), ensuring Ready node status and core system stability across Calico CNI, CoreDNS, and API Server.',

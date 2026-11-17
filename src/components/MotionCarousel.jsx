@@ -134,11 +134,6 @@ export default function MotionCarousel({ options = DEFAULT_OPTIONS }) {
                       {/* Info Block */}
                       <div className="cert-body">
                         <h4 className="cert-title">{cert.title}</h4>
-                        <div className="cert-skills-pill-box">
-                          {cert.skills.map((skill, sIdx) => (
-                            <span key={sIdx} className="cert-skill-pill">{skill}</span>
-                          ))}
-                        </div>
                       </div>
 
                       {/* Footer Credentials & Bento CTA */}

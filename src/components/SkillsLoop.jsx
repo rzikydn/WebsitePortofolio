@@ -18,6 +18,7 @@ export default function SkillsLoop() {
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -27,8 +28,8 @@ export default function SkillsLoop() {
       logos={imageLogos}
       speed={80}
       direction="left"
-      logoHeight={isMobile ? 44 : "4.75rem"}
-      gap={isMobile ? 28 : "3.85rem"}
+      logoHeight={isMobile ? 64 : "6.8rem"}
+      gap={isMobile ? 28 : "4.5rem"}
       hoverSpeed={0}
       scaleOnHover
       fadeOut

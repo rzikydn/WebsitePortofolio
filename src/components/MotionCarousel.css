@@ -290,53 +290,6 @@
     color: #10b981;
 }
 
-@media (max-width: 768px) {
-    .cert-title {
-        font-size: 0.95rem;
-    }
-
-    .cert-issuer-badge {
-        display: none;
-    }
-
-    .cert-issuer-badge span {
-        font-size: 0.55rem;
-    }
-
-    .cert-issuer-badge i {
-        font-size: 0.7rem;
-    }
-
-    .cert-skill-pill {
-        font-size: 0.6rem;
-        padding: 2px 6px;
-    }
-
-    .cert-date {
-        font-size: 0.62rem;
-    }
-
-    .cert-id {
-        font-size: 0.55rem;
-    }
-
-    .cert-verify-cta {
-        font-size: 0.6rem;
-        gap: 4px;
-    }
-
-    .cert-footer {
-        padding-top: 10px;
-        margin-top: 8px;
-        margin-bottom: 5.5px;
-    }
-
-    .cert-body {
-        gap: 6px;
-        margin: 6px 0;
-    }
-}
-
 .cert-desc {
     font-size: 0.95rem;
     color: #64748b;
@@ -347,31 +300,7 @@
 
 /* Skills Pill Box */
 .cert-skills-pill-box {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.375rem;
-}
-
-.cert-skill-pill {
-    font-family: "Elms Sans", sans-serif;
-    font-size: 0.88rem;
-    color: #94a3b8;
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 0.5rem;
-    padding: 0.3rem 0.75rem;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    transition: all 0.3s ease;
-}
-
-.certificate-card:hover .cert-skill-pill,
-.certificate-card.active .cert-skill-pill {
-    border-color: rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #cbd5e1;
+    display: none;
 }
 
 /* Card Footer */
@@ -396,12 +325,14 @@
     font-size: 0.95rem;
     color: #64748b;
     font-weight: 300;
+    white-space: nowrap;
 }
 
 .cert-id {
     font-size: 0.82rem;
     color: #475569;
     font-family: monospace;
+    white-space: nowrap;
 }
 
 /* Bento CTA Link Button */
@@ -418,6 +349,42 @@
     opacity: 0.5;
     transform: translateY(2px);
     white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .cert-title {
+        font-size: 0.95rem;
+    }
+
+    .cert-issuer-badge {
+        display: none;
+    }
+
+    .cert-date {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .cert-id {
+        font-size: 0.58rem;
+        white-space: nowrap;
+    }
+
+    .cert-verify-cta {
+        font-size: 0.65rem;
+        gap: 4px;
+    }
+
+    .cert-footer {
+        padding-top: 10px;
+        margin-top: 8px;
+        margin-bottom: 5.5px;
+    }
+
+    .cert-body {
+        gap: 6px;
+        margin: 6px 0;
+    }
 }
 
 .certificate-card:hover .cert-verify-cta,

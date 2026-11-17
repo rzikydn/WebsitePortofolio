@@ -131,20 +131,16 @@
 
 .logoloop--fade::before {
   left: 0;
-  background: linear-gradient(
-    to right,
-    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(to right,
+      var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .logoloop--fade::after {
   right: 0;
-  background: linear-gradient(
-    to left,
-    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(to left,
+      var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .logoloop--vertical.logoloop--fade::before,
@@ -156,24 +152,36 @@
 .logoloop--vertical.logoloop--fade::before {
   top: 0;
   bottom: auto;
-  background: linear-gradient(
-    to bottom,
-    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(to bottom,
+      var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 .logoloop--vertical.logoloop--fade::after {
   bottom: 0;
   top: auto;
-  background: linear-gradient(
-    to top,
-    var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(to top,
+      var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 @media (max-width: 768px) {
+
+  .logoloop {
+    --logoloop-logoHeight: 64px !important;
+    --logoloop-gap: 28px !important;
+  }
+
+  .logoloop__item,
+  .logoloop__item:last-child {
+    margin-right: 28px !important;
+    font-size: 64px !important;
+  }
+
+  .logoloop__item img {
+    height: 64px !important;
+  }
+
   .logoloop--fade::before,
   .logoloop--fade::after {
     display: none !important;
