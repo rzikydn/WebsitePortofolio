@@ -70,7 +70,9 @@ export function ExpandableScreenDemo() {
                   </div>
                   <div>
                     <p className="expandable-screen-feature-text">
-                      I usually respond within 24 hours with actionable feedback or next steps.
+                      I usually respond within 24 hours
+                      <br />
+                      with actionable feedback or next steps.
                     </p>
                   </div>
                 </div>
@@ -89,7 +91,9 @@ export function ExpandableScreenDemo() {
                   </div>
                   <div>
                     <p className="expandable-screen-feature-text">
-                      From end to end web apps to custom automation, built to fit your exact needs.
+                      From end to end web apps to custom automation,
+                      <br />
+                      built to fit your exact needs.
                     </p>
                   </div>
                 </div>

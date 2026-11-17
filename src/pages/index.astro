@@ -4,7 +4,6 @@ import Layout from '../layouts/Layout.astro';
 import LanyardHero from '../components/LanyardHero.jsx';
 import ProgressiveBlur from '../components/ProgressiveBlur.jsx';
 import AboutReveal from '../components/AboutReveal.jsx';
-import SvgWorksScroll from '../components/SvgWorksScroll.jsx';
 import BentoGrid from '../components/BentoGrid.jsx';
 import SkillsLoop from '../components/SkillsLoop.jsx';
 import ExperienceAccordion from '../components/ExperienceAccordion.jsx';
@@ -173,9 +172,6 @@ import ConfettiSideCannons from '../components/ConfettiSideCannons.jsx';
             <h2 class="sr-only">My Works</h2>
             <div class="section-title-banner" aria-hidden="true">
                 <span class="bg-text">MY WORKS</span>
-            </div>
-            <div id="works-svg-root">
-                <SvgWorksScroll client:visible />
             </div>
             <div id="flowing-menu-root" style="width: 100%; position: relative; z-index: 40;">
                 <BentoGrid client:visible />
